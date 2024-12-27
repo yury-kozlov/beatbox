@@ -31,14 +31,12 @@ internal class BeatBox : IDisposable
         {
             Leader = new Sound("b1")
             {
-                Strategy = new RepeatStrategy { Every = 4, Interval = 500 },
+                Strategy = new RepeatStrategy { Every = 16, Interval = 500 },
                 Followers = new() {
                   new Sound("ts1") {
                       Strategy = new RepeatStrategy { DelayAfterLeader = 150, Every = 2, Interval = 80 },
-                      Followers = new() {
-                          // new Sound("ts2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 20 } },
-                      },
                   },
+                new Sound("ts2") { Strategy = new PlayOnceStrategy { PlayEveryX = 4 } },
                },
             },
         };

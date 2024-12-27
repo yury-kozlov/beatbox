@@ -62,8 +62,19 @@ public class RepeatStrategy : Strategy
 
 public class PlayOnceStrategy : Strategy
 {
+    public int PlayEveryX;
+    public int CalledTimes;
+
     public override List<SequenceMessage> GenerateSequence(Sound sound)
     {
+        CalledTimes++;
+
+        if (CalledTimes % PlayEveryX > 0)
+        {
+            // skip
+            return new();
+        }
+
         var msg = new SequenceMessage(sound.Name)
         {
             Timestamp = DelayAfterLeader,

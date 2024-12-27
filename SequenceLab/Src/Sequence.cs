@@ -54,6 +54,7 @@ public static class SequencePlayer
             }
             previous = msg;
 
+            Console.WriteLine(msg);
             channel.Write(msg.Message, 0, msg.Message.Length);
         }
     }
