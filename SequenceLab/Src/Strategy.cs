@@ -1,16 +1,30 @@
-﻿namespace Beater;
+﻿using Microsoft.VisualBasic;
 
-public class Strategy
+namespace Beater;
+
+public abstract class Strategy
 {
     /// <summary>
     /// Time to wait after the leader sound before starting to play the first follower or the whole loop (in case of repeated sounds).
     /// </summary>
     public int DelayAfterLeader { get; set; }
 
-    public virtual List<SequenceMessage> GenerateSequence(Sound sound)
+    public int CalledTimes;
+    public int PlayEveryX = 1; // play every time
+
+    public List<SequenceMessage> GenerateSequence(Sound sound)
     {
-        return new();
+        CalledTimes++;
+        if (CalledTimes % PlayEveryX > 0)
+        {
+            // skip
+            return new();
+        }
+
+        return GenerateSequenceFor(sound);
     }
+
+    protected abstract List<SequenceMessage> GenerateSequenceFor(Sound sound);
 
     protected List<SequenceMessage> GenerateFollowersSequence(Sound sound, int currentTimestamp)
     {
@@ -35,17 +49,19 @@ public class Strategy
 
 public class RepeatStrategy : Strategy
 {
-    public int Every { get; set; }
-    public int Interval { get; set; }
+    public int Count;
+    public int Interval;
+    public int LinearIncrement;
+    private int _previousIterval;
 
-    public override List<SequenceMessage> GenerateSequence(Sound sound)
+    protected override List<SequenceMessage> GenerateSequenceFor(Sound sound)
     {
         var sequence = new List<SequenceMessage>();
-        for (int i = 0; i < Every; i++)
+        for (int i = 0; i < Count; i++)
         {
             var msg = new SequenceMessage(sound.Name)
             {
-                Timestamp = DelayAfterLeader + (i * Interval),
+                Timestamp = DelayAfterLeader + CalculateInterval(i),
             };
             sequence.Add(msg);
 
@@ -55,25 +71,32 @@ public class RepeatStrategy : Strategy
             }
         }
 
+        _previousIterval = 0;
+
         return sequence;
+    }
+
+    private int CalculateInterval(int i)
+    {
+        if (LinearIncrement == 0)
+        {
+            return i * Interval;
+        }
+
+        if (i == 0)
+        {
+            // this is the first increment
+            return 0;
+        }
+
+        return _previousIterval += Interval + (i - 1) * LinearIncrement;
     }
 }
 
 public class PlayOnceStrategy : Strategy
 {
-    public int PlayEveryX;
-    public int CalledTimes;
-
-    public override List<SequenceMessage> GenerateSequence(Sound sound)
+    protected override List<SequenceMessage> GenerateSequenceFor(Sound sound)
     {
-        CalledTimes++;
-
-        if (CalledTimes % PlayEveryX > 0)
-        {
-            // skip
-            return new();
-        }
-
         var msg = new SequenceMessage(sound.Name)
         {
             Timestamp = DelayAfterLeader,

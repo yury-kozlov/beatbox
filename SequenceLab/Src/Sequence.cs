@@ -54,7 +54,7 @@ public static class SequencePlayer
             }
             previous = msg;
 
-            Console.WriteLine(msg);
+            Console.WriteLine($"{DateTime.Now:H:mm:ss:FFF} {msg}");
             channel.Write(msg.Message, 0, msg.Message.Length);
         }
     }
