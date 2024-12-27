@@ -49,10 +49,9 @@ public class RepeatStrategy : Strategy
             };
             sequence.Add(msg);
 
-            var followersSequence = GenerateFollowersSequence(sound, msg.Timestamp);
-            if (followersSequence.Count > 0)
+            if (sound.Followers.Count > 0)
             {
-                sequence.AddRange(followersSequence);
+                sequence.AddRange(GenerateFollowersSequence(sound, msg.Timestamp));
             }
         }
 

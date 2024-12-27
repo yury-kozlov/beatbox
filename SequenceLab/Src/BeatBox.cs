@@ -37,6 +37,8 @@ internal class BeatBox : IDisposable
                       Strategy = new RepeatStrategy { DelayAfterLeader = 150, Every = 2, Interval = 80 },
                   },
                 new Sound("ts2") { Strategy = new PlayOnceStrategy { PlayEveryX = 4 } },
+                // new Sound("ts3") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 0, PlayEveryX = 2 } },
+                new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 4 } },
                },
             },
         };
@@ -51,7 +53,7 @@ internal class BeatBox : IDisposable
 
             await Repeat(count: 3, waitMs: 500);
 
-            await RepeatLinear(count: 5, delayMs: 80, incr: -10);
+            await RepeatLinear(count: 5, initialDelayMs: 80, incr: -10);
 
             await Task.Delay(130);
 
@@ -87,17 +89,18 @@ internal class BeatBox : IDisposable
     //        }
     //}
 
-    private async Task RepeatLinear(int count, int delayMs, int incr)
+    private async Task RepeatLinear(int count, int initialDelayMs, int incr)
     {
+        var delay = initialDelayMs;
         for (int i = 0; i < count; i++)
         {
             Console.Write(".");
             _channel!.Write(SoundMessage.Beat1, 0, SoundMessage.Beat1.Length);
-            await Task.Delay(delayMs);
-            delayMs += incr;
-            if (delayMs <= 0)
+            await Task.Delay(delay);
+            delay += incr;
+            if (delay <= 0)
             {
-                delayMs = 20; // min delay
+                delay = 20; // min delay
             }
         }
     }
