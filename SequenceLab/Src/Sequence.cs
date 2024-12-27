@@ -1,6 +1,5 @@
 ﻿using System.Net.Sockets;
 using System.Text;
-using System.Threading.Channels;
 
 namespace Beater;
 
@@ -25,18 +24,11 @@ public class SequenceMessage
 
     public byte[] Message;
     public string Name;
-    
-    /// <summary>
-    /// Delay before is relative to the leader.
-    /// </summary>
-    public int DelayBefore;
-
-    public int DelayAfter;
     public int Timestamp; // from the beginning of sequence
 
     override public string ToString()
     {
-        return $"{DelayBefore}..{Name}..{DelayAfter}";
+        return $"{Timestamp}..{Name}";
     }
 }
 
@@ -48,19 +40,6 @@ public static class SequencePlayer
         {
             return;
         }
-
-        //foreach (var msg in sequenceMessages)
-        //{
-        //    if (msg.DelayBefore > 0)
-        //    {
-        //        await Task.Delay(msg.DelayBefore);
-        //    }
-        //    channel.Write(msg.Message, 0, msg.Message.Length);
-        //    if (msg.DelayAfter > 0)
-        //    {
-        //        await Task.Delay(msg.DelayAfter);
-        //    }
-        //}
 
         SequenceMessage? previous = null;
         foreach (var msg in sequenceMessages)

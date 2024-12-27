@@ -1,5 +1,4 @@
-﻿
-namespace Beater;
+﻿namespace Beater;
 
 public class Strategy
 {
@@ -46,8 +45,6 @@ public class RepeatStrategy : Strategy
         {
             var msg = new SequenceMessage(sound.Name)
             {
-                DelayBefore = i == 0 ? DelayAfterLeader : 0, // we need to add a delay before the first sound because its leader is added with 0 delay
-                DelayAfter = 0, // followers' delays will intersect with leader's delay
                 Timestamp = DelayAfterLeader + (i * Interval),
             };
             sequence.Add(msg);
@@ -56,13 +53,6 @@ public class RepeatStrategy : Strategy
             if (followersSequence.Count > 0)
             {
                 sequence.AddRange(followersSequence);
-            }
-
-            var followersDelay = followersSequence.Sum(x => x.DelayBefore + x.DelayAfter);
-            if (followersDelay < Interval)
-            {
-                // add remaining delay so that each loop duration will be the same (even the last one when we don't have any sound afterwards)
-                sequence.Last().DelayAfter += Interval - followersDelay;
             }
         }
 
@@ -76,7 +66,6 @@ public class PlayOnceStrategy : Strategy
     {
         var msg = new SequenceMessage(sound.Name)
         {
-            DelayBefore = DelayAfterLeader, // we need to add a delay before current sound because its leader is added with 0 delay
             Timestamp = DelayAfterLeader,
         };
 

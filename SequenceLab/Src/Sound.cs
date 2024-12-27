@@ -11,16 +11,12 @@ public class Sound
     }
 
     public string Name;
+    public Strategy Strategy;
+    public List<Sound> Followers = new();
 
     [Obsolete]
     public byte[] Message;
 
-    public int PreDelay;
-    public int PostDelay;
-    public Sound? Next;
-
-    public Strategy Strategy;
-    public List<Sound> Followers = new();
 
     override public string ToString() => Name;
 }

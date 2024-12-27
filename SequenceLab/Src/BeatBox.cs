@@ -1,5 +1,4 @@
 ﻿using System.Net.Sockets;
-using System.Text;
 
 namespace Beater;
 
@@ -35,9 +34,9 @@ internal class BeatBox : IDisposable
                 Strategy = new RepeatStrategy { Every = 4, Interval = 500 },
                 Followers = new() {
                   new Sound("ts1") {
-                      Strategy = new RepeatStrategy { DelayAfterLeader = 150, Every = 2, Interval = 100 },
+                      Strategy = new RepeatStrategy { DelayAfterLeader = 150, Every = 2, Interval = 80 },
                       Followers = new() {
-                          new Sound("ts2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 80 } },
+                          // new Sound("ts2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 20 } },
                       },
                   },
                },
@@ -45,31 +44,7 @@ internal class BeatBox : IDisposable
         };
 
         var sequenceMessages = sequence.Generate();
-
-        foreach (var item in sequenceMessages)
-        {
-            Console.WriteLine($"{item.Name}, Timestamp: {item.Timestamp}, {item}");
-        }
-
-
         await _channel.Play(sequenceMessages);
-
-
-
-        Console.WriteLine("experiment 2");
-
-        var beat = new Sound("b1")
-        {
-            PostDelay = 150,
-            Next = new Sound("ts1")
-            {
-                PostDelay = 80,
-                Next = new Sound("ts1") { PostDelay = 270 },
-            }
-        };
-
-        await PlaySequence(beat, 48);
-
 
         Console.WriteLine("experiment 1");
         for (int i = 0; i < 10; i++)
@@ -86,31 +61,6 @@ internal class BeatBox : IDisposable
         }
 
         Console.WriteLine();
-    }
-
-    public async Task Play(Sound sound)
-    {
-        while (sound is not null)
-        {
-            if (sound.PreDelay > 0)
-            {
-                await Task.Delay(sound.PreDelay);
-            }
-            _channel.Write(sound.Message, 0, sound.Message.Length);
-            if (sound.PostDelay > 0)
-            {
-                await Task.Delay(sound.PostDelay);
-            }
-            sound = sound.Next;
-        }
-    }
-
-    private async Task PlaySequence(Sound sound, int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            await Play(sound);
-        }
     }
 
     private async Task Repeat(int count, int waitMs)
