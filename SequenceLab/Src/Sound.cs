@@ -8,7 +8,7 @@ public class Sound
     }
 
     public string Name;
-    public Strategy Strategy;
+    public AbstractStrategy Strategy;
     public List<Sound> Followers = new();
 
     override public string ToString() => Name;
