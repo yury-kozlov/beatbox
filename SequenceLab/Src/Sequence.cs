@@ -16,13 +16,15 @@ public class Sequence
 
 public class SequenceMessage
 {
-    public SequenceMessage(string name, string? comment = null)
+    public SequenceMessage(Sound? sound, string? comment = null)
     {
-        Message = Encoding.ASCII.GetBytes($"{name} 1;"); // note: second argument is not yet supported
-        Name = name;
+        Sound = sound;
+        Message = Encoding.ASCII.GetBytes($"{Sound?.Name} 1;"); // note: second argument is not yet supported
+        Name = Sound?.Name ?? "";
         Comment = comment;
     }
 
+    public Sound? Sound;
     public byte[] Message;
     public string Name;
     public string? Comment;

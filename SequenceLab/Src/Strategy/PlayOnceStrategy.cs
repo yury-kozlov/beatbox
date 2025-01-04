@@ -4,7 +4,7 @@ public class PlayOnceStrategy : AbstractStrategy
 {
     protected override List<SequenceMessage> GenerateSequenceFor(Sound sound)
     {
-        var msg = new SequenceMessage(sound.Name)
+        var msg = new SequenceMessage(sound)
         {
             Timestamp = DelayAfterLeader,
         };

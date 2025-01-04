@@ -13,7 +13,7 @@ public class RepeatStrategy : AbstractStrategy
         var sequence = new List<SequenceMessage>();
         for (int i = 0; i < Count; i++)
         {
-            var msg = new SequenceMessage(sound.Name, $"#{i + 1}")
+            var msg = new SequenceMessage(sound, $"#{i + 1}")
             {
                 Timestamp = DelayAfterLeader + CalculateInterval(i),
             };
@@ -26,7 +26,7 @@ public class RepeatStrategy : AbstractStrategy
         }
 
         // close sequence with empty sound so that any other sequence that goes afterwards will continue only after this one ends
-        sequence.Add(new SequenceMessage("", $"{sound.Name} repeat x{Count} ends") { Timestamp = DelayAfterLeader + (Interval * Count) });
+        sequence.Add(new SequenceMessage(sound, $"{sound.Name} repeat x{Count} ends") { Timestamp = DelayAfterLeader + (Interval * Count) });
 
         return sequence;
     }
