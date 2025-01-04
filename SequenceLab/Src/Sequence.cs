@@ -16,19 +16,21 @@ public class Sequence
 
 public class SequenceMessage
 {
-    public SequenceMessage(string name)
+    public SequenceMessage(string name, string? comment = null)
     {
         Message = Encoding.ASCII.GetBytes($"{name} 1;"); // note: second argument is not yet supported
         Name = name;
+        Comment = comment;
     }
 
     public byte[] Message;
     public string Name;
+    public string? Comment;
     public int Timestamp; // from the beginning of sequence
 
     override public string ToString()
     {
-        return $"{Timestamp}..{Name}";
+        return $"{Timestamp:0000} {Name}";
     }
 }
 
@@ -54,9 +56,9 @@ public static class SequencePlayer
             }
             previous = msg;
 
-            Console.WriteLine($"{DateTime.Now:H:mm:ss:FFF} {msg}");
+            var now = DateTime.Now;
+            Console.WriteLine($"{now:H:mm:ss}:{now.Millisecond:000} {msg,-10} {msg.Comment}");
             channel.Write(msg.Message, 0, msg.Message.Length);
         }
     }
-
 }

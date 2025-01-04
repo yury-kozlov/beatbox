@@ -8,7 +8,7 @@ public abstract class AbstractStrategy
     public int DelayAfterLeader { get; set; }
 
     public int CalledTimes;
-    public int PlayEveryX = 1; // play every time
+    public int PlayEveryX = 1; // play every time by default
 
     public List<SequenceMessage> GenerateSequence(Sound sound)
     {
@@ -29,7 +29,7 @@ public abstract class AbstractStrategy
         var mixedSequence = new List<SequenceMessage>();
         foreach (var follower in sound.Followers)
         {
-            // NOTE: separate followers are played independently and may have overlapping sequences (mixed together)
+            // NOTE: separate followers are played independently to allow overlapping sequences (mixed together)
             var sequence = follower.Strategy.GenerateSequence(follower);
             foreach (var msg in sequence)
             {

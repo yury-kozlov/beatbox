@@ -5,6 +5,7 @@ public class RepeatStrategy : AbstractStrategy
     public int Count;
     public int Interval;
     public int LinearIncrement;
+
     private int _previousIterval;
 
     protected override List<SequenceMessage> GenerateSequenceFor(Sound sound)
@@ -12,7 +13,7 @@ public class RepeatStrategy : AbstractStrategy
         var sequence = new List<SequenceMessage>();
         for (int i = 0; i < Count; i++)
         {
-            var msg = new SequenceMessage(sound.Name)
+            var msg = new SequenceMessage(sound.Name, $"#{i + 1}")
             {
                 Timestamp = DelayAfterLeader + CalculateInterval(i),
             };
@@ -23,8 +24,6 @@ public class RepeatStrategy : AbstractStrategy
                 sequence.AddRange(GenerateFollowersSequence(sound, msg.Timestamp));
             }
         }
-
-        _previousIterval = 0;
 
         return sequence;
     }
@@ -39,7 +38,8 @@ public class RepeatStrategy : AbstractStrategy
         if (i == 0)
         {
             // this is the first increment
-            return 0;
+            // reset interval because current instance of repeat strategy may be called several times (as part of another repeat strategy)
+            return _previousIterval = 0;
         }
 
         return _previousIterval += Interval + (i - 1) * LinearIncrement;
