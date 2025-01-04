@@ -25,6 +25,9 @@ public class RepeatStrategy : AbstractStrategy
             }
         }
 
+        // close sequence with empty sound so that any other sequence that goes afterwards will continue only after this one ends
+        sequence.Add(new SequenceMessage("", $"{sound.Name} repeat x{Count} ends") { Timestamp = DelayAfterLeader + (Interval * Count) });
+
         return sequence;
     }
 
