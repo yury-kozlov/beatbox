@@ -21,7 +21,7 @@ public class SequenceMessage
         Sound = sound;
         Message = Encoding.ASCII.GetBytes($"{Sound?.Name} 1;"); // note: second argument is not yet supported
         Name = Sound?.Name ?? "";
-        Comment = comment;
+        Comment = comment + (sound.IsLeader() ? ", leads" : "");
     }
 
     public Sound? Sound;

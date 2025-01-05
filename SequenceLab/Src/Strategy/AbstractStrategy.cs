@@ -28,6 +28,8 @@ public abstract class AbstractStrategy
     /// </summary>
     public List<SequenceMessage> GenerateSequence(Sound sound)
     {
+        sound.SetLeader();
+
         CalledTimes++;
         if (IsSkipped())
         {
