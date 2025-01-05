@@ -8,11 +8,16 @@ public abstract class AbstractStrategy
     public int DelayAfterLeader { get; set; }
 
     /// <summary>
-    /// Total number of times this strategy was called.
+    /// Total number of times this strategy was called (including skipped calls).
     /// NOTE: this counter is related to the strategy, not to the sound itself
     /// (e.g. for repeat strategy it will count number of loops, not total number of sounds in all loops)
     /// </summary>
     public int CalledTimes;
+
+    /// <summary>
+    /// Number of times when this strategy was actually played (not skipped).
+    /// </summary>
+    public int CalledTimesActual;
 
     /// <summary>
     /// If X is integer, the sound will be played every X-th time:
@@ -37,6 +42,7 @@ public abstract class AbstractStrategy
             return new();
         }
 
+        CalledTimesActual++;
         return GenerateSequenceFor(sound);
     }
 

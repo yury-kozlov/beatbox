@@ -26,7 +26,7 @@ public class RepeatStrategy : AbstractStrategy
         }
 
         // close sequence with empty sound so that any other sequence that goes afterwards will continue only after this one ends
-        sequence.Add(new SequenceMessage(sound, $"{sound.Name} repeat x{Count} ends") { Timestamp = DelayAfterLeader + (Interval * Count) });
+        sequence.Add(new SequenceMessage(null, $"{sound.Name} repeat x{Count} ends, called times:{CalledTimesActual}/{CalledTimes}") { Timestamp = DelayAfterLeader + (Interval * Count) });
 
         return sequence;
     }
