@@ -5,7 +5,7 @@ namespace Tests;
 public class SequenceTests
 {
     [Fact]
-    public void GenerateSequenceAsExpected()
+    public void GenerateSquareLoopSequence_ReturnExpected()
     {
         // arrange
         var sequence = new Sequence
@@ -106,6 +106,30 @@ public class SequenceTests
             "7900:",
             "8000:",
         ];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void GenerateFollowerEvery3OutOf4_ReturnExpected()
+    {
+        // arrange
+        var sequence = new Sequence
+        {
+            Leader = new Sound("b1")
+            {
+                Strategy = new RepeatStrategy { Count = 8, Interval = 500 },
+                Followers = new() {
+                  new Sound("b2") { Strategy = new PlayOnceStrategy { PlayEveryX = 3/4f } },
+               },
+            },
+        };
+        string[] expected = ["0000:b1", "0500:b1", "1000:b1", "1000:b2", "1500:b1", "2000:b1", "2500:b1", "3000:b1", "3000:b2", "3500:b1", "4000:"];
 
         // act
         var actual = sequence.Generate();

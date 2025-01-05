@@ -7,19 +7,53 @@ public abstract class AbstractStrategy
     /// </summary>
     public int DelayAfterLeader { get; set; }
 
+    /// <summary>
+    /// Total number of times this strategy was called.
+    /// NOTE: this counter is related to the strategy, not to the sound itself
+    /// (e.g. for repeat strategy it will count number of loops, not total number of sounds in all loops)
+    /// </summary>
     public int CalledTimes;
-    public int PlayEveryX = 1; // play every time by default
 
+    /// <summary>
+    /// If X is integer, the sound will be played every X-th time:
+    ///   1 - every time without skipping
+    ///   2 - at even times (2,4,6...), while all odd times (1,3,5...) will be skipped.
+    /// If X is a fraction, the sound will be played every X-th time within repeated range, for example:
+    ///  3/4 - each 3rd time will be played out of every 4.
+    /// </summary>
+    public double PlayEveryX = 1; // play every time by default
+
+    /// <summary>
+    /// An entry point to generate sequence of messages of leader/follower.
+    /// </summary>
     public List<SequenceMessage> GenerateSequence(Sound sound)
     {
         CalledTimes++;
-        if (CalledTimes % PlayEveryX > 0)
+        if (IsSkipped())
         {
             // skip
             return new();
         }
 
         return GenerateSequenceFor(sound);
+    }
+
+    private bool IsSkipped()
+    {
+        if (Numbers.IsInteger(PlayEveryX))
+        {
+            // count every call
+            return CalledTimes % PlayEveryX > 0;
+        }
+
+        // count calls within loop (for example, every 3rd time within repeated range of 4)
+        var fraction = Numbers.GetFraction(PlayEveryX);
+        var playEveryX = fraction.Numerator;
+        var range = fraction.Denominator;
+        var iterationNumber = (CalledTimes - 1) / range;
+        var calledTimesInRange = CalledTimes - (range * iterationNumber);
+
+        return calledTimesInRange % playEveryX > 0;
     }
 
     protected abstract List<SequenceMessage> GenerateSequenceFor(Sound sound);
