@@ -16,18 +16,20 @@ public class Sequence
 
 public class SequenceMessage
 {
-    public SequenceMessage(Sound? sound, string? comment = null)
+    public SequenceMessage(Sound? sound)
     {
         Sound = sound;
+        Leads = sound.IsLeader();
         Message = Encoding.ASCII.GetBytes($"{Sound?.Name} 1;"); // note: second argument is not yet supported
         Name = Sound?.Name ?? "";
-        Comment = comment + (sound.IsLeader() ? ", leads" : "");
     }
 
     public Sound? Sound;
+
     public byte[] Message;
     public string Name;
     public string? Comment;
+    public bool Leads;
     public int Timestamp; // from the beginning of sequence
 
     override public string ToString()
@@ -58,9 +60,19 @@ public static class SequencePlayer
             }
             previous = msg;
 
-            var now = DateTime.Now;
-            Console.WriteLine($"{now:H:mm:ss}:{now.Millisecond:000} {msg,-10} {msg.Comment}");
+            Log(msg);
             channel.Write(msg.Message, 0, msg.Message.Length);
         }
+    }
+
+    private static void Log(SequenceMessage msg)
+    {
+        var now = DateTime.Now;
+        const string green = "\x1b[92m";
+        const string resetColor = "\x1b[39m";
+        var color = msg.Leads ? green : "";
+        var coloredName = $"{color}{msg.Name}{resetColor}";
+
+        Console.WriteLine($"{now:H:mm:ss}:{now.Millisecond:000} {msg.Timestamp:0000} {coloredName} {msg.Comment}");
     }
 }
