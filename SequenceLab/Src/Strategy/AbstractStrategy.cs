@@ -8,16 +8,16 @@ public abstract class AbstractStrategy
     public int DelayAfterLeader { get; set; }
 
     /// <summary>
-    /// Total number of times this strategy was called (including skipped calls).
+    /// Total number of times this strategy was checked and called (including skipped calls).
     /// NOTE: this counter is related to the strategy, not to the sound itself
     /// (e.g. for repeat strategy it will count number of loops, not total number of sounds in all loops)
     /// </summary>
-    public int CalledTimes;
+    public int CheckedTimes;
 
     /// <summary>
     /// Number of times when this strategy was actually played (not skipped).
     /// </summary>
-    public int CalledTimesActual;
+    public int CalledTimes;
 
     /// <summary>
     /// If X is integer, the sound will be played every X-th time:
@@ -35,14 +35,14 @@ public abstract class AbstractStrategy
     {
         sound.SetLeader();
 
-        CalledTimes++;
+        CheckedTimes++;
         if (IsSkipped())
         {
             // skip
             return new();
         }
 
-        CalledTimesActual++;
+        CalledTimes++;
         return GenerateSequenceFor(sound);
     }
 
@@ -51,15 +51,15 @@ public abstract class AbstractStrategy
         if (Numbers.IsInteger(PlayEveryX))
         {
             // count every call
-            return CalledTimes % PlayEveryX > 0;
+            return CheckedTimes % PlayEveryX > 0;
         }
 
         // count calls within loop (for example, every 3rd time within repeated range of 4)
         var fraction = Numbers.GetFraction(PlayEveryX);
         var playEveryX = fraction.Numerator;
         var range = fraction.Denominator;
-        var iterationNumber = (CalledTimes - 1) / range;
-        var calledTimesInRange = CalledTimes - (range * iterationNumber);
+        var iterationNumber = (CheckedTimes - 1) / range;
+        var calledTimesInRange = CheckedTimes - (range * iterationNumber);
 
         return calledTimesInRange % playEveryX > 0;
     }

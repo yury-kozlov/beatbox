@@ -4,6 +4,7 @@ public class SimpleFraction
 {
     public int Numerator;
     public int Denominator;
+    public override string ToString() => $"{Numerator}/{Denominator}";
 }
 
 public class Numbers

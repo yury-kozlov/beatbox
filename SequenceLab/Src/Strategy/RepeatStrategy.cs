@@ -51,11 +51,11 @@ public class RepeatStrategy : AbstractStrategy
 
     private SequenceMessage GetEndingMessage(Sound sound)
     {
-        var calledTimesText = CalledTimes == CalledTimesActual ? $"{CalledTimes}" : $"{CalledTimesActual}/{CalledTimes}";
+        var calledTimesText = CheckedTimes == CalledTimes ? $"call #{CheckedTimes}" : $"call #{CalledTimes}, check #{CheckedTimes}";
         return new SequenceMessage(null)
         {
             Timestamp = DelayAfterLeader + (Interval * Count),
-            Comment = $"{sound.Name} repeat x{Count} ends, called times:{calledTimesText}",
+            Comment = $"{sound.Name} repeat x{Count} ends, {calledTimesText}",
         };
     }
 }
