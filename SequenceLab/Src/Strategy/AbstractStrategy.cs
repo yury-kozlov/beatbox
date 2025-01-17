@@ -1,4 +1,6 @@
-﻿namespace Beater;
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace Beater;
 
 public abstract class AbstractStrategy
 {
@@ -20,13 +22,17 @@ public abstract class AbstractStrategy
     public int CalledTimes;
 
     /// <summary>
-    /// If X is integer, the sound will be played every X-th time:
+    /// The sound will be played every X-th time:
     ///   1 - every time without skipping
     ///   2 - at even times (2,4,6...), while all odd times (1,3,5...) will be skipped.
-    /// If X is a fraction, the sound will be played every X-th time within repeated range, for example:
+    /// </summary>
+    public int PlayEveryX = 1; // play every time by default
+
+    /// <summary>
+    /// The sound will be played every X-th time within repeated range, for example:
     ///  3/4 - each 3rd time will be played out of every 4.
     /// </summary>
-    public double PlayEveryX = 1; // play every time by default
+    public string? PlayEveryXOutOf;
 
     /// <summary>
     /// An entry point to generate sequence of messages of leader/follower.
@@ -48,26 +54,26 @@ public abstract class AbstractStrategy
 
     private bool IsSkipped()
     {
-        if (Numbers.IsInteger(PlayEveryX))
+        if (!PlayEveryXOutOf.IsNullOrEmpty())
         {
-            // count every call
-            return CheckedTimes % PlayEveryX > 0;
+            // count calls within loop (for example, every 3rd time within repeated range of 4)
+            var fraction = Numbers.GetFraction(PlayEveryXOutOf);
+            var playEveryX = fraction.Numerator;
+            var range = fraction.Denominator;
+            var iterationNumber = (CheckedTimes - 1) / range;
+            var calledTimesInRange = CheckedTimes - (range * iterationNumber);
+
+            if (playEveryX == 1)
+            {
+                // 1 is a special case (because all numbers can be divided by 1)
+                // let's just check the remainder of dividing by range:
+                return calledTimesInRange % range != 1;
+            }
+            return calledTimesInRange % playEveryX > 0;
         }
 
-        // count calls within loop (for example, every 3rd time within repeated range of 4)
-        var fraction = Numbers.GetFraction(PlayEveryX);
-        var playEveryX = fraction.Numerator;
-        var range = fraction.Denominator;
-        var iterationNumber = (CheckedTimes - 1) / range;
-        var calledTimesInRange = CheckedTimes - (range * iterationNumber);
-
-        if (playEveryX == 1)
-        {
-            // 1 is a special case (because all numbers can be divided by 1)
-            // let's just check the remainder of dividing by range:
-            return calledTimesInRange % range != 1;
-        }
-        return calledTimesInRange % playEveryX > 0;
+        // count every call
+        return CheckedTimes % PlayEveryX > 0;
     }
 
     protected abstract List<SequenceMessage> GenerateSequenceFor(Sound sound);

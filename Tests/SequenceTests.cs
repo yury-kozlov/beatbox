@@ -125,7 +125,7 @@ public class SequenceTests
             {
                 Strategy = new RepeatStrategy { Count = 8, Interval = 500 },
                 Followers = new() {
-                  new Sound("b2") { Strategy = new PlayOnceStrategy { PlayEveryX = 3/4f } },
+                  new Sound("b2") { Strategy = new PlayOnceStrategy { PlayEveryXOutOf = "3/4" } },
                },
             },
         };
@@ -149,7 +149,7 @@ public class SequenceTests
             {
                 Strategy = new RepeatStrategy { Count = 4, Interval = 500 },
                 Followers = new() {
-                  new Sound("ts1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100, PlayEveryX = 1/2f } },
+                  new Sound("ts1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100, PlayEveryXOutOf = "1/2" } },
                },
             },
         };
