@@ -60,19 +60,9 @@ public static class SequencePlayer
             }
             previous = msg;
 
-            Log(msg);
+            Logger.Log(msg);
             channel.Write(msg.Message, 0, msg.Message.Length);
         }
     }
 
-    private static void Log(SequenceMessage msg)
-    {
-        var now = DateTime.Now;
-        const string green = "\x1b[92m";
-        const string resetColor = "\x1b[39m";
-        var color = msg.Leads ? green : "";
-        var coloredName = $"{color}{msg.Name}{resetColor}";
-
-        Console.WriteLine($"{now:H:mm:ss}:{now.Millisecond:000} {msg.Timestamp:0000} {coloredName} {msg.Comment}");
-    }
 }
