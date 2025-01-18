@@ -30,13 +30,13 @@ public class Logger
 
     private static ConsoleColor GetColor(SequenceMessage msg)
     {
+        if (msg.Sound is null || msg.Sound.IsSilenced)
+        {
+            return ConsoleColor.DarkGray;
+        }
         if (msg.Leads)
         {
             return ConsoleColor.Green;
-        }
-        if (msg.Sound is null)
-        {
-            return ConsoleColor.DarkGray;
         }
         if (_assignedColors.TryGetValue(msg.Sound.Name, out var color))
         {

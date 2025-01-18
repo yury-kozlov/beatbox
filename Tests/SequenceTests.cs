@@ -162,4 +162,46 @@ public class SequenceTests
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
     }
+
+    [Fact]
+    public void SilenceEveryXOutOf4_ReturnExpected()
+    {
+        // arrange
+        var sequence = new Sequence
+        {
+            Leader = new Sound("b1")
+            {
+                Strategy = new RepeatStrategy { Count = 8, Interval = 500, SilenceEveryXSoundOutOf = "3/4" },
+                Followers = new() {
+                  new Sound("ts1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100, SilenceEveryXOutOf = "2/4" } },
+               },
+            },
+        };
+        string[] expected = [
+            "0000:b1",
+            "0100:ts1",
+            "0500:b1",
+            "0600:ts1-silenced",
+            "1000:b1-silenced",
+            "1100:ts1",
+            "1500:b1",
+            "1600:ts1",
+            "2000:b1",
+            "2100:ts1",
+            "2500:b1",
+            "2600:ts1-silenced",
+            "3000:b1-silenced",
+            "3100:ts1",
+            "3500:b1",
+            "3600:ts1",
+            "4000:"
+        ];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}{(msg.Sound?.IsSilenced is true ? "-silenced" : "")}");
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
 }

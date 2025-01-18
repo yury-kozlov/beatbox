@@ -10,29 +10,38 @@ public abstract class AbstractStrategy
     public int DelayAfterLeader { get; set; }
 
     /// <summary>
-    /// Total number of times this strategy was checked and called (including skipped calls).
+    /// Total number of times this strategy was checked and called (including skipped calls) starting from 1.
     /// NOTE: this counter is related to the strategy, not to the sound itself
     /// (e.g. for repeat strategy it will count number of loops, not total number of sounds in all loops)
     /// </summary>
-    public int CheckedTimes;
+    protected int CheckedTimes;
 
     /// <summary>
     /// Number of times when this strategy was actually played (not skipped).
     /// </summary>
-    public int CalledTimes;
+    protected int CalledTimes;
 
     /// <summary>
     /// The sound will be played every X-th time:
     ///   1 - every time without skipping
     ///   2 - at even times (2,4,6...), while all odd times (1,3,5...) will be skipped.
+    /// NOTE: this counter is related to the strategy, not to the sound itself.
     /// </summary>
     public int PlayEveryX = 1; // play every time by default
 
     /// <summary>
     /// The sound will be played every X-th time within repeated range, for example:
     ///  3/4 - each 3rd time will be played out of every 4.
+    /// NOTE: this counter is related to the strategy, not to the sound itself.
     /// </summary>
     public string? PlayEveryXOutOf;
+
+    /// <summary>
+    /// Will replace current sound with an empty sound preserving the same followers, for example:
+    ///  3/4 - each 3rd time out of every 4 will be silenced.
+    /// NOTE: this counter is related to the strategy, not to the sound itself.
+    /// </summary>
+    public string? SilenceEveryXOutOf;
 
     /// <summary>
     /// An entry point to generate sequence of messages of leader/follower.
@@ -48,32 +57,51 @@ public abstract class AbstractStrategy
             return new();
         }
 
+        if (IsSilenced())
+        {
+            sound = sound with { IsSilenced = true };
+        }
+
         CalledTimes++;
         return GenerateSequenceFor(sound);
+    }
+
+    private bool IsSilenced()
+    {
+        if (!SilenceEveryXOutOf.IsNullOrEmpty())
+        {
+            return IsXOutOf(SilenceEveryXOutOf, CheckedTimes);
+        }
+        return false;
     }
 
     private bool IsSkipped()
     {
         if (!PlayEveryXOutOf.IsNullOrEmpty())
         {
-            // count calls within loop (for example, every 3rd time within repeated range of 4)
-            var fraction = Numbers.GetFraction(PlayEveryXOutOf);
-            var playEveryX = fraction.Numerator;
-            var range = fraction.Denominator;
-            var iterationNumber = (CheckedTimes - 1) / range;
-            var calledTimesInRange = CheckedTimes - (range * iterationNumber);
-
-            if (playEveryX == 1)
-            {
-                // 1 is a special case (because all numbers can be divided by 1)
-                // let's just check the remainder of dividing by range:
-                return calledTimesInRange % range != 1;
-            }
-            return calledTimesInRange % playEveryX > 0;
+            return !IsXOutOf(PlayEveryXOutOf, CheckedTimes);
         }
 
         // count every call
         return CheckedTimes % PlayEveryX > 0;
+    }
+
+    protected bool IsXOutOf(string xOutOfY, int x)
+    {
+        // count calls within loop (for example, every 3rd time within repeated range of 4)
+        var fraction = Numbers.GetFraction(xOutOfY);
+        var playEveryX = fraction.Numerator;
+        var range = fraction.Denominator;
+        var iterationNumber = (x - 1) / range;
+        var calledTimesInRange = x - (range * iterationNumber);
+
+        if (playEveryX == 1)
+        {
+            // 1 is a special case (because all numbers can be divided by 1)
+            // let's just check the remainder of dividing by range:
+            return calledTimesInRange % range == 1;
+        }
+        return calledTimesInRange % playEveryX == 0;
     }
 
     protected abstract List<SequenceMessage> GenerateSequenceFor(Sound sound);

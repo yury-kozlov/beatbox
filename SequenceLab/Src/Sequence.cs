@@ -61,6 +61,10 @@ public static class SequencePlayer
             previous = msg;
 
             Logger.Log(msg);
+            if (msg.Sound is null || msg.Sound.IsSilenced)
+            {
+                continue;
+            }
             channel.Write(msg.Message, 0, msg.Message.Length);
         }
     }

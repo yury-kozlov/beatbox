@@ -1,6 +1,6 @@
 ﻿namespace Beater;
 
-public class Sound
+public record Sound
 {
     public Sound(string name)
     {
@@ -11,6 +11,7 @@ public class Sound
     public AbstractStrategy Strategy;
     public List<Sound> Followers = new();
     public Sound? Leader;
+    public bool IsSilenced;
 
     override public string ToString() => Name;
 

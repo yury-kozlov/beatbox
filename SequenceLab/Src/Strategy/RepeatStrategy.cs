@@ -6,13 +6,27 @@ public class RepeatStrategy : AbstractStrategy
     public int Interval;
     public int LinearIncrement;
 
+    /// <summary>
+    /// Will replace current sound with an empty sound preserving the same followers, for example:
+    ///  3/4 - each 3rd time out of every 4 will be silenced.
+    /// NOTE: this counter is related to every sound within the strategy (not to the strategy itself).
+    /// </summary>
+    public string? SilenceEveryXSoundOutOf;
+
     private int _previousIterval;
 
     protected override List<SequenceMessage> GenerateSequenceFor(Sound sound)
     {
+        var originalSound = sound;
         var sequence = new List<SequenceMessage>();
         for (int i = 0; i < Count; i++)
         {
+            sound = originalSound;
+            if (!SilenceEveryXSoundOutOf.IsNullOrEmpty() && IsXOutOf(SilenceEveryXSoundOutOf, i + 1))
+            {
+                sound = sound with { IsSilenced = true };
+            }
+
             var msg = new SequenceMessage(sound)
             {
                 Timestamp = DelayAfterLeader + CalculateInterval(i),
