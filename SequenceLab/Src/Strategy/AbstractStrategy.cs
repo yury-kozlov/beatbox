@@ -95,13 +95,7 @@ public abstract class AbstractStrategy
         var iterationNumber = (x - 1) / range;
         var calledTimesInRange = x - (range * iterationNumber);
 
-        if (playEveryX == 1)
-        {
-            // 1 is a special case (because all numbers can be divided by 1)
-            // let's just check the remainder of dividing by range:
-            return calledTimesInRange % range == 1;
-        }
-        return calledTimesInRange % playEveryX == 0;
+        return calledTimesInRange == playEveryX;
     }
 
     protected abstract List<SequenceMessage> GenerateSequenceFor(Sound sound);
