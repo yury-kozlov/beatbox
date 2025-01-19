@@ -42,11 +42,22 @@ public static class SequencePlayer
 {
     public static async Task Play(this NetworkStream? channel, List<SequenceMessage> sequenceMessages)
     {
-        if (channel is null)
+        if (channel is not null)
         {
-            return;
+            await PlaySequence(channel, sequenceMessages);
         }
+    }
 
+    public static async Task PlayRepeated(this NetworkStream? channel, List<SequenceMessage> sequenceMessages)
+    {
+        if (channel is not null)
+        {
+            await Repeat(() => PlaySequence(channel, sequenceMessages));
+        }
+    }
+
+    private static async Task PlaySequence(NetworkStream channel, List<SequenceMessage> sequenceMessages)
+    {
         SequenceMessage? previous = null;
         foreach (var msg in sequenceMessages)
         {
@@ -69,4 +80,13 @@ public static class SequencePlayer
         }
     }
 
+    private static async Task Repeat(Func<Task> callback)
+    {
+        do
+        {
+            await callback();
+            Console.WriteLine("Repeat?, press y");
+        }
+        while (Console.ReadKey().KeyChar == 'y');
+    }
 }
