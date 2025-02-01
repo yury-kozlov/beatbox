@@ -18,14 +18,15 @@ public class Logger
         ConsoleColor.DarkCyan,
     ]);
 
-    public static void Log(SequenceMessage msg)
+    public static void Log(SequenceMessage msg, DateTime startedAt)
     {
         var now = DateTime.Now;
+        var sinceStart = (now - startedAt).TotalMilliseconds;
 
         // text inside square brackets with be colored:
         var comment = msg.Name.IsNullOrEmpty() ? $"[{msg.Comment}]" : $"[{msg.Name}] {msg.Comment}";
         
-        WriteColored($"{now:H:mm:ss}:{now.Millisecond:000} {msg.Timestamp:0000} {comment}", GetColor(msg));
+        WriteColored($"{now:H:mm:ss}:{now.Millisecond:000}, sinceStart: {sinceStart:0000}, schedule: {msg.Timestamp:0000}, {comment}", GetColor(msg));
     }
 
     private static ConsoleColor GetColor(SequenceMessage msg)

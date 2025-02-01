@@ -58,6 +58,7 @@ public static class SequencePlayer
 
     private static async Task PlaySequence(NetworkStream channel, List<SequenceMessage> sequenceMessages)
     {
+        var startedAt = DateTime.Now;
         SequenceMessage? previous = null;
         foreach (var msg in sequenceMessages)
         {
@@ -71,7 +72,7 @@ public static class SequencePlayer
             }
             previous = msg;
 
-            Logger.Log(msg);
+            Logger.Log(msg, startedAt);
             if (msg.Sound is null || msg.Sound.IsSilenced)
             {
                 continue;
