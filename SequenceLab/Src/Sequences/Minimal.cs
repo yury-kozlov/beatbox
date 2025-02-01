@@ -37,4 +37,42 @@ public class Minimal
             },
         };
     }
+
+    internal static Sequence BrokenBeat1()
+    {
+        return new Sequence
+        {
+            Leader = new Sound("")
+            {
+                Strategy = new RepeatStrategy { Count = 4, Interval = 2000 },
+                Followers = new()
+                {
+                    new Sound("b1")
+                    {
+                        Strategy = new RepeatStrategy { Count = 2, Interval = 250 },
+                        Followers = new() {
+                            new Sound("b2") {
+                                Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 2 },
+                                Followers = new()
+                                {
+                                    new Sound("b1")
+                                    {
+                                        Strategy = new RepeatStrategy { DelayAfterLeader = 585, Count = 2, Interval = 125 },
+                                        Followers = new() {
+                                            new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 2 } }
+                                        },
+                                    }
+                                }
+                            },
+                       },
+                    },
+                    new Sound("ts1") { Strategy = new RepeatStrategy { DelayAfterLeader = 85, Interval = 500, Count = 4 },
+                        Followers = new () {
+                            new Sound("ts2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 125, PlayEveryXOutOf = "2/4" } },
+                        }
+                    },
+                },
+            },
+        };
+    }
 }

@@ -27,14 +27,23 @@ internal class BeatBox : IDisposable
     public async Task Run()
     {
         var seq0 = Minimal.TechnoBeat1().Generate();
-        await _channel.Play(seq0);
-
+        await _channel.PlayRepeated(seq0);
 
         var seq1 = Minimal.TechnoBeat2().Generate();
         await _channel.PlayRepeated(seq1);
 
+        var seq2 = Minimal.BrokenBeat1().Generate();
+        await _channel.PlayRepeated(seq2);
+
         // TODO 1:   implement different sequences with the same sounds and then try to connect them together as an evolution of one sequence into another
-        // TODO 1.1: learn how to implement evolution of sequences using the same sounds by re-sampling existing tracks and layering them in sequence
+        // question: will re-sampling existing tracks into sequences help to learn evolution of sequences using the same sounds ?
+        //           it might not help create new sequences but instead will help to repeat existing patterns
+
+        // question: do we need exact time scheduling for each sound or it's ok to have time shifting due to inaccuracy of .net delays?
+
+        // TODO 2:   think how to simplify the sequence creation process and make it more readable
+        //             e.g.: create strategy that may use another strategy as a follower
+        //             e.g.: can we avoid creating empty sounds just to be able to stick other sound strategies to them?
 
         Console.WriteLine("");
     }
