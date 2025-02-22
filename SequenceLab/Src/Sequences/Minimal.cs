@@ -1,4 +1,5 @@
-﻿namespace Beater;
+﻿
+namespace Beater;
 
 public class Minimal
 {
@@ -70,6 +71,42 @@ public class Minimal
                         Followers = new () {
                             new Sound("ts2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 125, PlayEveryXOutOf = "2/4" } },
                         }
+                    },
+                },
+            },
+        };
+    }
+
+    internal static Sequence SlowBeat1()
+    {
+        return new Sequence
+        {
+            Leader = new Sound("")
+            {
+                Strategy = new RepeatStrategy { Count = 4, Interval = 2550 },
+                Followers = new()
+                {
+                    new Sound("b1")
+                    {
+                        Strategy = new RepeatStrategy { Count = 2, Interval = 330 },
+                        Followers = new() {
+                            new Sound("b2") {
+                                Strategy = new PlayOnceStrategy { DelayAfterLeader = 330, PlayEveryX = 2 },
+                                Followers = new()
+                                {
+                                    new Sound("b1")
+                                    {
+                                        Strategy = new PlayOnceStrategy { DelayAfterLeader = 950, PlayEveryXOutOf="1/2" },
+                                        Followers = new() { new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 }}},
+                                    },
+                                    new Sound("b1")
+                                    {
+                                        Strategy = new RepeatStrategy { DelayAfterLeader = 500, PlayEveryXOutOf="2/2", Count = 2, Interval = 450 },
+                                        Followers = new() {new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330,  PlayEveryX = 2 } }},
+                                    }
+                                }
+                            },
+                       },
                     },
                 },
             },

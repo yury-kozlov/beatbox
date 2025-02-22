@@ -35,6 +35,10 @@ internal class BeatBox : IDisposable
         var seq2 = Minimal.BrokenBeat1().Generate();
         await _channel.PlayRepeated(seq2);
 
+        var seq3 = Minimal.SlowBeat1().Generate();
+        await _channel.PlayRepeated(seq3);
+
+
         // TODO 1:   implement different sequences with the same sounds and then try to connect them together as an evolution of one sequence into another
         // question: will re-sampling existing tracks into sequences help to learn evolution of sequences using the same sounds ?
         //           it might not help create new sequences but instead will help to repeat existing patterns
