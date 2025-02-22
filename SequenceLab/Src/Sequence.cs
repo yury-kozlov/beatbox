@@ -1,5 +1,4 @@
-﻿using System.Net.Sockets;
-using System.Text;
+﻿using System.Text;
 
 namespace Beater;
 
@@ -14,19 +13,18 @@ public class Sequence
     }
 }
 
-public class SequenceMessage
+public class SequenceMessage : TransportMessage
 {
     public SequenceMessage(Sound? sound)
+        : base(sound?.Name)
     {
         Sound = sound;
         Leads = sound.IsLeader();
-        Message = Encoding.ASCII.GetBytes($"{Sound?.Name} 1;"); // note: second argument is not yet supported
         Name = Sound?.Name ?? "";
     }
 
     public Sound? Sound;
 
-    public byte[] Message;
     public string Name;
     public string? Comment;
     public bool Leads;
@@ -40,23 +38,23 @@ public class SequenceMessage
 
 public static class SequencePlayer
 {
-    public static async Task Play(this NetworkStream? channel, List<SequenceMessage> sequenceMessages)
+    public static async Task Play(this TcpTransport? transport, List<SequenceMessage> sequenceMessages)
     {
-        if (channel is not null)
+        if (transport is not null)
         {
-            await PlaySequence(channel, sequenceMessages);
+            await PlaySequence(transport, sequenceMessages);
         }
     }
 
-    public static async Task PlayRepeated(this NetworkStream? channel, List<SequenceMessage> sequenceMessages)
+    public static async Task PlayRepeated(this TcpTransport? transport, List<SequenceMessage> sequenceMessages)
     {
-        if (channel is not null)
+        if (transport is not null)
         {
-            await Repeat(() => PlaySequence(channel, sequenceMessages));
+            await Repeat(() => PlaySequence(transport, sequenceMessages));
         }
     }
 
-    private static async Task PlaySequence(NetworkStream channel, List<SequenceMessage> sequenceMessages)
+    private static async Task PlaySequence(TcpTransport transport, List<SequenceMessage> sequenceMessages)
     {
         var startedAt = DateTime.Now;
         SequenceMessage? previous = null;
@@ -73,11 +71,11 @@ public static class SequencePlayer
             previous = msg;
 
             Logger.Log(msg, startedAt);
-            if (msg.Sound is null || msg.Sound.IsSilenced)
+            if (msg.Sound is null || msg.Sound.IsSilenced || msg.Message is null)
             {
                 continue;
             }
-            channel.Write(msg.Message, 0, msg.Message.Length);
+            transport.Send(msg);
         }
     }
 

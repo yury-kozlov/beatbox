@@ -1,5 +1,3 @@
-﻿using System.Net.Sockets;
-
 namespace Beater;
 
 /// <summary>
@@ -7,13 +5,11 @@ namespace Beater;
 /// </summary>
 internal class BeatBox : IDisposable
 {
-    private TcpClient? _client;
-    private NetworkStream? _channel;
+    private TcpTransport? _transport;
 
     public BeatBox Init()
     {
-        _client = new TcpClient("localhost", 3000);
-        _channel = _client.GetStream();
+        _transport = new TcpTransport();
 
         GC.Collect();
         return this;
@@ -21,22 +17,22 @@ internal class BeatBox : IDisposable
 
     public void Dispose()
     {
-        _client?.Dispose();
+        _transport?.Dispose();
     }
 
     public async Task Run()
     {
         var seq0 = Minimal.TechnoBeat1().Generate();
-        await _channel.PlayRepeated(seq0);
+        await _transport.PlayRepeated(seq0);
 
         var seq1 = Minimal.TechnoBeat2().Generate();
-        await _channel.PlayRepeated(seq1);
+        await _transport.PlayRepeated(seq1);
 
         var seq2 = Minimal.BrokenBeat1().Generate();
-        await _channel.PlayRepeated(seq2);
+        await _transport.PlayRepeated(seq2);
 
         var seq3 = Minimal.SlowBeat1().Generate();
-        await _channel.PlayRepeated(seq3);
+        await _transport.PlayRepeated(seq3);
 
 
         // TODO 1:   implement different sequences with the same sounds and then try to connect them together as an evolution of one sequence into another
