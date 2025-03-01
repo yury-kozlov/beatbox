@@ -81,11 +81,17 @@ public static class SequencePlayer
 
     private static async Task Repeat(Func<Task> callback)
     {
+        char keyChar;
         do
         {
             await callback();
-            Console.WriteLine("Repeat?, press y");
+            Console.WriteLine("Repeat - press y,    Exit - press esc");
         }
-        while (Console.ReadKey().KeyChar == 'y');
+        while ((keyChar = Console.ReadKey().KeyChar) == 'y');
+        
+        if (keyChar == (char)ConsoleKey.Escape)
+        {
+            Environment.Exit(0);
+        }
     }
 }
