@@ -23,15 +23,15 @@ public class Logger
         var now = DateTime.Now;
         var sinceStart = (now - startedAt).TotalMilliseconds;
 
-        // text inside square brackets with be colored:
+        // text inside square brackets will be colored:
         var comment = msg.Name.IsNullOrEmpty() ? $"[{msg.Comment}]" : $"[{msg.Name}] {msg.Comment}";
-        
-        WriteColored($"{now:H:mm:ss}:{now.Millisecond:000}, sinceStart: {sinceStart:0000}, schedule: {msg.Timestamp:0000}, {comment}", GetColor(msg));
+
+        WriteColoredLine($"{now:H:mm:ss}:{now.Millisecond:000}, sinceStart: {sinceStart:0000}, schedule: {msg.Timestamp:0000}, {comment}", GetColor(msg));
     }
 
     private static ConsoleColor GetColor(SequenceMessage msg)
     {
-        if (msg.Sound is null || msg.Sound.IsSilenced)
+        if (msg.Sound?.Name is null || msg.Sound.IsSilenced)
         {
             return ConsoleColor.DarkGray;
         }
@@ -39,18 +39,27 @@ public class Logger
         {
             return ConsoleColor.Green;
         }
-        if (_assignedColors.TryGetValue(msg.Sound.Name, out var color))
+        
+        return AssignedColor(msg.Sound.Name);
+    }
+
+    public static ConsoleColor AssignedColor(string token)
+    {
+        if (_assignedColors.TryGetValue(token, out var color))
         {
             return color;
         }
         if (_availableColors.TryPop(out color))
         {
-            _assignedColors[msg.Sound.Name] = color;
-        };
+            _assignedColors[token] = color;
+        }
         return color;
     }
 
-    private static void WriteColored(string message, ConsoleColor color)
+    /// <summary>
+    // [text inside] square brackets will be colored.
+    /// </summary>
+    public static void WriteColored(string message, ConsoleColor color)
     {
         var pieces = Regex.Split(message, @"(\[[^\]]*\])");
         for (int i = 0; i < pieces.Length; i++)
@@ -66,6 +75,11 @@ public class Logger
             Console.Write(piece);
             Console.ResetColor();
         }
+    }
+
+    public static void WriteColoredLine(string message, ConsoleColor color)
+    {
+        WriteColored(message, color);
         Console.WriteLine();
     }
 }

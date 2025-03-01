@@ -4,14 +4,16 @@ namespace Beater;
 
 public class TransportMessage
 {
-    public byte[] Message;
+    public byte[]? Message;
+    public string? SoundName;
 
-    public TransportMessage(string? message = null)
+    public TransportMessage(string? soundName = null)
     {
-        if (!message.IsNullOrEmpty())
+        SoundName = soundName;
+        if (!soundName.IsNullOrEmpty())
         {
-            message = message.EndsWith(";") ? message : message + ";";
-            Message = Encoding.ASCII.GetBytes(message);
+            soundName = soundName.EndsWith(";") ? soundName : soundName + ";";
+            Message = Encoding.ASCII.GetBytes(soundName);
         }
     }
 }

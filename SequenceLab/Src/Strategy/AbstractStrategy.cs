@@ -1,6 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Beater;
+﻿namespace Beater;
 
 public abstract class AbstractStrategy
 {
