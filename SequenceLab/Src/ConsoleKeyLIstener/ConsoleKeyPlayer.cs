@@ -14,6 +14,7 @@ public class ConsoleKeyPlayer
     public Action<KeyPressed>? OnKeyPressed;
     public List<KeyPressed> PressedKeys = new();
     public int TotalTime;
+    public bool IsEmpty => PressedKeys.Count == 0 || PressedKeys[0].Key == EndOfSequence;
 
     private readonly TcpTransport _transport;
     private static Dictionary<ConsoleKey, TransportMessage> _soundsMap = new()
@@ -85,9 +86,10 @@ public class ConsoleKeyPlayer
         }
     }
 
-    public List<SequenceMessage> GenerateSequence()
+    public Sequence GetSequence()
     {
-        var loop = new Sound("") { Strategy = new RepeatStrategy { Count = 4, Interval = TotalTime } };
+        var iterationsCount = 4;
+        var loop = new Sound("") { Strategy = new RepeatStrategy { Count = iterationsCount, Interval = TotalTime } };
         var seq = new Sequence { Leader = loop };
 
         KeyPressed? previousKey = null;
@@ -110,13 +112,21 @@ public class ConsoleKeyPlayer
             previousKey = k;
         }
 
-        return seq.Generate();
+        return seq;
     }
 
-    public async Task PlayRepeated()
+    public async Task PlayRepeated(Sequence? seq = null)
     {
-        var seq = GenerateSequence();
-        await _transport.PlayRepeated(seq);
+        seq ??= GetSequence();
+        await _transport.PlayRepeated(seq.Generate());
+    }
+
+    public async Task PlayRepeated(string sequenceFilePath)
+    {
+        var json = File.ReadAllText(sequenceFilePath);
+        var seq = Sequence.FromJson(json);
+
+        await PlayRepeated(seq);
     }
 
     private TransportMessage GetSound(ConsoleKey key)
@@ -127,5 +137,15 @@ public class ConsoleKeyPlayer
     private static int Round(TimeSpan value, double precision)
     {
         return (int)Math.Round(value.TotalMilliseconds / precision) * (int)precision;
+    }
+
+    internal void SaveSequence()
+    {
+        if (!IsEmpty)
+        {
+            var seq = GetSequence();
+            var json = seq.ToJson();
+            File.WriteAllText($"C:/music/samples/sequences/seq{DateTime.Now:yyyy-MM-dd-HHmm}.json", json);
+        }
     }
 }
