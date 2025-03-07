@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace Beater;
+﻿namespace Beater;
 
 public class Sequence
 {
@@ -12,21 +10,7 @@ public class Sequence
         return sequence;
     }
 
-    public string ToJson()
-    {
-        var settings = new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            DefaultValueHandling = DefaultValueHandling.Ignore
-        };
-        return JsonConvert.SerializeObject(this, Formatting.Indented, settings);
-    }
-
-    public static Sequence? FromJson(string json)
-    {
-        var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
-        return JsonConvert.DeserializeObject<Sequence>(json, settings);
-    }
+    public static Sequence? FromJson(string json) => Serialization.FromJson<Sequence>(json);
 }
 
 public class SequenceMessage : TransportMessage
