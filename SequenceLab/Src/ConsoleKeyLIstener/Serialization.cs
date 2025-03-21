@@ -24,8 +24,8 @@ public static class Serialization
 }
 
 /// <summary>
-/// Add information about concrete type to JSON only if current property is a base class (or an interface).
-/// All other classes, including system types are added without type info.
+/// Adds information about concrete type to JSON only if current property is a base class (or an interface).
+/// All other classes, including system types are serialized without type info.
 /// </summary>
 public class TypedBaseClassesContractResolver : DefaultContractResolver
 {

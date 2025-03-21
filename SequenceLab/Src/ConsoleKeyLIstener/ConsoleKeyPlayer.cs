@@ -1,4 +1,6 @@
-﻿namespace Beater;
+﻿using System.Runtime.CompilerServices;
+
+namespace Beater;
 
 public class KeyPressed
 {
@@ -24,6 +26,7 @@ public class ConsoleKeyPlayer
         { EndOfSequence, new() }
     };
     private static TransportMessage _defaultSound = Samples.B1;
+    private string? _jsonFilePath;
 
     public ConsoleKeyPlayer()
     {
@@ -145,7 +148,54 @@ public class ConsoleKeyPlayer
         {
             var seq = GetSequence();
             var json = seq.ToJson();
-            File.WriteAllText($"C:/music/samples/sequences/seq{DateTime.Now:yyyy-MM-dd-HHmm}.json", json);
+            _jsonFilePath = $"C:/music/samples/sequences/seq{DateTime.Now:yyyy-MM-dd-HHmm}.json";
+            File.WriteAllText(_jsonFilePath, json);
+        }
+    }
+
+    internal void GenerateCodeFrom(string sequenceFilePath)
+    {
+        var json = File.ReadAllText(sequenceFilePath);
+        var seq = Sequence.FromJson(json);
+
+        var sequenceName = Path.GetFileNameWithoutExtension(sequenceFilePath).Replace("-", "");
+        var code = SequenceCodeGenerator.GenerateCode(seq, sequenceName);
+
+        var destinationFolder = GetSourceCodeDestination();
+        if (!Directory.Exists(destinationFolder))
+        {
+            Console.WriteLine("Unable to save new sequence code because destination folder doesn't exist: " + destinationFolder);
+            return;
+        }
+        File.WriteAllText(Path.Combine(destinationFolder, $"{sequenceName}.cs"), code.ToString());
+    }
+
+    private string GetSourceCodeDestination([CallerFilePath] string sourceCodePath = null)
+    {
+        var i = sourceCodePath.LastIndexOf(@"\Src\");
+        if (i >= 0)
+        {
+            var sourcePath = sourceCodePath.Substring(0, i + @"\Src\".Length);
+            return Path.Combine(sourcePath, "Sequences");
+        }
+        i = sourceCodePath.LastIndexOf(@"\Program.cs");
+        if (i >= 0)
+        {
+            var sourcePath = sourceCodePath.Substring(0, i);
+            return Path.Combine(sourcePath, "Src", "Sequences");
+        }
+        return "";
+    }
+
+    internal void SaveCode()
+    {
+        if (_jsonFilePath is null)
+        {
+            SaveSequence();
+        }
+        if (File.Exists(_jsonFilePath))
+        {
+            GenerateCodeFrom(_jsonFilePath);
         }
     }
 }
