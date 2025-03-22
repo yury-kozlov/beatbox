@@ -1,10 +1,12 @@
 namespace Beater;
 
+/// <summary>
+/// 1        1   2      1    1  1    1   2
+/// </summary>
 public class Otik_Clairvoyant
 {
     internal static Sequence GetSequence()
     {
-
         var sequence = new Sequence
         {
             Leader = new Sound("")

@@ -1,4 +1,6 @@
-﻿namespace Beater;
+﻿using System.Text;
+
+namespace Beater;
 
 public class Sequence
 {
@@ -52,6 +54,33 @@ public static class SequencePlayer
         {
             await Repeat(() => PlaySequence(transport, sequenceMessages));
         }
+    }
+
+    public static string ToString(this List<SequenceMessage> sequenceMessages)
+    {
+        SequenceMessage? previous = null;
+        var str = new StringBuilder();
+        foreach (var msg in sequenceMessages)
+        {
+            if (previous is not null)
+            {
+                var delay = msg.Timestamp - previous.Timestamp;
+                if (delay > 0)
+                {
+                    var spacesCount = (int)(delay / 100.0);
+                    for (var i = 0; i < spacesCount; i++)
+                    {
+                        str.Append(' ');
+                    }
+                }
+            }
+            previous = msg;
+            if (msg.Sound is not null && !msg.Sound.IsSilenced && msg.Message is not null)
+            {
+                str.Append(msg.Name);
+            }
+        }
+        return str.ToString();
     }
 
     private static async Task PlaySequence(TcpTransport transport, List<SequenceMessage> sequenceMessages)

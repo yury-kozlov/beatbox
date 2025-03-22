@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Beater;
 
@@ -17,6 +18,7 @@ public class ConsoleKeyPlayer
     public List<KeyPressed> PressedKeys = new();
     public int TotalTime;
     public bool IsEmpty => PressedKeys.Count == 0 || PressedKeys[0].Key == EndOfSequence;
+    public string? KeysString;
 
     private readonly TcpTransport _transport;
     private static Dictionary<ConsoleKey, TransportMessage> _soundsMap = new()
@@ -70,21 +72,26 @@ public class ConsoleKeyPlayer
 
     public void PrintFormatted()
     {
+        var str = new StringBuilder();
         foreach (var k in PressedKeys)
         {
             if (k.Key == EndOfSequence)
             {
                 Console.WriteLine(TotalTime);
+                KeysString = str.ToString();
                 return;
             }
 
             var keyName = k.Key.ToString();
             var color = Logger.AssignedColor(GetSound(k.Key).SoundName!);
             Logger.WriteColored($"[{keyName}]", color);
+            str.Append(keyName);
+
             var spacesCount = (int)(k.PostDelay / 100.0);
             for (var i = 0; i < spacesCount; i++)
             {
                 Console.Write(" ");
+                str.Append(' ');
             }
         }
     }
@@ -159,7 +166,7 @@ public class ConsoleKeyPlayer
         var seq = Sequence.FromJson(json);
 
         var sequenceName = Path.GetFileNameWithoutExtension(sequenceFilePath).Replace("-", "");
-        var code = SequenceCodeGenerator.GenerateCode(seq, sequenceName);
+        var code = SequenceCodeGenerator.GenerateCode(seq, sequenceName, KeysString);
 
         var destinationFolder = GetSourceCodeDestination();
         if (!Directory.Exists(destinationFolder))
