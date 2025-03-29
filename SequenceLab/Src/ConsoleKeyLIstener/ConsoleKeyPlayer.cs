@@ -162,36 +162,7 @@ public class ConsoleKeyPlayer
 
     internal void GenerateCodeFrom(string sequenceFilePath)
     {
-        var json = File.ReadAllText(sequenceFilePath);
-        var seq = Sequence.FromJson(json);
-
-        var sequenceName = Path.GetFileNameWithoutExtension(sequenceFilePath).Replace("-", "");
-        var code = SequenceCodeGenerator.GenerateCode(seq, sequenceName, KeysString);
-
-        var destinationFolder = GetSourceCodeDestination();
-        if (!Directory.Exists(destinationFolder))
-        {
-            Console.WriteLine("Unable to save new sequence code because destination folder doesn't exist: " + destinationFolder);
-            return;
-        }
-        File.WriteAllText(Path.Combine(destinationFolder, $"{sequenceName}.cs"), code.ToString());
-    }
-
-    private string GetSourceCodeDestination([CallerFilePath] string sourceCodePath = null)
-    {
-        var i = sourceCodePath.LastIndexOf(@"\Src\");
-        if (i >= 0)
-        {
-            var sourcePath = sourceCodePath.Substring(0, i + @"\Src\".Length);
-            return Path.Combine(sourcePath, "Sequences");
-        }
-        i = sourceCodePath.LastIndexOf(@"\Program.cs");
-        if (i >= 0)
-        {
-            var sourcePath = sourceCodePath.Substring(0, i);
-            return Path.Combine(sourcePath, "Src", "Sequences");
-        }
-        return "";
+        SequenceCodeGenerator.GenerateCodeFromSequenceJson(sequenceFilePath, KeysString);
     }
 
     internal void SaveCode()
