@@ -14,6 +14,8 @@ public class James_Shinra_Poppin
             {
                 new Sound("b2")
                 {
+                    // note: this sound (b2) starts before the logical leader (b1)
+                    // if we want to define the sequence using leader/follower relationship - how does the follower appearing before leader fit into this model?
                     Strategy = new RepeatStrategy() { DelayAfterLeader = 450, Count = 4, Interval = 915 },
                 },
                 new Sound("b1")
