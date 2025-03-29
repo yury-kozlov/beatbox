@@ -1,0 +1,99 @@
+﻿using Beater;
+
+namespace Tests;
+
+public class SequenceSamplesTests
+{
+    [Fact]
+    public void Scsi9_Nebula_Hotel_ReturnExpected()
+    {
+        // arrange
+        var sequence = Scsi9_Nebula_Hotel.GetSequence();
+
+        string[] expected = ["0000:", "0000:b1", "0260:b1", "0490:b2", "1240:b1", "1460:b2", "1960:b1", "2210:b1", "2460:b2", "2860:b1", "3210:b1", "3460:b2", "3940:", "3940:b1", "4200:b1", "4430:b2", "5180:b1", "5400:b2", "5900:b1", "6150:b1", "6400:b2", "6800:b1", "7150:b1", "7400:b2", "7880:", "7880:b1", "8140:b1", "8370:b2", "9120:b1", "9340:b2", "9840:b1", "10090:b1", "10340:b2", "10740:b1", "11090:b1", "11340:b2", "11820:", "11820:b1", "12080:b1", "12310:b2", "13060:b1", "13280:b2", "13780:b1", "14030:b1", "14280:b2", "14680:b1", "15030:b1", "15280:b2", "15760:"];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void Otik_Clairvoyant_ReturnExpected()
+    {
+        // arrange
+        var sequence = Otik_Clairvoyant.GetSequence();
+
+        string[] expected = ["0000:", "0000:b1", "0360:b1", "0460:b2", "0700:b1", "0905:b1", "1005:b1", "1235:b1", "1335:b2", "1900:", "1900:b1", "2260:b1", "2360:b2", "2600:b1", "2805:b1", "2905:b1", "3135:b1", "3235:b2", "3800:", "3800:b1", "4160:b1", "4260:b2", "4500:b1", "4705:b1", "4805:b1", "5035:b1", "5135:b2", "5700:", "5700:b1", "6060:b1", "6160:b2", "6400:b1", "6605:b1", "6705:b1", "6935:b1", "7035:b2", "7600:"];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void Minimal_TechnoBeat1_ReturnExpected()
+    {
+        // arrange
+        var sequence = Minimal.TechnoBeat1();
+
+        string[] expected = ["0000:b1", "0150:ts1", "0230:ts1", "0310:", "0500:b1", "0650:ts1", "0730:ts1", "0810:", "1000:b1", "1150:ts1", "1230:ts1", "1310:", "1500:b1", "1500:ts2", "1650:ts1", "1730:ts1", "1750:b2", "1810:", "2000:b1", "2150:ts1", "2230:ts1", "2310:", "2500:b1", "2650:ts1", "2730:ts1", "2810:", "3000:b1", "3150:ts1", "3230:ts1", "3310:", "3500:b1", "3500:ts2", "3580:ts3", "3650:ts1", "3660:ts3", "3730:ts1", "3730:ts3", "3750:b2", "3790:ts3", "3810:", "3900:", "4000:b1", "4150:ts1", "4230:ts1", "4310:", "4500:b1", "4650:ts1", "4730:ts1", "4810:", "5000:b1", "5150:ts1", "5230:ts1", "5310:", "5500:b1", "5500:ts2", "5650:ts1", "5730:ts1", "5750:b2", "5810:", "6000:b1", "6150:ts1", "6230:ts1", "6310:", "6500:b1", "6650:ts1", "6730:ts1", "6810:", "7000:b1", "7150:ts1", "7230:ts1", "7310:", "7500:b1", "7500:ts2", "7580:ts3", "7650:ts1", "7660:ts3", "7730:ts1", "7730:ts3", "7750:b2", "7790:ts3", "7810:", "7900:", "8000:"];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void Minimal_TechnoBeat2_ReturnExpected()
+    {
+        // arrange
+        var sequence = Minimal.TechnoBeat2();
+        string[] expected = ["0000:b1", "0100:ts1", "0100:b1", "0180:ts1", "0200:b1", "0260:", "0300:", "0500:b1", "0550:ts3", "0600:ts2", "0630:ts3", "0700:ts2", "0700:ts3", "0760:ts3", "0800:", "0870:", "1000:b1", "1000:b2", "1500:b1", "1600:ts2", "2000:b1", "2100:ts1", "2100:b1", "2180:ts1", "2200:b1", "2260:", "2300:", "2500:b1", "2550:ts3", "2600:ts2", "2630:ts3", "2700:ts2", "2700:ts3", "2760:ts3", "2800:", "2870:", "3000:b1", "3000:b2", "3500:b1", "3600:ts2", "4000:b1", "4100:ts1", "4100:b1", "4180:ts1", "4200:b1", "4260:", "4300:", "4500:b1", "4550:ts3", "4600:ts2", "4630:ts3", "4700:ts2", "4700:ts3", "4760:ts3", "4800:", "4870:", "5000:b1", "5000:b2", "5500:b1", "5600:ts2", "6000:b1", "6100:ts1", "6100:b1", "6180:ts1", "6200:b1", "6260:", "6300:", "6500:b1", "6550:ts3", "6600:ts2", "6630:ts3", "6700:ts2", "6700:ts3", "6760:ts3", "6800:", "6870:", "7000:b1", "7000:b2", "7500:b1", "7600:ts2", "8000:"];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void Minimal_BrokenBeat1_ReturnExpected()
+    {
+        // arrange
+        var sequence = Minimal.BrokenBeat1();
+        string[] expected = ["0000:", "0000:b1", "0085:ts1", "0250:b1", "0500:b2", "0500:", "0585:ts1", "0710:ts2", "1085:b1", "1085:ts1", "1210:b1", "1335:", "1460:b2", "1585:ts1", "2000:", "2000:", "2000:b1", "2085:ts1", "2250:b1", "2500:b2", "2500:", "2585:ts1", "2710:ts2", "3085:b1", "3085:ts1", "3210:b1", "3335:", "3460:b2", "3585:ts1", "4000:", "4000:", "4000:b1", "4085:ts1", "4250:b1", "4500:b2", "4500:", "4585:ts1", "4710:ts2", "5085:b1", "5085:ts1", "5210:b1", "5335:", "5460:b2", "5585:ts1", "6000:", "6000:", "6000:b1", "6085:ts1", "6250:b1", "6500:b2", "6500:", "6585:ts1", "6710:ts2", "7085:b1", "7085:ts1", "7210:b1", "7335:", "7460:b2", "7585:ts1", "8000:", "8000:"];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void Minimal_SlowBeat1_ReturnExpected()
+    {
+        // arrange
+        var sequence = Minimal.SlowBeat1();
+        string[] expected = ["0000:", "0000:b1", "0330:b1", "0660:b2", "0660:", "1610:b1", "1940:b2", "2550:", "2550:b1", "2880:b1", "3210:b2", "3210:", "3710:b1", "4160:b1", "4490:b2", "4610:", "5100:", "5100:b1", "5430:b1", "5760:b2", "5760:", "6710:b1", "7040:b2", "7650:", "7650:b1", "7980:b1", "8310:b2", "8310:", "8810:b1", "9260:b1", "9590:b2", "9710:", "10200:"];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+}
