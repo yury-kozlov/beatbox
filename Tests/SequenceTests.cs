@@ -116,6 +116,35 @@ public class SequenceTests
     }
 
     [Fact]
+    public void FollowPreviousSoundStrategy_ReturnExpected()
+    {
+        // arrange
+        var sequence = new Sequence
+        {
+            Leader = new Sound("")
+            {
+                Strategy = new RepeatStrategy() { Count = 2, Interval = 1000 },
+                Followers = new()
+                {
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() },
+                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
+                    new Sound("b3") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 200 } },
+                    new Sound("b4") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 300 } },
+                }
+            }
+        };
+
+        string[] expected = ["0000:", "0000:b1", "0100:b2", "0300:b3", "0600:b4", "1000:", "1000:b1", "1100:b2", "1300:b3", "1600:b4", "2000:"];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
     public void GenerateFollowerEvery3rdOutOf4_ReturnExpected()
     {
         // arrange

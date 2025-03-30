@@ -2,7 +2,7 @@
 
 public class PlayOnceStrategy : AbstractStrategy
 {
-    protected override List<SequenceMessage> GenerateSequenceFor(Sound sound)
+    protected override List<SequenceMessage> GenerateSequenceFor(Sound sound, List<SequenceMessage>? previousMessages = null)
     {
         var msg = new SequenceMessage(sound)
         {

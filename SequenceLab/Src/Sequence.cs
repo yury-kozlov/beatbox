@@ -30,7 +30,13 @@ public class SequenceMessage : TransportMessage
     public string Name;
     public string? Comment;
     public bool Leads;
-    public int Timestamp; // from the beginning of sequence
+
+    /// <summary>
+    /// In the final sequence, represents absolute position of the sound from the beginning of the whole sequence.
+    /// If the sound is an X iteration inside a loop, position will still be calculated from the very beginning (including all previous iterations).
+    /// NOTE: during sequence generation, this value is calculated relatively to the current leader and then shifted according to leader's position (becomes absolute).
+    /// </summary>
+    public int Timestamp;
 
     override public string ToString()
     {
