@@ -11,62 +11,22 @@ public class Otik_Clairvoyant
         {
             Leader = new Sound("")
             {
-                Strategy = new RepeatStrategy() { Count = 4, Interval = 1900, PlayEveryX = 1 },
+                Strategy = new RepeatStrategy() { Count = 4, Interval = 1900 },
                 Followers = new()
-            {
-                new Sound("b1")
                 {
-                    Strategy = new PlayOnceStrategy() { PlayEveryX = 1 },
-                    Followers = new ()
-                    {
-                        new Sound("b1")
-                        {
-                            Strategy = new PlayOnceStrategy() { DelayAfterLeader = 360, PlayEveryX = 1 },
-                            Followers = new ()
-                            {
-                                new Sound("b2")
-                                {
-                                    Strategy = new PlayOnceStrategy() { DelayAfterLeader = 100, PlayEveryX = 1 },
-                                },
-                                new Sound("b1")
-                                {
-                                    Strategy = new PlayOnceStrategy() { DelayAfterLeader = 340, PlayEveryX = 1 },
-                                    Followers = new ()
-                                    {
-                                        new Sound("b1")
-                                        {
-                                            Strategy = new PlayOnceStrategy() { DelayAfterLeader = 205, PlayEveryX = 1 },
-                                            Followers = new ()
-                                            {
-                                                new Sound("b1")
-                                                {
-                                                    Strategy = new PlayOnceStrategy() { DelayAfterLeader = 100, PlayEveryX = 1 },
-                                                    Followers = new ()
-                                                    {
-                                                        new Sound("b1")
-                                                        {
-                                                            Strategy = new PlayOnceStrategy() { DelayAfterLeader = 230, PlayEveryX = 1 },
-                                                            Followers = new ()
-                                                            {
-                                                                new Sound("b2")
-                                                                {
-                                                                    Strategy = new PlayOnceStrategy() { DelayAfterLeader = 100, PlayEveryX = 1 },
-                                                                 }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() },
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 360 },
+                        Followers = new () {
+                            new Sound("b2") { Strategy = new PlayOnceStrategy() { DelayAfterLeader = 100 } },
+                            new Sound("b1") { Strategy = new PlayOnceStrategy() { DelayAfterLeader = 340 } },
+                        },
+                    },
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 205 } },
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 230 } },
+                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
                 }
             }
-            }
-
         };
 
         return sequence;
