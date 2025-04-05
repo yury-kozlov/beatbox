@@ -96,7 +96,7 @@ public class ConsoleKeyPlayer
         }
     }
 
-    public Sequence GetSequence()
+    public Sequence GenerateSequence()
     {
         var iterationsCount = 4;
         var loop = new Sound("") { Strategy = new RepeatStrategy { Count = iterationsCount, Interval = TotalTime } };
@@ -127,7 +127,7 @@ public class ConsoleKeyPlayer
 
     public async Task PlayRepeated(Sequence? seq = null)
     {
-        seq ??= GetSequence();
+        seq ??= GenerateSequence();
         await _transport.PlayRepeated(seq.Generate());
     }
 
@@ -153,7 +153,7 @@ public class ConsoleKeyPlayer
     {
         if (!IsEmpty)
         {
-            var seq = GetSequence();
+            var seq = GenerateSequence();
             var json = seq.ToJson();
             _jsonFilePath = $"C:/music/samples/sequences/seq{DateTime.Now:yyyy-MM-dd-HHmm}.json";
             File.WriteAllText(_jsonFilePath, json);
