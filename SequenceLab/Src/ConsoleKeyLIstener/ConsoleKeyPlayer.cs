@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System.Text;
 
 namespace Beater;
 
@@ -99,6 +98,8 @@ public class ConsoleKeyPlayer
     public Sequence GenerateSequence()
     {
         var iterationsCount = 4;
+
+        // this will be the main loop (acting like a metronome, without any sound):
         var loop = new Sound("") { Strategy = new RepeatStrategy { Count = iterationsCount, Interval = TotalTime } };
         var seq = new Sequence { Leader = loop };
 
@@ -112,12 +113,9 @@ public class ConsoleKeyPlayer
                 break;
             }
             var soundName = GetSound(k.Key).SoundName!;
-            var sound = new Sound(soundName);
-            sound.Strategy = new PlayOnceStrategy { DelayAfterLeader = previousKey?.PostDelay ?? 0 };
-
-            var followers = previousSound?.Followers ?? loop.Followers;
-            followers.Add(sound);
-
+            var delayAfterLeader = previousKey?.PostDelay ?? 0;
+            var sound = new Sound(soundName) { Strategy = new FollowPreviousSoundStrategy { DelayAfterLeader = delayAfterLeader } };
+            loop.Followers.Add(sound);
             previousSound = sound;
             previousKey = k;
         }
