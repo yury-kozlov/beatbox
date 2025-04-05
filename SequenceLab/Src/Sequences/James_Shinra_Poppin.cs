@@ -4,73 +4,32 @@ public class James_Shinra_Poppin
 {
     internal static Sequence GetSequence()
     {
-
         var sequence = new Sequence
         {
             Leader = new Sound("")
             {
-                Strategy = new RepeatStrategy() { Count = 4, Interval = 3620, PlayEveryX = 1 },
-                Followers = new()
-            {
-                new Sound("b2")
-                {
-                    // note: this sound (b2) starts before the logical leader (b1)
-                    // if we want to define the sequence using leader/follower relationship - how does the follower appearing before leader fit into this model?
-                    Strategy = new RepeatStrategy() { DelayAfterLeader = 450, Count = 4, Interval = 915 },
-                },
-                new Sound("b1")
-                {
-                    Strategy = new PlayOnceStrategy() { PlayEveryX = 1 },
-                    Followers = new ()
+                Strategy = new RepeatStrategy() { Count = 4, Interval = 3620 },
+                Followers = new() {
+                    new Sound("b1")
                     {
-                        new Sound("b1")
+                        Strategy = new PlayOnceStrategy(),
+                        Followers = new ()
                         {
-                            Strategy = new PlayOnceStrategy() { DelayAfterLeader = 680, PlayEveryX = 1 },
-                            Followers = new ()
-                            {
-                                new Sound("b1")
-                                {
-                                    Strategy = new PlayOnceStrategy() { DelayAfterLeader = 1340, PlayEveryX = 1 },
-                                    Followers = new ()
-                                    {
-                                        new Sound("b1")
-                                        {
-                                            Strategy = new PlayOnceStrategy() { DelayAfterLeader = 460, PlayEveryX = 1 },
-                                            Followers = new ()
-                                            {
-                                                new Sound("b1")
-                                                {
-                                                    Strategy = new PlayOnceStrategy() { DelayAfterLeader = 460, PlayEveryX = 1 },
-                                                    Followers = new ()
-                                                    {
-                                                        new Sound("b1")
-                                                        {
-                                                            Strategy = new PlayOnceStrategy() { DelayAfterLeader = 340, PlayEveryX = 1 },
-                                                            Followers = new ()
-                                                            {
-                                                                new Sound("b1")
-                                                                {
-                                                                    Strategy = new PlayOnceStrategy() { DelayAfterLeader = 100, PlayEveryX = 1 },
-                                                                    Followers = new ()
-                                                                    {
-
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 680 } },
+                            new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 1340 } },
+                            new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 460 } },
+                            new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 460 } },
+                            new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 340 } },
+                            new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
                         }
-                    }
+                    },
+                    new Sound("b2")
+                    {
+                        // note: this sound (b2) has a constant loop, although its logic leader (b1) is played at more irregular intervals
+                        Strategy = new RepeatStrategy() { DelayAfterLeader = 450, Count = 4, Interval = 915 },
+                    },
                 }
             }
-            }
-
         };
 
         return sequence;
