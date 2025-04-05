@@ -5,6 +5,38 @@ namespace Tests;
 public class SequenceSamplesTests
 {
     [Fact]
+    public void James_Shinra_Gritty_ReturnExpected()
+    {
+        // arrange
+        var sequence = James_Shinra_Gritty.GetSequence();
+
+        string[] expected = ["0000:", "0000:b1", "0350:b1", "0465:b2", "0675:b1", "1145:b1", "1385:b2", "1880:", "1880:b1", "2230:b1", "2345:b2", "2555:b1", "3025:b1", "3265:b2", "3760:", "3760:b1", "4110:b1", "4225:b2", "4435:b1", "4905:b1", "5145:b2", "5640:", "5640:b1", "5990:b1", "6105:b2", "6315:b1", "6785:b1", "7025:b2", "7520:"];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void James_Shinra_Poppin_ReturnExpected()
+    {
+        // arrange
+        var sequence = James_Shinra_Poppin.GetSequence();
+
+        string[] expected = ["0000:", "0000:b1", "0450:b2", "0680:b1", "1365:b2", "2020:b1", "2280:b2", "2480:b1", "2940:b1", "3195:b2", "3280:b1", "3380:b1", "3620:", "3620:", "3620:b1", "4070:b2", "4300:b1", "4985:b2", "5640:b1", "5900:b2", "6100:b1", "6560:b1", "6815:b2", "6900:b1", "7000:b1", "7240:", "7240:", "7240:b1", "7690:b2", "7920:b1", "8605:b2", "9260:b1", "9520:b2", "9720:b1", "10180:b1", "10435:b2", "10520:b1", "10620:b1", "10860:", "10860:", "10860:b1", "11310:b2", "11540:b1", "12225:b2", "12880:b1", "13140:b2", "13340:b1", "13800:b1", "14055:b2", "14140:b1", "14240:b1", "14480:", "14480:"];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
     public void Scsi9_Nebula_Hotel_ReturnExpected()
     {
         // arrange
