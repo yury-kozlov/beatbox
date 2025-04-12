@@ -11,7 +11,7 @@ public static partial class Example
         player.PrintFormatted();
         player.SaveSequence();
         player.PlayRepeated().Wait();
-
+        
         // OR
         player.PlayRepeated("/music/samples/sequences/seq2025-03-01-2114.json").Wait();
     }
