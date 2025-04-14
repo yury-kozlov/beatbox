@@ -13,6 +13,13 @@ public class KeyPressed
 public class ConsoleKeyPlayer
 {
     public static readonly ConsoleKey EndOfSequence = ConsoleKey.Enter;
+    public static readonly ConsoleKey ResetKey = ConsoleKey.Delete;
+    public static readonly List<ConsoleKey> IgnoredKeys = new() {
+        ConsoleKey.VolumeDown,
+        ConsoleKey.VolumeUp,
+        ConsoleKey.VolumeMute,
+    };
+
     public Action<KeyPressed>? OnKeyPressed;
     public List<KeyPressed> PressedKeys = new();
     public int TotalTime;
@@ -34,7 +41,7 @@ public class ConsoleKeyPlayer
         _transport = new TcpTransport();
         OnKeyPressed += (e) =>
         {
-            if (e.Key == EndOfSequence)
+            if (e.Key == EndOfSequence || e.Key == ResetKey)
             {
                 return;
             }
@@ -46,10 +53,16 @@ public class ConsoleKeyPlayer
     public ConsoleKeyPlayer Listen()
     {
         Console.WriteLine("Press ENTER to stop listening...");
+        Console.WriteLine("Press DEL to reset and start over...");
+
         KeyPressed? previousKey = null;
         while (true)
         {
             var keyInfo = Console.ReadKey();
+            if (IgnoredKeys.Contains(keyInfo.Key))
+            {
+                continue;
+            }
             var now = DateTime.Now;
             if (previousKey is not null)
             {
@@ -59,6 +72,15 @@ public class ConsoleKeyPlayer
             var keyPressed = new KeyPressed { Key = keyInfo.Key, Time = now };
             PressedKeys.Add(previousKey = keyPressed);
             OnKeyPressed?.Invoke(keyPressed);
+
+            if (keyInfo.Key == ResetKey)
+            {
+                Console.WriteLine("\r\nResetting...");
+                PressedKeys.Clear();
+                TotalTime = 0;
+                previousKey = null;
+                continue;
+            }
 
             if (keyInfo.Key == EndOfSequence)
             {
