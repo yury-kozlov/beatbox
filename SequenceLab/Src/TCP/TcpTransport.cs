@@ -27,4 +27,29 @@ public class TcpTransport
     {
         _channel.Write(message, 0, message.Length);
     }
+
+    public async Task SendScheduled(List<SequenceMessage> sequenceMessages)
+    {
+        var startedAt = DateTime.Now;
+        SequenceMessage? previous = null;
+        foreach (var msg in sequenceMessages)
+        {
+            if (previous is not null)
+            {
+                var delay = msg.Timestamp - previous.Timestamp;
+                if (delay > 0)
+                {
+                    await Task.Delay(delay);
+                }
+            }
+            previous = msg;
+
+            Logger.Log(msg, startedAt);
+            if (msg.Sound is null || msg.Sound.IsSilenced || msg.Message is null)
+            {
+                continue;
+            }
+            Send(msg);
+        }
+    }
 }

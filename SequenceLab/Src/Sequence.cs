@@ -50,7 +50,7 @@ public static class SequencePlayer
     {
         if (transport is not null)
         {
-            await PlaySequence(transport, sequenceMessages);
+            await transport.SendScheduled(sequenceMessages);
         }
     }
 
@@ -58,7 +58,7 @@ public static class SequencePlayer
     {
         if (transport is not null)
         {
-            await Repeat(() => PlaySequence(transport, sequenceMessages));
+            await Repeat(() => transport.SendScheduled(sequenceMessages));
         }
     }
 
@@ -87,31 +87,6 @@ public static class SequencePlayer
             }
         }
         return str.ToString();
-    }
-
-    private static async Task PlaySequence(TcpTransport transport, List<SequenceMessage> sequenceMessages)
-    {
-        var startedAt = DateTime.Now;
-        SequenceMessage? previous = null;
-        foreach (var msg in sequenceMessages)
-        {
-            if (previous is not null)
-            {
-                var delay = msg.Timestamp - previous.Timestamp;
-                if (delay > 0)
-                {
-                    await Task.Delay(delay);
-                }
-            }
-            previous = msg;
-
-            Logger.Log(msg, startedAt);
-            if (msg.Sound is null || msg.Sound.IsSilenced || msg.Message is null)
-            {
-                continue;
-            }
-            transport.Send(msg);
-        }
     }
 
     private static async Task Repeat(Func<Task> callback)
