@@ -2,10 +2,26 @@
 
 namespace Beater;
 
+public enum SendMode
+{
+    /// <summary>
+    /// Sends each message with delay, awaiting each message in dotnet.
+    /// Delays are not consistent/precise because of unpredictable nature of timing operations with dotnet itself.
+    /// </summary>
+    DelayedMessages,
+
+    /// <summary>
+    /// Sends all messages at once with information about delays attached of each individual message - so that scheduling will happen outside of dotnet framework.
+    /// </summary>
+    AllAtOnce,
+}
+
 public class TcpTransport
 {
     private readonly TcpClient _client;
     private readonly NetworkStream _channel;
+
+    public SendMode SendMode { get; set; } = SendMode.AllAtOnce;
 
     public TcpTransport()
     {
@@ -29,6 +45,35 @@ public class TcpTransport
     }
 
     public async Task SendScheduled(List<SequenceMessage> sequenceMessages)
+    {
+        switch (SendMode)
+        {
+            case SendMode.DelayedMessages:
+                await SendDelayedMessages(sequenceMessages);
+                break;
+            case SendMode.AllAtOnce:
+                SendAllAtOnce(sequenceMessages);
+                break;
+            default:
+                Console.WriteLine($"Unable to send generated messages. Unknown send mode: {SendMode}");
+                break;
+        }
+    }
+
+    private void SendAllAtOnce(List<SequenceMessage> sequenceMessages)
+    {
+        var batch = new TransportBatchMessage();
+        SequenceMessage? previous = null;
+        foreach (var msg in sequenceMessages)
+        {
+            var preDelay = msg.Timestamp - previous?.Timestamp;
+            batch.Add(msg.SoundName, preDelay);
+            previous = msg;
+        }
+        Send(batch.ToTransportMessage());
+    }
+
+    private async Task SendDelayedMessages(List<SequenceMessage> sequenceMessages)
     {
         var startedAt = DateTime.Now;
         SequenceMessage? previous = null;
