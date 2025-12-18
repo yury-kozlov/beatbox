@@ -7,6 +7,8 @@ public class Pitch_Perfect_Cups
 {
     internal static Sequence GetSequence()
     {
+        // NOTE: this sequence doesn't have clear borders, so when listening from the middle, the pattern may be unrecognizable.
+        // in order to put accent to its start, need to add some distinguishable sound at the beginning of each loop
         return new Sequence
         {
             Leader = new Sound("")
