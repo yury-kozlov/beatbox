@@ -2,12 +2,12 @@
 
 public record Sound
 {
-    public Sound(string name)
+    public Sound(string? name = null)
     {
         Name = name;
     }
 
-    public string Name;
+    public string? Name;
     public AbstractStrategy Strategy;
     public List<Sound> Followers = new();
     public Sound? Leader;

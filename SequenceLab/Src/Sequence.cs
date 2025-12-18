@@ -22,7 +22,7 @@ public class SequenceMessage : TransportMessage
     {
         Sound = sound;
         Leads = sound.IsLeader();
-        Name = Sound?.Name ?? "";
+        Name = Sound?.Name ?? NoSound;
     }
 
     public Sound? Sound;

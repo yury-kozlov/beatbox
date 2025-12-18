@@ -11,7 +11,7 @@ public class Pitch_Perfect_Cups
         // in order to put accent to its start, need to add some distinguishable sound at the beginning of each loop
         return new Sequence
         {
-            Leader = new Sound("")
+            Leader = new Sound()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 3600 },
                 Followers = new()
