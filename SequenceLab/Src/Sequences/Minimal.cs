@@ -112,4 +112,79 @@ public class Minimal
             },
         };
     }
+
+    /// <summary>
+    /// K         K   S      S   S   K      K      S           
+    /// </summary>
+    internal static Sequence SlowBeat2()
+    {
+        return new Sequence
+        {
+            Leader = new Sound("")
+            {
+                Strategy = new RepeatStrategy() { Count = 4, Interval = 4700 },
+                Followers = new()
+                {
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() },
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 900 }},
+                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
+                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
+                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
+                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
+                },
+            },
+
+        };
+    }
+
+    /// <summary>
+    /// K   K  K   S   K        K    S      S      K          
+    /// </summary>
+    internal static Sequence SlowBeat3()
+    {
+        return new Sequence
+        {
+            Leader = new Sound("")
+            {
+                Strategy = new RepeatStrategy() { Count = 4, Interval = 4400 },
+                Followers = new()
+                {
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {PlayEveryX = 1}},
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 350 }},
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200 }},
+                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200 }},
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 350 }},
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 800 }},
+                    // those two percussions need more accent from some other sound:
+                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
+                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500 }},
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
+                },
+            },
+        };
+    }
+
+    /// <summary>
+    /// K    K    S         S   K      K   K   S         S   K       
+    /// </summary>
+    internal static Sequence SlowBeat4()
+    {
+        return new Sequence
+        {
+            Leader = new Sound("")
+            {
+                Strategy = new RepeatStrategy() { Count = 4, Interval = 2400 },
+                Followers = new()
+                {
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() },
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
+                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
+                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 900 }},
+                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
+                },
+            },
+        };
+    }
 }
