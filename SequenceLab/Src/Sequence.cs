@@ -58,7 +58,8 @@ public static class SequencePlayer
     {
         if (transport is not null)
         {
-            await Repeat(() => transport.SendScheduled(sequenceMessages));
+            await Repeat(() => transport.SendScheduled(sequenceMessages),
+                () => transport.Send(Encoding.UTF8.GetBytes("seq clear;")));
         }
     }
 
@@ -89,19 +90,29 @@ public static class SequencePlayer
         return str.ToString();
     }
 
-    private static async Task Repeat(Func<Task> callback)
+    private static async Task Repeat(Func<Task> repeatAction, Action onExit)
     {
         char keyChar;
-        do
-        {
-            await callback();
-            Console.WriteLine("Repeat - press y,    Exit - press esc");
-        }
-        while ((keyChar = Console.ReadKey().KeyChar) == 'y');
 
-        if (keyChar == (char)ConsoleKey.Escape)
+        await repeatAction();
+        Console.WriteLine("Repeat - press [y] or [r],    Exit - press [esc],    Continue - press [Enter]");
+
+        for (; ; )
         {
-            Environment.Exit(0);
+            keyChar = Console.ReadKey().KeyChar;
+            if (keyChar == (char)ConsoleKey.Escape)
+            {
+                onExit();
+                Environment.Exit(0);
+            }
+            if (keyChar == 'y' || keyChar == 'r')
+            {
+                await repeatAction();
+            }
+            if (keyChar == (char)ConsoleKey.Enter)
+            {
+                break;
+            }
         }
     }
 }
