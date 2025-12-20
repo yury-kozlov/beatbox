@@ -9,7 +9,7 @@ public class Scsi9_Nebula_Hotel
     {
         var sequence = new Sequence
         {
-            Leader = new Sound("")
+            Leader = new Sound()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 3940 },
                 Followers = new()

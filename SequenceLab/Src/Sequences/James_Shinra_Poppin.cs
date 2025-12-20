@@ -6,7 +6,7 @@ public class James_Shinra_Poppin
     {
         var sequence = new Sequence
         {
-            Leader = new Sound("")
+            Leader = new Sound()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 3620 },
                 Followers = new() {
