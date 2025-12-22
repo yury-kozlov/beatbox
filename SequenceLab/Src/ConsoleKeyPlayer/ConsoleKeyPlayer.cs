@@ -31,6 +31,15 @@ public class ConsoleKeyPlayer
     {
         { ConsoleKey.K, Samples.B1 },
         { ConsoleKey.S, Samples.B2 },
+        { ConsoleKey.D1, Samples.TS1 },
+        { ConsoleKey.D2, Samples.TS2 },
+        { ConsoleKey.D3, Samples.TS3 },
+        { ConsoleKey.D4, Samples.TS4 },
+        { ConsoleKey.D5, Samples.TS5 },
+        { ConsoleKey.D6, Samples.TS6 },
+        { ConsoleKey.D7, Samples.TS7 },
+        { ConsoleKey.D8, Samples.TS8 },
+        { ConsoleKey.D9, Samples.TS9 },
         { EndOfSequence, new() }
     };
     private static TransportMessage _defaultSound = Samples.B1;
