@@ -25,7 +25,7 @@ public class TcpTransport
 
     public TcpTransport()
     {
-        _client = new TcpClient("localhost", 3000);
+        _client = new TcpClient("localhost", 3311);
         _channel = _client.GetStream();
     }
 
