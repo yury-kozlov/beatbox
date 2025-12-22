@@ -12,17 +12,17 @@ public class KeyPressed
 
 public class ConsoleKeyPlayer
 {
-    public static readonly ConsoleKey EndOfSequence = ConsoleKey.Enter;
-    public static readonly ConsoleKey ResetKey = ConsoleKey.Delete;
-    public static readonly List<ConsoleKey> IgnoredKeys = new() {
+    private static readonly ConsoleKey EndOfSequence = ConsoleKey.Enter;
+    private static readonly ConsoleKey ResetKey = ConsoleKey.Delete;
+    private static readonly List<ConsoleKey> IgnoredKeys = new() {
         ConsoleKey.VolumeDown,
         ConsoleKey.VolumeUp,
         ConsoleKey.VolumeMute,
     };
 
-    public Action<KeyPressed>? OnKeyPressed;
-    public List<KeyPressed> PressedKeys = new();
-    public int TotalTime;
+    private Action<KeyPressed>? OnKeyPressed;
+    private List<KeyPressed> PressedKeys = new();
+    private int TotalTime;
     public bool IsEmpty => PressedKeys.Count == 0 || PressedKeys[0].Key == EndOfSequence;
     public string? KeysString;
 
