@@ -55,7 +55,7 @@ public class ConsoleKeyPlayer
                 return;
             }
             var audioMessage = GetSound(e.Key);
-            _transport.Send(audioMessage);
+            _transport.Send(audioMessage.ToPlayMessage());
         };
     }
 

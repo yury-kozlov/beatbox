@@ -16,6 +16,11 @@ public class TransportMessage
             Message = Encoding.ASCII.GetBytes(soundName.TrimEnd(';') + ';');
         }
     }
+
+    internal TransportMessage ToPlayMessage()
+    {
+        return new TransportMessage($"play {SoundName};");
+    }
 }
 
 public class TransportBatchMessage
@@ -68,4 +73,13 @@ public static class Samples
 {
     public static TransportMessage B1 = new("b1");
     public static TransportMessage B2 = new("b2");
+    public static TransportMessage TS1 = new("ts1");
+    public static TransportMessage TS2 = new("ts2");
+    public static TransportMessage TS3 = new("ts3");
+    public static TransportMessage TS4 = new("ts4");
+    public static TransportMessage TS5 = new("ts5");
+    public static TransportMessage TS6 = new("ts6");
+    public static TransportMessage TS7 = new("ts7");
+    public static TransportMessage TS8 = new("ts8");
+    public static TransportMessage TS9 = new("ts9");
 }
