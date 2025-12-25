@@ -58,8 +58,7 @@ public static class SequencePlayer
     {
         if (transport is not null)
         {
-            await Repeat(() => transport.SendScheduled(sequenceMessages),
-                () => transport.Send(Encoding.UTF8.GetBytes("seq clear;")));
+            await Repeat(() => transport.SendScheduled(sequenceMessages), transport.Dispose);
         }
     }
 

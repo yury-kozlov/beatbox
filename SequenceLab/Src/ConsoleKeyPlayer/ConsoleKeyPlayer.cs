@@ -10,7 +10,7 @@ public class KeyPressed
     override public string ToString() => $"{Key} {PostDelay}";
 }
 
-public class ConsoleKeyPlayer
+public class ConsoleKeyPlayer : IDisposable
 {
     private static readonly ConsoleKey EndOfSequence = ConsoleKey.Enter;
     private static readonly ConsoleKey ResetKey = ConsoleKey.Delete;
@@ -58,6 +58,8 @@ public class ConsoleKeyPlayer
             _transport.Send(audioMessage.ToPlayMessage());
         };
     }
+
+    public void Dispose() => _transport?.Dispose();
 
     public ConsoleKeyPlayer Listen()
     {

@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using System.Text;
 
 namespace Beater;
 
@@ -31,6 +32,7 @@ public class TcpTransport
 
     public void Dispose()
     {
+        Send(Encoding.UTF8.GetBytes("seq clear;")); // stop currently playing sequence
         _client?.Dispose();
     }
 
