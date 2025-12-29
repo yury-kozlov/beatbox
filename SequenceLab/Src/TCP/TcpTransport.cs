@@ -32,7 +32,7 @@ public class TcpTransport
 
     public void Dispose()
     {
-        Send(Encoding.UTF8.GetBytes("seq clear;")); // stop currently playing sequence
+        Send(Encoding.UTF8.GetBytes("seq stop;")); // stop currently playing sequence
         _client?.Dispose();
     }
 
