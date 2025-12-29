@@ -3,7 +3,12 @@
 public class RepeatStrategy : AbstractStrategy
 {
     public int Count;
+
+    /// <summary>
+    /// Interval in milliseconds between each repetition.
+    /// </summary>
     public int Interval;
+
     public int LinearIncrement;
 
     /// <summary>
