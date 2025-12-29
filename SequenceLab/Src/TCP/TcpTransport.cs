@@ -69,6 +69,11 @@ public class TcpTransport
         foreach (var msg in sequenceMessages)
         {
             var preDelay = msg.Timestamp - previous?.Timestamp;
+            if (preDelay < 0)
+            {
+                Console.WriteLine("Predelay can't be negative: check that sequence has properly configured loop interval");
+            }
+
             batch.Add(msg.SoundName, preDelay);
             previous = msg;
         }
