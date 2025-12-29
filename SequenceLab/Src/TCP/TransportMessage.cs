@@ -29,6 +29,7 @@ public class TransportBatchMessage
     {
         public int PreDelay;
         public string? SoundName;
+        public override string ToString() => $"{PreDelay} {SoundName}";
     }
 
     private List<BatchItem> _items = new();
