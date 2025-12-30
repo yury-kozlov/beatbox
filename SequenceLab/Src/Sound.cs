@@ -9,6 +9,14 @@ public record Sound
         Name = name;
     }
 
+    public Sound(string? name, string simultaneousSound)
+    {
+        Name = name;
+
+        // both sounds will be played at the same time (without any delay between them)
+        Followers.Add(new Sound(simultaneousSound) { Strategy = new FollowPreviousSoundStrategy() });
+    }
+
     public string? Name;
     public AbstractStrategy Strategy;
     public List<Sound> Followers = new();
