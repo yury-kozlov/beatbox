@@ -6,7 +6,7 @@ public class Metro_Boomin_Humming_Bird
     {
         return new Sequence
         {
-            Leader = new Sound()
+            Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 5890 },
                 Followers = new()
@@ -37,7 +37,7 @@ public class Metro_Boomin_Humming_Bird
     {
         return new Sequence
         {
-            Leader = new Sound()
+            Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 5890 },
                 Followers = new()

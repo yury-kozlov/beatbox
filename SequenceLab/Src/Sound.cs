@@ -4,7 +4,7 @@ public record Sound
 {
     public const string NoSound = "no-sound";
 
-    public Sound(string? name = null)
+    public Sound(string? name)
     {
         Name = name;
     }
@@ -23,6 +23,16 @@ public record Sound
         {
             follower.Leader = this;
         }
+    }
+}
+
+/// <summary>
+/// Acts like a loop grid without any sound.
+/// </summary>
+public record Metronome : Sound
+{
+    public Metronome() : base(NoSound)
+    {
     }
 }
 

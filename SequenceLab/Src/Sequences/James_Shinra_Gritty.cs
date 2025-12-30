@@ -9,7 +9,7 @@ public class James_Shinra_Gritty
     {
         var sequence = new Sequence
         {
-            Leader = new Sound()
+            Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 1880, PlayEveryX = 1 },
                 Followers = new() {

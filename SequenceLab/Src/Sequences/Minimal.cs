@@ -43,7 +43,7 @@ public class Minimal
     {
         return new Sequence
         {
-            Leader = new Sound()
+            Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy { Count = 4, Interval = 2000 },
                 Followers = new()
@@ -109,7 +109,6 @@ public class Minimal
                        },
                     },
                 },
-            },
         };
     }
 
@@ -120,7 +119,7 @@ public class Minimal
     {
         return new Sequence
         {
-            Leader = new Sound()
+            Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 4700 },
                 Followers = new()
@@ -146,7 +145,7 @@ public class Minimal
     {
         return new Sequence
         {
-            Leader = new Sound()
+            Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 4400 },
                 Followers = new()
@@ -173,7 +172,7 @@ public class Minimal
     {
         return new Sequence
         {
-            Leader = new Sound()
+            Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 2400 },
                 Followers = new()

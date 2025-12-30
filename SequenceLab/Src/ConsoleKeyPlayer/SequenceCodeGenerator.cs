@@ -73,7 +73,7 @@ internal class SequenceCodeGenerator
 
         var totalTime = delays.Sum();
         var iterationsCount = 4;
-        var loop = new Sound() { Strategy = new RepeatStrategy { Count = iterationsCount, Interval = totalTime } };
+        var loop = new Metronome() { Strategy = new RepeatStrategy { Count = iterationsCount, Interval = totalTime } };
         var seq = new Sequence { Leader = loop };
         Sound? previousSound = null;
 

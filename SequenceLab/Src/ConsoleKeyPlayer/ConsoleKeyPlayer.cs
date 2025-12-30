@@ -128,12 +128,15 @@ public class ConsoleKeyPlayer : IDisposable
         }
     }
 
+    /// <summary>
+    /// Generates sequence from pressed keys interactively.
+    /// </summary>
     public Sequence GenerateSequence()
     {
         var iterationsCount = 4;
 
         // this will be the main loop (acting like a metronome, without any sound):
-        var loop = new Sound() { Strategy = new RepeatStrategy { Count = iterationsCount, Interval = TotalTime } };
+        var loop = new Metronome() { Strategy = new RepeatStrategy { Count = iterationsCount, Interval = TotalTime } };
         var seq = new Sequence { Leader = loop };
 
         KeyPressed? previousKey = null;

@@ -9,7 +9,7 @@ public class Otik_Clairvoyant
     {
         var sequence = new Sequence
         {
-            Leader = new Sound()
+            Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 1900 },
                 Followers = new()
