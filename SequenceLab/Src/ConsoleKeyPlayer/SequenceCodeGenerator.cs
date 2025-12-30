@@ -82,9 +82,7 @@ internal class SequenceCodeGenerator
 
         foreach (var delay in delays)
         {
-            var sound = new Sound(soundName);
-            sound.Strategy = new PlayOnceStrategy { DelayAfterLeader = delay };
-
+            var sound = new Sound(soundName) { Strategy = new PlayOnceStrategy { DelayAfterLeader = delay } };
             var followers = previousSound?.Followers ?? loop.Followers;
             followers.Add(sound);
 

@@ -18,7 +18,7 @@ public record Sound
     }
 
     public string? Name;
-    public AbstractStrategy Strategy;
+    public required AbstractStrategy Strategy;
     public List<Sound> Followers = new();
     public Sound? Leader;
     public bool IsSilenced;
