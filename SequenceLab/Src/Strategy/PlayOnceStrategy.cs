@@ -10,10 +10,8 @@ public class PlayOnceStrategy : AbstractStrategy
         };
 
         var sequence = new List<SequenceMessage>() { msg };
-        if (sound.Followers.Count > 0)
-        {
-            sequence.AddRange(GenerateFollowersSequence(sound, msg.Timestamp));
-        }
+
+        AddFollowers(sound, msg, sequence);
 
         return sequence;
     }

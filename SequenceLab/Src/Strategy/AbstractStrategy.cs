@@ -120,4 +120,12 @@ public abstract class AbstractStrategy
 
         return mixedSequence;
     }
+
+    protected void AddFollowers(Sound sound, SequenceMessage msg, List<SequenceMessage> sequence)
+    {
+        if (sound.Followers.Count > 0)
+        {
+            sequence.AddRange(GenerateFollowersSequence(sound, msg.Timestamp));
+        }
+    }
 }

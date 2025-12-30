@@ -45,10 +45,7 @@ public class RepeatStrategy : AbstractStrategy
             };
             sequence.Add(msg);
 
-            if (sound.Followers.Count > 0)
-            {
-                sequence.AddRange(GenerateFollowersSequence(sound, msg.Timestamp));
-            }
+            AddFollowers(sound, msg, sequence);
         }
 
         // close sequence with empty sound so that any other sequence that goes afterwards will continue only after this one ends
