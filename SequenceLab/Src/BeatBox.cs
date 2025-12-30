@@ -34,16 +34,6 @@ internal class BeatBox : IDisposable
         var seq3 = Minimal.SlowBeat1().Generate();
         await _transport.PlayRepeated(seq3);
 
-
-        // TODO 1:   implement different sequences with the same sounds and then try to connect them together as an evolution of one sequence into another
-        // question: will re-sampling existing tracks into sequences help to learn evolution of sequences using the same sounds ?
-        //           it might not help create new sequences but instead will help to repeat existing patterns
-
-
-        // TODO 2:   think how to simplify the sequence creation process and make it more readable
-        //             e.g.: create strategy that may use another strategy as a follower
-        //             e.g.: can we avoid creating empty sounds just to be able to stick other sound strategies to them?
-
         Console.WriteLine("");
     }
 }
