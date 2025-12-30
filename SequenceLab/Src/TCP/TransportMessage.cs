@@ -6,7 +6,6 @@ public class TransportMessage
 {
     public byte[]? Message;
     public string? SoundName;
-    public const string NoSound = "no-sound";
 
     public TransportMessage(string? soundName = null)
     {
@@ -38,7 +37,7 @@ public class TransportBatchMessage
     {
         _items.Add(new BatchItem
         {
-            SoundName = soundName ?? TransportMessage.NoSound, // if no sound should be played - delay still must be applied
+            SoundName = soundName ?? Sound.NoSound, // if no sound should be played - delay still must be applied
             PreDelay = preDelay ?? 0,
         });
     }
@@ -46,16 +45,16 @@ public class TransportBatchMessage
     internal TransportMessage ToTransportMessage()
     {
         var sb = new StringBuilder();
-        sb.Append($"seq clear;"); // clear any previous sequences that were received before
+        sb.Append($"seq clear;"); // clear any previous sequences that were played before
 
         for (int i = 0; i < _items.Count; i++)
         {
             var item = _items[i];
-            if (item.SoundName == TransportMessage.NoSound)
+            if (item.SoundName == Sound.NoSound)
             {
                 if (item.PreDelay == 0 || i == _items.Count - 1)
                 {
-                    continue;
+                    continue; // skip empty sounds if they have no effect on others
                 }
             }
 

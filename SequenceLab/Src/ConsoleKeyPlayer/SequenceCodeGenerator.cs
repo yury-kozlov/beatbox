@@ -36,7 +36,7 @@ internal class SequenceCodeGenerator
         code.AppendLine($"{_}{{");
         code.AppendLine($"{_}{_}return new Sequence");
         code.AppendLine($"{_}{_}{{");
-        code.AppendLine($"{_}{_}{_}Leader = new Sound(\"{seq.Leader.Name}\")");
+        code.AppendLine($"{_}{_}{_}Leader = new Sound({GetSoundName(seq.Leader)})");
         code.AppendLine(NewSoundCode(seq.Leader, level: 3));
         code.AppendLine($"{_}{_}}};");
         code.AppendLine($"{_}}}");
@@ -121,11 +121,11 @@ internal class SequenceCodeGenerator
             if (follower.Followers.Count == 0)
             {
                 // no more followers, one-liner
-                code.AppendLine($"{___}new Sound(\"{follower.Name}\") {{ Strategy = new {follower.Strategy.GetType().Name}() {{{GetPropInitializers(follower.Strategy)}}}}},");
+                code.AppendLine($"{___}new Sound({GetSoundName(follower)}) {{ Strategy = new {follower.Strategy.GetType().Name}() {{{GetPropInitializers(follower.Strategy)}}}}},");
             }
             else
             {
-                code.AppendLine($"{___}new Sound(\"{follower.Name}\")");
+                code.AppendLine($"{___}new Sound({GetSoundName(follower)})");
                 code.Append(NewSoundCode(follower, level));
             }
         }
@@ -133,6 +133,11 @@ internal class SequenceCodeGenerator
 
         code.AppendLine($"{_}}},"); // end of sound
         return code.ToString();
+    }
+
+    private static string GetSoundName(Sound sound)
+    {
+        return sound.Name.IsNullOrEmpty() ? $"{nameof(Sound)}.{nameof(Sound.NoSound)}" : $"\"{sound.Name}\"";
     }
 
     private static IEnumerable<(string name, object? value, object? defaultValue)> GetFieldsAndProperties(object obj)

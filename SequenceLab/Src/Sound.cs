@@ -2,6 +2,8 @@
 
 public record Sound
 {
+    public const string NoSound = "no-sound";
+
     public Sound(string? name = null)
     {
         Name = name;
@@ -13,7 +15,7 @@ public record Sound
     public Sound? Leader;
     public bool IsSilenced;
 
-    override public string ToString() => Name;
+    override public string? ToString() => Name;
 
     internal void SetLeader()
     {
