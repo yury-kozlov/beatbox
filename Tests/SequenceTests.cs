@@ -145,6 +145,79 @@ public class SequenceTests
     }
 
     [Fact]
+    public void GenerateFollowers_PlayEvery2_ReturnExpected()
+    {
+        // arrange
+        var sequence = new Sequence
+        {
+            Leader = new Sound("b1")
+            {
+                Strategy = new RepeatStrategy { Count = 4, Interval = 1000 },
+                Followers = new() { new Sound("every-2nd") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100, PlayEveryX = 2 } } },
+            },
+        };
+        string[] expected = [
+            "0000:b1",
+            "1000:b1",
+            "1100:every-2nd",
+            "2000:b1",
+            "3000:b1",
+            "3100:every-2nd",
+            "4000:no-sound",
+        ];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void GenerateFollowers_PlayEvery3_ReturnExpected()
+    {
+        // arrange
+        var sequence = new Sequence
+        {
+            Leader = new Metronome()
+            {
+                Strategy = new RepeatStrategy { Count = 1, Interval = 1000 },
+                Followers = new()
+                {
+                    new Sound("b1")
+                    {
+                        Strategy = new RepeatStrategy { Count = 6, Interval = 100 },
+                        Followers = new() {
+                            new Sound("every-3rd") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 50, PlayEveryX = 3 } },
+                       },
+                    },
+                },
+            },
+        };
+        string[] expected = [
+            "0000:no-sound",
+            "0000:b1",
+            "0100:b1",
+            "0200:b1",
+            "0250:every-3rd",
+            "0300:b1",
+            "0400:b1",
+            "0500:b1",
+            "0550:every-3rd",
+            "0600:no-sound",
+            "1000:no-sound",
+        ];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
     public void GenerateFollowerEvery3rdOutOf4_ReturnExpected()
     {
         // arrange
