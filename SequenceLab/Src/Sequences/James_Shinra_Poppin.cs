@@ -10,20 +10,20 @@ public class James_Shinra_Poppin
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 3620 },
                 Followers = new() {
-                    new Sound("k")
+                    new Kick
                     {
                         Strategy = new PlayOnceStrategy(),
                         Followers = new ()
                         {
-                            new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 680 } },
-                            new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 1340 } },
-                            new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 460 } },
-                            new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 460 } },
-                            new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 340 } },
-                            new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
+                            new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 680 } },
+                            new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 1340 } },
+                            new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 460 } },
+                            new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 460 } },
+                            new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 340 } },
+                            new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
                         }
                     },
-                    new Sound("s")
+                    new Snare
                     {
                         // note: this sound (s) has a constant loop, although its logic leader (k) is played at more irregular intervals
                         Strategy = new RepeatStrategy() { DelayAfterLeader = 450, Count = 4, Interval = 915 },

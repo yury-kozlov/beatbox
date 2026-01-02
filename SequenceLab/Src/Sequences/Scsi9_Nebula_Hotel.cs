@@ -14,17 +14,17 @@ public class Scsi9_Nebula_Hotel
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 3940 },
                 Followers = new()
                 {
-                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() },
-                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 260 } },
-                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 230 } },
-                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 750 } },
-                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 220 } },
-                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 500 } },
-                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 250 } },
-                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 250 } },
-                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 400 } },
-                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 350 } },
-                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 250 } },
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() },
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 260 } },
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 230 } },
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 750 } },
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 220 } },
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 500 } },
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 250 } },
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 250 } },
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 400 } },
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 350 } },
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 250 } },
                 }
             }
         };

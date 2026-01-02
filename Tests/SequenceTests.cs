@@ -10,13 +10,13 @@ public class SequenceTests
         // arrange
         var sequence = new Sequence
         {
-            Leader = new Sound("k")
+            Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 16, Interval = 500 },
                 Followers = new() {
                   new Sound("ts1") { Strategy = new RepeatStrategy { DelayAfterLeader = 150, Count = 2, Interval = 80 } },
                   new Sound("ts2") { Strategy = new PlayOnceStrategy { PlayEveryX = 4 } },
-                  new Sound("s") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 4 } },
+                  new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 4 } },
                   new Sound("ts3") { Strategy = new RepeatStrategy { DelayAfterLeader = 80, Count = 4, Interval = 80, LinearIncrement = -10, PlayEveryX = 8 } },
                },
             },
@@ -126,8 +126,8 @@ public class SequenceTests
                 Strategy = new RepeatStrategy() { Count = 2, Interval = 1000 },
                 Followers = new()
                 {
-                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() },
-                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() },
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
                     new Sound("b3") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 200 } },
                     new Sound("b4") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 300 } },
                 }
@@ -150,7 +150,7 @@ public class SequenceTests
         // arrange
         var sequence = new Sequence
         {
-            Leader = new Sound("k")
+            Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 4, Interval = 1000 },
                 Followers = new() { new Sound("every-2nd") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100, PlayEveryX = 2 } } },
@@ -185,7 +185,7 @@ public class SequenceTests
                 Strategy = new RepeatStrategy { Count = 1, Interval = 1000 },
                 Followers = new()
                 {
-                    new Sound("k")
+                    new Kick
                     {
                         Strategy = new RepeatStrategy { Count = 6, Interval = 100 },
                         Followers = new() {
@@ -223,11 +223,11 @@ public class SequenceTests
         // arrange
         var sequence = new Sequence
         {
-            Leader = new Sound("k")
+            Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 8, Interval = 500 },
                 Followers = new() {
-                  new Sound("s") { Strategy = new PlayOnceStrategy { PlayEveryXOutOf = "3/4" } },
+                  new Snare { Strategy = new PlayOnceStrategy { PlayEveryXOutOf = "3/4" } },
                },
             },
         };
@@ -247,7 +247,7 @@ public class SequenceTests
         // arrange
         var sequence = new Sequence
         {
-            Leader = new Sound("k")
+            Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 4, Interval = 500 },
                 Followers = new() {
@@ -271,7 +271,7 @@ public class SequenceTests
         // arrange
         var sequence = new Sequence
         {
-            Leader = new Sound("k")
+            Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 8, Interval = 500, SilenceEveryXSoundOutOf = "3/4" },
                 Followers = new() {

@@ -13,12 +13,12 @@ public class James_Shinra_Gritty
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 1880, PlayEveryX = 1 },
                 Followers = new() {
-                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() },
-                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 350 } },
-                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 115 } },
-                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 210 } },
-                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 470 } },
-                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 240 } },
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() },
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 350 } },
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 115 } },
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 210 } },
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 470 } },
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 240 } },
                 }
             }
         };

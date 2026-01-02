@@ -3,6 +3,8 @@
 public record Sound
 {
     public const string NoSound = "no-sound";
+    public const string KickSound = "k";
+    public const string SnareSound = "s";
 
     public Sound(string? name)
     {
@@ -40,8 +42,25 @@ public record Sound
 public record Metronome : Sound
 {
     public Metronome() : base(NoSound)
+    { }
+}
+
+/// <summary>
+/// Main beat sound.
+/// </summary>
+public record Kick : Sound
     {
+    public Kick() : base(KickSound)
+    { }
     }
+
+/// <summary>
+/// Snare sound.
+/// </summary>
+public record Snare : Sound
+{
+    public Snare() : base(SnareSound)
+    { }
 }
 
 public static class SoundExtensions
@@ -51,4 +70,3 @@ public static class SoundExtensions
         return sound is not null && sound.Leader is null;
     }
 }
-
