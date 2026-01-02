@@ -29,8 +29,8 @@ public class ConsoleKeyPlayer : IDisposable
     private readonly TcpTransport _transport;
     private static Dictionary<ConsoleKey, TransportMessage> _soundsMap = new()
     {
-        { ConsoleKey.K, Samples.B1 },
-        { ConsoleKey.S, Samples.B2 },
+        { ConsoleKey.K, Samples.K },
+        { ConsoleKey.S, Samples.S },
         { ConsoleKey.D1, Samples.TS1 },
         { ConsoleKey.D2, Samples.TS2 },
         { ConsoleKey.D3, Samples.TS3 },
@@ -42,7 +42,7 @@ public class ConsoleKeyPlayer : IDisposable
         { ConsoleKey.D9, Samples.TS9 },
         { EndOfSequence, new() }
     };
-    private static TransportMessage _defaultSound = Samples.B1;
+    private static TransportMessage _defaultSound = Samples.K;
     private string? _jsonFilePath;
 
     public ConsoleKeyPlayer()

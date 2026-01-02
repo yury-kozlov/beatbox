@@ -71,8 +71,8 @@ public class TransportBatchMessage
 
 public static class Samples
 {
-    public static TransportMessage B1 = new("b1");
-    public static TransportMessage B2 = new("b2");
+    public static TransportMessage K = new("k");
+    public static TransportMessage S = new("s");
     public static TransportMessage TS1 = new("ts1");
     public static TransportMessage TS2 = new("ts2");
     public static TransportMessage TS3 = new("ts3");

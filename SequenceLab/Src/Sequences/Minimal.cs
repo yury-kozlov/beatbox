@@ -7,13 +7,13 @@ public class Minimal
     {
         return new Sequence
         {
-            Leader = new Sound("b1")
+            Leader = new Sound("k")
             {
                 Strategy = new RepeatStrategy { Count = 16, Interval = 500 },
                 Followers = new() {
                   new Sound("ts1") { Strategy = new RepeatStrategy { DelayAfterLeader = 150, Count = 2, Interval = 80 }},
                   new Sound("ts2") { Strategy = new PlayOnceStrategy { PlayEveryX = 4 } },
-                  new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 4 } },
+                  new Sound("s") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 4 } },
                   new Sound("ts3") { Strategy = new RepeatStrategy { DelayAfterLeader = 80, Count = 4, Interval = 80, LinearIncrement = -10, PlayEveryX = 8 } },
                },
             },
@@ -24,13 +24,13 @@ public class Minimal
     {
         return new Sequence
         {
-            Leader = new Sound("b1")
+            Leader = new Sound("k")
             {
                 Strategy = new RepeatStrategy { Count = 16, Interval = 500, SilenceEveryXSoundOutOf = "3/4" },
                 Followers = new() {
-                    new Sound("b2") { Strategy = new PlayOnceStrategy { PlayEveryXOutOf = "3/4" } },
+                    new Sound("s") { Strategy = new PlayOnceStrategy { PlayEveryXOutOf = "3/4" } },
                     new Sound("ts1") { Strategy = new RepeatStrategy { DelayAfterLeader = 100, Interval = 80, Count = 2, PlayEveryXOutOf="1/4" } },
-                    new Sound("b1") { Strategy = new RepeatStrategy { PlayEveryXOutOf = "1/4", DelayAfterLeader = 100, Interval = 100, Count = 2 } },
+                    new Sound("k") { Strategy = new RepeatStrategy { PlayEveryXOutOf = "1/4", DelayAfterLeader = 100, Interval = 100, Count = 2 } },
                     new Sound("ts2") { Strategy = new RepeatStrategy { DelayAfterLeader = 100, Interval=100, Count=2, PlayEveryXOutOf="2/4" } },
                     new Sound("ts2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100, PlayEveryXOutOf="4/4" } },
                     new Sound("ts3") { Strategy = new RepeatStrategy { DelayAfterLeader = 50, Count = 4, Interval = 80, LinearIncrement = -10, PlayEveryXOutOf = "2/4" } },
@@ -48,19 +48,19 @@ public class Minimal
                 Strategy = new RepeatStrategy { Count = 4, Interval = 2000 },
                 Followers = new()
                 {
-                    new Sound("b1")
+                    new Sound("k")
                     {
                         Strategy = new RepeatStrategy { Count = 2, Interval = 250 },
                         Followers = new() {
-                            new Sound("b2") {
+                            new Sound("s") {
                                 Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 2 },
                                 Followers = new()
                                 {
-                                    new Sound("b1")
+                                    new Sound("k")
                                     {
                                         Strategy = new RepeatStrategy { DelayAfterLeader = 585, Count = 2, Interval = 125 },
                                         Followers = new() {
-                                            new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 2 } }
+                                            new Sound("s") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 2 } }
                                         },
                                     }
                                 }
@@ -86,23 +86,23 @@ public class Minimal
                 Strategy = new RepeatStrategy { Count = 4, Interval = 2550 },
                 Followers = new()
                 {
-                    new Sound("b1")
+                    new Sound("k")
                     {
                         Strategy = new RepeatStrategy { Count = 2, Interval = 330 },
                         Followers = new() {
-                            new Sound("b2") {
+                            new Sound("s") {
                                 Strategy = new PlayOnceStrategy { DelayAfterLeader = 330, PlayEveryX = 2 },
                                 Followers = new()
                                 {
-                                    new Sound("b1")
+                                    new Sound("k")
                                     {
                                         Strategy = new PlayOnceStrategy { DelayAfterLeader = 950, PlayEveryXOutOf="1/2" },
-                                        Followers = new() { new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 }}},
+                                        Followers = new() { new Sound("s") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 }}},
                                     },
-                                    new Sound("b1")
+                                    new Sound("k")
                                     {
                                         Strategy = new RepeatStrategy { DelayAfterLeader = 500, PlayEveryXOutOf="2/2", Count = 2, Interval = 450 },
-                                        Followers = new() {new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330,  PlayEveryX = 2 } }},
+                                        Followers = new() {new Sound("s") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330,  PlayEveryX = 2 } }},
                                     }
                                 }
                             },
@@ -113,7 +113,7 @@ public class Minimal
         };
     }
 
-    internal static Sequence SlowBeat1LeadWithoutRepeats()
+    internal static Sequence SlowBeat1WithoutRepeats()
     {
         return new Sequence
         {
@@ -122,26 +122,26 @@ public class Minimal
                 Strategy = new RepeatStrategy { Count = 2, Interval = 5100 },
                 Followers = new()
             {
-                new Sound("b1")
+                new Sound("k")
                 {
                     Followers = new() {
-                        new Sound("b1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 } },
-                        new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*2 } },
+                        new Sound("k") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 } },
+                        new Sound("s") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*2 } },
 
-                        new Sound("b1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*4 + 290 },
-                            Followers = new() { new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 }}},
+                        new Sound("k") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*4 + 290 },
+                            Followers = new() { new Sound("s") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 }}},
                         },
 
-                        new Sound("b1") {
+                        new Sound("k") {
                             Strategy = new PlayOnceStrategy { DelayAfterLeader = 2550 },
                             Followers = new() {
-                                new Sound("b1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 } },
-                                new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*2 } },
+                                new Sound("k") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 } },
+                                new Sound("s") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*2 } },
 
-                                new Sound("b1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*2 + 500 },
+                                new Sound("k") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*2 + 500 },
                                     Followers = new() {
-                                        new Sound("b1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 450 } },
-                                        new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 450+330 } },
+                                        new Sound("k") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 450 } },
+                                        new Sound("s") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 450+330 } },
                                     },
                                 }
                             },
@@ -165,14 +165,14 @@ public class Minimal
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 4700 },
                 Followers = new()
                 {
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() },
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 900 }},
-                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
-                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
-                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
-                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() },
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 900 }},
+                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
+                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
+                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
+                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
                 },
             },
 
@@ -191,16 +191,16 @@ public class Minimal
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 4400 },
                 Followers = new()
                 {
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {PlayEveryX = 1}},
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 350 }},
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200 }},
-                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200 }},
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 350 }},
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 800 }},
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() {PlayEveryX = 1}},
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 350 }},
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200 }},
+                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200 }},
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 350 }},
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 800 }},
                     // those two percussions need more accent from some other sound:
-                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
-                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500 }},
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
+                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
+                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500 }},
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
                 },
             },
         };
@@ -218,11 +218,11 @@ public class Minimal
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 2400 },
                 Followers = new()
                 {
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() },
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
-                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
-                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 900 }},
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() },
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
+                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
+                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 900 }},
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
                 },
             },
         };

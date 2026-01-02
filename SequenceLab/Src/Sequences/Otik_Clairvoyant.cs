@@ -14,17 +14,17 @@ public class Otik_Clairvoyant
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 1900 },
                 Followers = new()
                 {
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() },
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 360 },
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() },
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 360 },
                         Followers = new () {
-                            new Sound("b2") { Strategy = new PlayOnceStrategy() { DelayAfterLeader = 100 } },
-                            new Sound("b1") { Strategy = new PlayOnceStrategy() { DelayAfterLeader = 340 } },
+                            new Sound("s") { Strategy = new PlayOnceStrategy() { DelayAfterLeader = 100 } },
+                            new Sound("k") { Strategy = new PlayOnceStrategy() { DelayAfterLeader = 340 } },
                         },
                     },
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 205 } },
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 230 } },
-                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 205 } },
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 230 } },
+                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
                 }
             }
         };

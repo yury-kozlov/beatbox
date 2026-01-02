@@ -14,17 +14,17 @@ public class Scsi9_Nebula_Hotel
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 3940 },
                 Followers = new()
                 {
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() },
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 260 } },
-                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 230 } },
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 750 } },
-                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 220 } },
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 500 } },
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 250 } },
-                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 250 } },
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 400 } },
-                    new Sound("b1") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 350 } },
-                    new Sound("b2") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 250 } },
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() },
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 260 } },
+                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 230 } },
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 750 } },
+                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 220 } },
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 500 } },
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 250 } },
+                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 250 } },
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 400 } },
+                    new Sound("k") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 350 } },
+                    new Sound("s") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 250 } },
                 }
             }
         };
