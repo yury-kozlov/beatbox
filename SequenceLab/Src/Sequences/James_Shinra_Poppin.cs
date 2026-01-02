@@ -12,7 +12,6 @@ public class James_Shinra_Poppin
                 Followers = new() {
                     new Kick
                     {
-                        Strategy = new PlayOnceStrategy(),
                         Followers = new ()
                         {
                             new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 680 } },

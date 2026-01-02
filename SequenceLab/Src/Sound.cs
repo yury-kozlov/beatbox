@@ -20,7 +20,7 @@ public record Sound
     }
 
     public string? Name;
-    public required AbstractStrategy Strategy;
+    public AbstractStrategy Strategy = new PlayOnceStrategy();
     public List<Sound> Followers = new();
     public Sound? Leader;
     public bool IsSilenced;
@@ -49,10 +49,10 @@ public record Metronome : Sound
 /// Main beat sound.
 /// </summary>
 public record Kick : Sound
-    {
+{
     public Kick() : base(KickSound)
     { }
-    }
+}
 
 /// <summary>
 /// Snare sound.
