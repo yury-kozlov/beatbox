@@ -118,7 +118,7 @@ public class SequenceSamplesTests
     public void Minimal_SlowBeat1_ReturnExpected()
     {
         // arrange
-        var sequence = Minimal.SlowBeat1();
+        var sequence = Minimal.SlowBeat1WithRepeats();
         string[] expected = ["0000:no-sound", "0000:b1", "0330:b1", "0660:b2", "0660:no-sound", "1610:b1", "1940:b2", "2550:no-sound", "2550:b1", "2880:b1", "3210:b2", "3210:no-sound", "3710:b1", "4160:b1", "4490:b2", "4610:no-sound", "5100:no-sound", "5100:b1", "5430:b1", "5760:b2", "5760:no-sound", "6710:b1", "7040:b2", "7650:no-sound", "7650:b1", "7980:b1", "8310:b2", "8310:no-sound", "8810:b1", "9260:b1", "9590:b2", "9710:no-sound", "10200:no-sound"];
 
         // act

@@ -31,7 +31,7 @@ internal class BeatBox : IDisposable
         var seq2 = Minimal.BrokenBeat1().Generate();
         await _transport.PlayRepeated(seq2);
 
-        var seq3 = Minimal.SlowBeat1().Generate();
+        var seq3 = Minimal.SlowBeat1WithRepeats().Generate();
         await _transport.PlayRepeated(seq3);
 
         Console.WriteLine("");

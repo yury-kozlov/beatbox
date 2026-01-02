@@ -77,11 +77,11 @@ public class Minimal
         };
     }
 
-    internal static Sequence SlowBeat1()
+    internal static Sequence SlowBeat1WithRepeats()
     {
         return new Sequence
         {
-            Leader = new Sound()
+            Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy { Count = 4, Interval = 2550 },
                 Followers = new()
@@ -109,6 +109,47 @@ public class Minimal
                        },
                     },
                 },
+            }
+        };
+    }
+
+    internal static Sequence SlowBeat1LeadWithoutRepeats()
+    {
+        return new Sequence
+        {
+            Leader = new Metronome()
+            {
+                Strategy = new RepeatStrategy { Count = 2, Interval = 5100 },
+                Followers = new()
+            {
+                new Sound("b1")
+                {
+                    Followers = new() {
+                        new Sound("b1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 } },
+                        new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*2 } },
+
+                        new Sound("b1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*4 + 290 },
+                            Followers = new() { new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 }}},
+                        },
+
+                        new Sound("b1") {
+                            Strategy = new PlayOnceStrategy { DelayAfterLeader = 2550 },
+                            Followers = new() {
+                                new Sound("b1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 } },
+                                new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*2 } },
+
+                                new Sound("b1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*2 + 500 },
+                                    Followers = new() {
+                                        new Sound("b1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 450 } },
+                                        new Sound("b2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 450+330 } },
+                                    },
+                                }
+                            },
+                        },
+                    },
+                },
+            }
+            }
         };
     }
 
