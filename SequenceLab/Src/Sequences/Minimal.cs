@@ -121,34 +121,33 @@ public class Minimal
             {
                 Strategy = new RepeatStrategy { Count = 2, Interval = 5100 },
                 Followers = new()
-            {
-                new Kick
                 {
-                    Followers = new() {
-                        new Kick { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 } },
-                        new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*2 } },
+                    new Kick
+                    {
+                        Followers = new() {
+                            new Kick { DelayAfterLeader = 330 },
+                            new Snare { DelayAfterLeader = 330*2 },
 
-                        new Kick { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*4 + 290 },
-                            Followers = new() { new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 }}},
-                        },
+                            new Kick { DelayAfterLeader = 330*4 + 290,
+                                Followers = new() { new Snare { DelayAfterLeader = 330 }},
+                            },
 
-                        new Kick {
-                            Strategy = new PlayOnceStrategy { DelayAfterLeader = 2550 },
-                            Followers = new() {
-                                new Kick { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 } },
-                                new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*2 } },
+                            new Kick { DelayAfterLeader = 2550,
+                                Followers = new() {
+                                    new Kick { DelayAfterLeader = 330 },
+                                    new Snare { DelayAfterLeader = 330*2 },
 
-                                new Kick { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330*2 + 500 },
-                                    Followers = new() {
-                                        new Kick { Strategy = new PlayOnceStrategy { DelayAfterLeader = 450 } },
-                                        new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 450+330 } },
-                                    },
-                                }
+                                    new Kick { DelayAfterLeader = 330*3 + 170,
+                                        Followers = new() {
+                                            new Kick { DelayAfterLeader = 450 },
+                                            new Snare { DelayAfterLeader = 450+330 },
+                                        },
+                                    }
+                                },
                             },
                         },
                     },
-                },
-            }
+                }
             }
         };
     }

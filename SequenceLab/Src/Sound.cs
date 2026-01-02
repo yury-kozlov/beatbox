@@ -25,6 +25,8 @@ public record Sound
     public Sound? Leader;
     public bool IsSilenced;
 
+    public int DelayAfterLeader { set { Strategy.DelayAfterLeader = value; } }
+
     override public string? ToString() => Name;
 
     internal void SetLeader()
