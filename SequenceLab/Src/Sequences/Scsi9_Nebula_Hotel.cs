@@ -12,8 +12,7 @@ public class Scsi9_Nebula_Hotel
             Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 3940 },
-                Followers = new()
-                {
+                Followers = [
                     new Kick { Strategy = new FollowPreviousSoundStrategy() },
                     new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 260 } },
                     new Snare { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 230 } },
@@ -25,7 +24,7 @@ public class Scsi9_Nebula_Hotel
                     new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 400 } },
                     new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 350 } },
                     new Snare { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 250 } },
-                }
+                ]
             }
         };
 

@@ -12,20 +12,19 @@ public class Otik_Clairvoyant
             Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 1900 },
-                Followers = new()
-                {
+                Followers = [
                     new Kick { Strategy = new FollowPreviousSoundStrategy() },
                     new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 360 },
-                        Followers = new () {
+                        Followers = [
                             new Snare { Strategy = new PlayOnceStrategy() { DelayAfterLeader = 100 } },
                             new Kick { Strategy = new PlayOnceStrategy() { DelayAfterLeader = 340 } },
-                        },
+                        ]
                     },
                     new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 205 } },
                     new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
                     new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 230 } },
                     new Snare { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
-                }
+                ]
             }
         };
 

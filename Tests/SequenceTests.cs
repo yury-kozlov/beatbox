@@ -13,12 +13,12 @@ public class SequenceTests
             Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 16, Interval = 500 },
-                Followers = new() {
+                Followers = [
                   new Sound("ts1") { Strategy = new RepeatStrategy { DelayAfterLeader = 150, Count = 2, Interval = 80 } },
                   new Sound("ts2") { Strategy = new PlayOnceStrategy { PlayEveryX = 4 } },
                   new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 4 } },
                   new Sound("ts3") { Strategy = new RepeatStrategy { DelayAfterLeader = 80, Count = 4, Interval = 80, LinearIncrement = -10, PlayEveryX = 8 } },
-               },
+               ]
             },
         };
         string[] expected = [
@@ -124,13 +124,12 @@ public class SequenceTests
             Leader = new Sound("")
             {
                 Strategy = new RepeatStrategy() { Count = 2, Interval = 1000 },
-                Followers = new()
-                {
+                Followers = [
                     new Kick { Strategy = new FollowPreviousSoundStrategy() },
                     new Snare { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
                     new Sound("b3") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 200 } },
                     new Sound("b4") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 300 } },
-                }
+                ]
             }
         };
 
@@ -153,7 +152,7 @@ public class SequenceTests
             Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 4, Interval = 1000 },
-                Followers = new() { new Sound("every-2nd") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100, PlayEveryX = 2 } } },
+                Followers = [new Sound("every-2nd") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100, PlayEveryX = 2 } }],
             },
         };
         string[] expected = [
@@ -183,16 +182,15 @@ public class SequenceTests
             Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy { Count = 1, Interval = 1000 },
-                Followers = new()
-                {
+                Followers = [
                     new Kick
                     {
                         Strategy = new RepeatStrategy { Count = 6, Interval = 100 },
-                        Followers = new() {
+                        Followers = [
                             new Sound("every-3rd") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 50, PlayEveryX = 3 } },
-                       },
+                       ]
                     },
-                },
+                ]
             },
         };
         string[] expected = [
@@ -226,9 +224,9 @@ public class SequenceTests
             Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 8, Interval = 500 },
-                Followers = new() {
+                Followers = [
                   new Snare { Strategy = new PlayOnceStrategy { PlayEveryXOutOf = "3/4" } },
-               },
+                ]
             },
         };
         string[] expected = ["0000:k", "0500:k", "1000:k", "1000:s", "1500:k", "2000:k", "2500:k", "3000:k", "3000:s", "3500:k", "4000:no-sound"];
@@ -250,9 +248,9 @@ public class SequenceTests
             Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 4, Interval = 500 },
-                Followers = new() {
+                Followers = [
                   new Sound("ts1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100, PlayEveryXOutOf = "1/2" } },
-               },
+                ]
             },
         };
         string[] expected = ["0000:k", "0100:ts1", "0500:k", "1000:k", "1100:ts1", "1500:k", "2000:no-sound"];
@@ -274,9 +272,9 @@ public class SequenceTests
             Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 8, Interval = 500, SilenceEveryXSoundOutOf = "3/4" },
-                Followers = new() {
+                Followers = [
                   new Sound("ts1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100, SilenceEveryXOutOf = "2/4" } },
-               },
+                ]
             },
         };
         string[] expected = [

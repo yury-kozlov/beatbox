@@ -14,8 +14,7 @@ public class Pitch_Perfect_Cups
             Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 3700 },
-                Followers = new()
-                {
+                Followers = [
                     new Sound("ts2") { Strategy = new FollowPreviousSoundStrategy() },
                     new Sound("ts2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 235 }},
                     new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 210 }},
@@ -32,9 +31,8 @@ public class Pitch_Perfect_Cups
                     new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 225 }},
                     new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 220 }},
                     new Sound("ts2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 255 }},
-                },
+                ]
             },
-
         };
     }
 }

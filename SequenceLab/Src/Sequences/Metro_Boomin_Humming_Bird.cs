@@ -9,8 +9,7 @@ public class Metro_Boomin_Humming_Bird
             Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 5890 },
-                Followers = new()
-                {
+                Followers = [
                     new Kick { Strategy = new FollowPreviousSoundStrategy() },
                     new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 710 }},
                     new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400 }},
@@ -27,9 +26,8 @@ public class Metro_Boomin_Humming_Bird
                     new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200 }},
                     new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 350 }},
                     new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 370 }},
-                },
-            },
-
+                ]
+            }
         };
     }
 
@@ -40,8 +38,7 @@ public class Metro_Boomin_Humming_Bird
             Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 5890 },
-                Followers = new()
-                {
+                Followers = [
                     new Kick { Strategy = new FollowPreviousSoundStrategy() },
                     new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 175 }},
 
@@ -59,9 +56,8 @@ public class Metro_Boomin_Humming_Bird
                     new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 350 }},
                     new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200 }},
                     new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200 }},
-                },
+                ]
             },
-
         };
     }
 }
