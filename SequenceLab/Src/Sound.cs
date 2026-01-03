@@ -27,6 +27,7 @@ public record Sound
 
     /// <summary>
     /// Indicates that starting from the current sound all its followers belong to the same tag.
+    /// Tags are used for searching a sound within a sequence.
     /// </summary>
     public List<string>? Tags;
 
@@ -68,9 +69,12 @@ public record Sound
 /// <summary>
 /// Acts like a loop grid without any sound.
 /// </summary>
-public record Metronome : Sound
+public record Metronome : NoSound
+{ }
+
+public record NoSound : Sound
 {
-    public Metronome() : base(NoSound)
+    public NoSound() : base(NoSound)
     { }
 }
 

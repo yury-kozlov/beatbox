@@ -4,7 +4,7 @@ namespace Beater;
 
 public class Sequence
 {
-    public required Sound Leader;
+    public Sound Leader = new NoSound();
 
     public List<SequenceMessage> Generate()
     {

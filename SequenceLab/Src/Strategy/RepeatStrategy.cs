@@ -48,7 +48,7 @@ public class RepeatStrategy : AbstractStrategy
             AddFollowers(sound, msg, sequence);
         }
 
-        // close sequence with empty sound so that any other sequence that goes afterwards will continue only after this one ends
+        // close sequence with empty sound (acting as a spacer) so that any other sound that goes afterwards will continue only after current sequence ends
         sequence.Add(GetEndingMessage(sound));
 
         return sequence;
