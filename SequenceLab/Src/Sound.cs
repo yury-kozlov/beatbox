@@ -25,6 +25,11 @@ public record Sound
     public Sound? Leader;
     public bool IsSilenced;
 
+    /// <summary>
+    /// Indicates that starting from the current sound all its followers belong to the same tag.
+    /// </summary>
+    public List<string>? Tags;
+
     public int DelayAfterLeader { set { Strategy.DelayAfterLeader = value; } }
 
     override public string? ToString() => Name;
@@ -35,6 +40,28 @@ public record Sound
         {
             follower.Leader = this;
         }
+    }
+
+    /// <summary>
+    /// Finds recursively and returns the first sound that has the specified tag.
+    /// </summary>
+    internal Sound? FindByTag(string tag)
+    {
+        if (Tags.ContainsSafe(tag))
+        {
+            return this;
+        }
+
+        foreach (var follower in Followers)
+        {
+            var sound = follower.FindByTag(tag);
+            if (sound is not null)
+            {
+                return sound;
+            }
+        }
+
+        return null;
     }
 }
 

@@ -8,4 +8,9 @@ public static class Extensions
     {
         return string.IsNullOrEmpty(value);
     }
+
+    public static bool ContainsSafe<T>(this List<T>? source, T item)
+    {
+        return source is not null && source.Contains(item);
+    }
 }
