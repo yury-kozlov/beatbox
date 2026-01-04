@@ -6,6 +6,11 @@ public class Sequence
 {
     public Sound Leader = new NoSound();
 
+    /// <summary>
+    /// In milliseconds (represents full loop of a sequence including ending space).
+    /// </summary>
+    public int Duration;
+
     public List<SequenceMessage> Generate()
     {
         var sequence = Leader.Strategy.GenerateSequence(Leader);
@@ -13,6 +18,28 @@ public class Sequence
     }
 
     public static Sequence? FromJson(string json) => Serialization.FromJson<Sequence>(json);
+
+    /// <summary>
+    /// Appends new sequence to the end of the current one.
+    /// NOTE: duration of the current sequence is increased after adding the new one.
+    /// </summary>
+    internal void Append(Sequence next)
+    {
+        if (Leader.Followers.Count == 0)
+        {
+            // this is the first sequence
+            Leader.Followers = [next.Leader];
+            Duration = next.Duration;
+            return;
+        }
+        
+        Leader.Followers.Add(new Joint()
+        {
+            DelayAfterLeader = Duration, // wait for the original sequence to finish, only then start playing the next one
+            Followers = [next.Leader],
+        });
+        Duration += next.Duration;
+    }
 }
 
 public class SequenceMessage : TransportMessage

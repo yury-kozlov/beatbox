@@ -68,6 +68,7 @@ public record Sound
 
 /// <summary>
 /// Acts like a loop grid without any sound.
+/// The same as NoSound, used for better developer experience.
 /// </summary>
 public record Metronome : NoSound
 { }
@@ -75,6 +76,16 @@ public record Metronome : NoSound
 public record NoSound : Sound
 {
     public NoSound() : base(NoSound)
+    { }
+}
+
+/// <summary>
+/// Joins two sequences.
+/// The same as NoSound, used for better debugging experience.
+/// </summary>
+public record Joint : Sound
+{
+    public Joint() : base(NoSound)
     { }
 }
 

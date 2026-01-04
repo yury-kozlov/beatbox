@@ -113,32 +113,29 @@ public class Minimal
     {
         return new Sequence
         {
-            Leader = new Metronome()
+            Duration = 5100,
+            Leader = new Kick()
             {
-                Strategy = new RepeatStrategy { Count = 2, Interval = 5100 },
+                Tags = ["group-1"],
                 Followers = [
-                    new Kick() { Tags = ["group-1"],
+                    new Kick { DelayAfterLeader = 330 },
+                    new Snare { DelayAfterLeader = 330*2 },
+
+                    new Kick { DelayAfterLeader = 330*4 + 290, Tags = ["group-2"],
+                        Followers = [new Snare { DelayAfterLeader = 330 }]
+                    },
+
+                    new Kick { DelayAfterLeader = 2550, Tags = ["group-3"],
                         Followers = [
                             new Kick { DelayAfterLeader = 330 },
                             new Snare { DelayAfterLeader = 330*2 },
 
-                            new Kick { DelayAfterLeader = 330*4 + 290, Tags = ["group-2"],
-                                Followers = [new Snare { DelayAfterLeader = 330 }]
-                            },
-
-                            new Kick { DelayAfterLeader = 2550, Tags = ["group-3"],
+                            new Kick { DelayAfterLeader = 330*3 + 170, Tags = ["group-4"],
                                 Followers = [
-                                    new Kick { DelayAfterLeader = 330 },
-                                    new Snare { DelayAfterLeader = 330*2 },
-
-                                    new Kick { DelayAfterLeader = 330*3 + 170, Tags = ["group-4"],
-                                        Followers = [
-                                            new Kick { DelayAfterLeader = 450 },
-                                            new Snare { DelayAfterLeader = 450+330 },
-                                        ]
-                                    }
+                                    new Kick { DelayAfterLeader = 450 },
+                                    new Snare { DelayAfterLeader = 450+330 },
                                 ]
-                            },
+                            }
                         ]
                     },
                 ]

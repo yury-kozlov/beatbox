@@ -304,4 +304,41 @@ public class SequenceTests
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
     }
+
+    [Fact]
+    public void AppendSequences_ReturnJoined()
+    {
+        // arrange
+        var getSequence = () => new Sequence
+        {
+            Duration = 500,
+            Leader = new Kick()
+            {
+                Followers = [new Snare() { DelayAfterLeader = 100 }, new Snare() { DelayAfterLeader = 150 }]
+            }
+        };
+        var seq1 = getSequence();
+        var seq2 = getSequence();
+
+        // act
+        var sequence = new Sequence();
+        sequence.Append(seq1);
+        sequence.Append(seq2);
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+
+        string[] expected = [
+            "0000:no-sound", // sequence start
+            "0000:k",
+            "0100:s",
+            "0150:s",
+            "0500:no-sound", // joint
+            "0500:k",
+            "0600:s",
+            "0650:s",
+        ];
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
 }
