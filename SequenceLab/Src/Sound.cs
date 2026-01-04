@@ -83,11 +83,8 @@ public record NoSound : Sound
 /// Joins two sequences.
 /// The same as NoSound, used for better debugging experience.
 /// </summary>
-public record Joint : Sound
-{
-    public Joint() : base(NoSound)
-    { }
-}
+public record Joint : NoSound
+{ }
 
 /// <summary>
 /// Main beat sound.
