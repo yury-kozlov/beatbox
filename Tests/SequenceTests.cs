@@ -109,7 +109,7 @@ public class SequenceTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
@@ -137,7 +137,7 @@ public class SequenceTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
@@ -167,7 +167,7 @@ public class SequenceTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
@@ -209,7 +209,7 @@ public class SequenceTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
@@ -233,7 +233,7 @@ public class SequenceTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
@@ -257,7 +257,7 @@ public class SequenceTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
@@ -325,7 +325,7 @@ public class SequenceTests
         sequence.Append(seq1);
         sequence.Append(seq2);
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         string[] expected = [
             "0000:no-sound", // sequence start

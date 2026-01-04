@@ -14,7 +14,7 @@ public class SequenceSamplesTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
@@ -30,7 +30,7 @@ public class SequenceSamplesTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
@@ -46,7 +46,7 @@ public class SequenceSamplesTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
@@ -62,7 +62,7 @@ public class SequenceSamplesTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
@@ -78,7 +78,7 @@ public class SequenceSamplesTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
@@ -93,7 +93,7 @@ public class SequenceSamplesTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
@@ -108,7 +108,7 @@ public class SequenceSamplesTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
@@ -123,7 +123,7 @@ public class SequenceSamplesTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}");
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
