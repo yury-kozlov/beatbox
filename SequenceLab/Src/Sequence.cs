@@ -23,14 +23,14 @@ public class Sequence
     /// Appends new sequence to the end of the current one.
     /// NOTE: duration of the current sequence is increased after adding the new one.
     /// </summary>
-    internal void Append(Sequence next)
+    internal Sequence Append(Sequence next)
     {
         if (Leader.Followers.Count == 0)
         {
             // this is the first sequence
             Leader.Followers = [next.Leader];
             Duration = next.Duration;
-            return;
+            return this;
         }
         
         Leader.Followers.Add(new Joint()
@@ -39,6 +39,7 @@ public class Sequence
             Followers = [next.Leader],
         });
         Duration += next.Duration;
+        return this;
     }
 }
 
