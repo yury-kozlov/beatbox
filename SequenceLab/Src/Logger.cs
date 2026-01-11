@@ -45,8 +45,10 @@ public class Logger
             name = "joint";
         }
 
+        var tags = msg.Sound?.Tags?.Count > 0 ? " " + msg.Sound.Tags.Join() : "";
+
         // text inside square brackets will be colored:
-        var comment = name.IsNullOrEmpty() ? $"[{msg.Comment}]" : $"[{name}] {msg.Comment}";
+        var comment = name.IsNullOrEmpty() ? $"[{msg.Comment}]" : $"[{name}] {msg.Comment}{tags}";
         var sequenceName = GetOrAddSequenceName(msg.Sound);
 
         WriteColored($"{now:H:mm:ss}:{now.Millisecond:000}, seq: [{sequenceName,3}] ", AssignedColor(sequenceName));
