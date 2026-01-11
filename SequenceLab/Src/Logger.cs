@@ -18,10 +18,21 @@ public class Logger
         ConsoleColor.DarkCyan,
     ]);
 
-    public static void Log(SequenceMessage msg, DateTime startedAt)
+    public static void Log(SequenceMessage msg, DateTime startedAt, int? sinceStart = null)
     {
-        var now = DateTime.Now;
-        var sinceStart = (now - startedAt).TotalMilliseconds;
+        DateTime now;
+        if (sinceStart.HasValue)
+        {
+            // show expected time based on already calculated timestamp
+            // (timestamp of each message is known beforehand when all messages are sent at once)
+            now = startedAt.AddMilliseconds(sinceStart.Value);
+        }
+        else
+        {
+            // show actual time based on current time
+            now = DateTime.Now;
+            sinceStart = (int)(now - startedAt).TotalMilliseconds;
+        }
 
         // text inside square brackets will be colored:
         var comment = msg.Name.IsNullOrEmpty() ? $"[{msg.Comment}]" : $"[{msg.Name}] {msg.Comment}";
@@ -39,7 +50,7 @@ public class Logger
         {
             return ConsoleColor.Green;
         }
-        
+
         return AssignedColor(msg.Sound.Name);
     }
 

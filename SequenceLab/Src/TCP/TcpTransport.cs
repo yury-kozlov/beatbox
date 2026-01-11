@@ -64,6 +64,7 @@ public class TcpTransport
 
     private void SendAllAtOnce(List<SequenceMessage> sequenceMessages)
     {
+        var startedAt = DateTime.Now;
         var batch = new TransportBatchMessage();
         SequenceMessage? previous = null;
         foreach (var msg in sequenceMessages)
@@ -75,6 +76,7 @@ public class TcpTransport
             }
 
             batch.Add(msg.SoundName, preDelay);
+            Logger.Log(msg, startedAt, msg.Timestamp);
             previous = msg;
         }
         Send(batch.ToTransportMessage());
