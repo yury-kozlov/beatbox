@@ -87,7 +87,7 @@ public class RepeatStrategy : AbstractStrategy
         return new SequenceMessage(null)
         {
             Timestamp = timestamp,
-            Comment = $"{sound.Name} repeat x{Count} ends, {calledTimesText}",
+            Comment = $"{(sound is Metronome ? "metronome" : sound.Name)} repeat x{Count} ends, {calledTimesText}",
         };
     }
 }
