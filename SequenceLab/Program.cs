@@ -7,7 +7,7 @@ public static partial class Program
         try
         {
             var player = new ConsoleKeyPlayer();
-            Console.CancelKeyPress += OnShutdown(player);
+
             player.Listen();
             player.PrintFormatted();
             player.SaveSequence();
@@ -25,11 +25,4 @@ public static partial class Program
             Console.WriteLine(ex);
         }
     }
-
-    private static ConsoleCancelEventHandler OnShutdown(ConsoleKeyPlayer player) => (object? sender, ConsoleCancelEventArgs e) =>
-    {
-        player?.Dispose();
-        Console.WriteLine("Shutting down..");
-        Environment.Exit(0);
-    };
 }

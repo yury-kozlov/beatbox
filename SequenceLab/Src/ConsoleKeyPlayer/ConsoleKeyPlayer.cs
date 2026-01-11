@@ -57,6 +57,14 @@ public class ConsoleKeyPlayer : IDisposable
             var audioMessage = GetSound(e.Key);
             _transport.Send(audioMessage.ToPlayMessage());
         };
+        Console.CancelKeyPress += OnShutdown;
+    }
+
+    private void OnShutdown(object? sender, ConsoleCancelEventArgs e)
+    {
+        Dispose();
+        Console.WriteLine("Shutting down..");
+        Environment.Exit(0);
     }
 
     public void Dispose() => _transport?.Dispose();
