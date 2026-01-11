@@ -31,6 +31,14 @@ public record Sound
     /// </summary>
     public List<string>? Tags;
 
+    /// <summary>
+    /// Name of the sequence current sounds belongs to.
+    /// Used for logging purposes.
+    /// Leader of a sequence is supposed to have this name hard coded. 
+    /// All followers will automatically get this name assigned when the sequence is logged.
+    /// </summary>
+    public string? SequenceName;
+
     public int DelayAfterLeader { set { Strategy.DelayAfterLeader = value; } }
 
     override public string? ToString() => Name;

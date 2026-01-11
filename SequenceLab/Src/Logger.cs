@@ -5,6 +5,7 @@ namespace Beater;
 public class Logger
 {
     private static Dictionary<string, ConsoleColor> _assignedColors = new();
+    private static Dictionary<Sound, string> _soundSequencenameMap = new();
     private static Stack<ConsoleColor> _availableColors = new([
         ConsoleColor.Red,
         ConsoleColor.Yellow,
@@ -34,10 +35,58 @@ public class Logger
             sinceStart = (int)(now - startedAt).TotalMilliseconds;
         }
 
-        // text inside square brackets will be colored:
-        var comment = msg.Name.IsNullOrEmpty() ? $"[{msg.Comment}]" : $"[{msg.Name}] {msg.Comment}";
+        var name = msg.Name;
+        if (msg.Sound is Metronome)
+        {
+            name = "metronome";
+        }
+        else if (msg.Sound is Joint)
+        {
+            name = "joint";
+        }
 
-        WriteColoredLine($"{now:H:mm:ss}:{now.Millisecond:000}, sinceStart: {sinceStart:0000}, schedule: {msg.Timestamp:0000}, {comment}", GetColor(msg));
+        // text inside square brackets will be colored:
+        var comment = name.IsNullOrEmpty() ? $"[{msg.Comment}]" : $"[{name}] {msg.Comment}";
+        var sequenceName = GetOrAddSequenceName(msg.Sound);
+
+        WriteColored($"{now:H:mm:ss}:{now.Millisecond:000}, seq: [{sequenceName,3}] ", AssignedColor(sequenceName));
+
+        if (sinceStart.HasValue)
+        {
+            // don't show schedule because they are equal
+            WriteColored($"timestamp: {sinceStart:0000}, {comment}", GetColor(msg));
+        }
+        else
+        {
+            WriteColored($"sinceStart: {sinceStart:0000}, schedule: {msg.Timestamp:0000}, {comment}", GetColor(msg));
+        }
+
+        Console.WriteLine();
+    }
+
+    /// <summary>
+    /// This method populates the map with sequence names recursively.
+    /// This is done only once per sound and all its followers (leader is supposed to have its sequence name hard coded).
+    /// </summary>
+    private static string GetOrAddSequenceName(Sound? sound)
+    {
+        if (sound?.SequenceName is null)
+        {
+            return "";
+        }
+
+        _soundSequencenameMap[sound] = sound.SequenceName;
+
+        foreach (var follower in sound.Followers)
+        {
+            if (follower.SequenceName is null)
+            {
+                follower.SequenceName = sound.SequenceName;
+            }
+            GetOrAddSequenceName(follower);
+        }
+
+        return sound.SequenceName;
     }
 
     private static ConsoleColor GetColor(SequenceMessage msg)
@@ -86,11 +135,5 @@ public class Logger
             Console.Write(piece);
             Console.ResetColor();
         }
-    }
-
-    public static void WriteColoredLine(string message, ConsoleColor color)
-    {
-        WriteColored(message, color);
-        Console.WriteLine();
     }
 }
