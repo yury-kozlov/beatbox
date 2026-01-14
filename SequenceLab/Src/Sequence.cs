@@ -4,12 +4,18 @@ namespace Beater;
 
 public class Sequence
 {
-    public Sound Leader = new NoSound();
+    public Sound Leader { get; set => field = value.WithSequenceIfMissing(this); } = new NoSound();
 
     /// <summary>
     /// In milliseconds (represents full loop of a sequence including ending space).
     /// </summary>
     public int Duration;
+
+    /// <summary>
+    /// Name of the current sequence.
+    /// Used for logging purposes.
+    /// </summary>
+    public string? Name;
 
     public List<SequenceMessage> Generate()
     {
@@ -32,7 +38,7 @@ public class Sequence
             Duration = next.Duration;
             return this;
         }
-        
+
         Leader.Followers.Add(new Joint()
         {
             DelayAfterLeader = Duration, // wait for the original sequence to finish, only then start playing the next one
@@ -41,6 +47,8 @@ public class Sequence
         Duration += next.Duration;
         return this;
     }
+
+    public override string ToString() => Name ?? base.ToString() ?? "";
 }
 
 public class SequenceMessage : TransportMessage

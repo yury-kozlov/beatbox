@@ -23,6 +23,15 @@ public record Sound
     public AbstractStrategy Strategy = new PlayOnceStrategy();
     public List<Sound> Followers = new();
     public Sound? Leader;
+
+    /// <summary>
+    /// Original sequence current sound belongs to.
+    /// Used for logging purposes.
+    /// NOTE: when appending one sequence to another, the original sequence still remains in place here.
+    /// All followers will automatically get this name assigned when a leader sound is added to a sequence.
+    /// </summary>
+    public Sequence Sequence;
+
     public bool IsSilenced;
 
     /// <summary>
@@ -30,14 +39,6 @@ public record Sound
     /// Tags are used for searching a sound within a sequence.
     /// </summary>
     public List<string>? Tags;
-
-    /// <summary>
-    /// Name of the sequence current sounds belongs to.
-    /// Used for logging purposes.
-    /// Leader of a sequence is supposed to have this name hard coded. 
-    /// All followers will automatically get this name assigned when the sequence is logged.
-    /// </summary>
-    public string? SequenceName;
 
     public int DelayAfterLeader { set { Strategy.DelayAfterLeader = value; } }
 
@@ -71,6 +72,24 @@ public record Sound
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Sets sequence to the current sound if it's missing.
+    /// </summary>
+    public Sound WithSequenceIfMissing(Sequence sequence)
+    {
+        if (Sequence is null)
+        {
+            Sequence = sequence;
+        }
+
+        foreach (var follower in Followers)
+        {
+            follower.WithSequenceIfMissing(Sequence);
+        }
+
+        return this;
     }
 }
 

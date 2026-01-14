@@ -5,7 +5,6 @@ namespace Beater;
 public class Logger
 {
     private static Dictionary<string, ConsoleColor> _assignedColors = new();
-    private static Dictionary<Sound, string> _soundSequencenameMap = new();
     private static Stack<ConsoleColor> _availableColors = new([
         ConsoleColor.Red,
         ConsoleColor.Yellow,
@@ -49,7 +48,7 @@ public class Logger
 
         // text inside square brackets will be colored:
         var comment = name.IsNullOrEmpty() ? $"[{msg.Comment}]" : $"[{name}] {msg.Comment}{tags}";
-        var sequenceName = GetOrAddSequenceName(msg.Sound);
+        var sequenceName = msg.Sound?.Sequence?.Name ?? "";
 
         WriteColored($"{now:H:mm:ss}:{now.Millisecond:000}, seq: [{sequenceName,3}] ", AssignedColor(sequenceName));
 
@@ -64,31 +63,6 @@ public class Logger
         }
 
         Console.WriteLine();
-    }
-
-    /// <summary>
-    /// This method populates the map with sequence names recursively.
-    /// This is done only once per sound and all its followers (leader is supposed to have its sequence name hard coded).
-    /// </summary>
-    private static string GetOrAddSequenceName(Sound? sound)
-    {
-        if (sound?.SequenceName is null)
-        {
-            return "";
-        }
-
-        _soundSequencenameMap[sound] = sound.SequenceName;
-
-        foreach (var follower in sound.Followers)
-        {
-            if (follower.SequenceName is null)
-            {
-                follower.SequenceName = sound.SequenceName;
-            }
-            GetOrAddSequenceName(follower);
-        }
-
-        return sound.SequenceName;
     }
 
     private static ConsoleColor GetColor(SequenceMessage msg)
