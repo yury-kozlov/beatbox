@@ -4,6 +4,8 @@ namespace Beater;
 
 public class Sequence
 {
+    private int JoinsCounter;
+
     public Sound Leader { get; set => field = value.WithSequenceIfMissing(this); } = new NoSound();
 
     /// <summary>
@@ -16,6 +18,11 @@ public class Sequence
     /// Used for logging purposes.
     /// </summary>
     public string? Name;
+
+    /// <summary>
+    /// Last sequence that was appended to the current one.
+    /// </summary>
+    public Sequence? LastAppendedSequence;
 
     public List<SequenceMessage> Generate()
     {
@@ -36,15 +43,21 @@ public class Sequence
             // this is the first sequence
             Leader.Followers = [next.Leader];
             Duration = next.Duration;
+            LastAppendedSequence = next;
             return this;
         }
 
+        JoinsCounter++;
         Leader.Followers.Add(new Joint()
         {
+            JoinsCounter = JoinsCounter,
             DelayAfterLeader = Duration, // wait for the original sequence to finish, only then start playing the next one
             Followers = [next.Leader],
+            PreviousSequence = LastAppendedSequence!,
+            NextSequence = next,
         });
         Duration += next.Duration;
+        LastAppendedSequence = next;
         return this;
     }
 

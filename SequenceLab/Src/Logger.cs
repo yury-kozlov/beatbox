@@ -39,9 +39,9 @@ public class Logger
         {
             name = "metronome";
         }
-        else if (msg.Sound is Joint)
+        else if (msg.Sound is Joint j)
         {
-            name = "joint";
+            name = $"joint #{j.JoinsCounter} {j.PreviousSequence.Name}__{j.NextSequence.Name}";
         }
 
         var tags = msg.Sound?.Tags?.Count > 0 ? " " + msg.Sound.Tags.Join() : "";

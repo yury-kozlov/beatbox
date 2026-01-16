@@ -111,7 +111,23 @@ public record NoSound : Sound
 /// The same as NoSound, used for better debugging experience.
 /// </summary>
 public record Joint : NoSound
-{ }
+{
+    /// <summary>
+    /// Indicates number of joined sequences.
+    /// Initialized when a sequence is appended to another sequence.
+    /// </summary>
+    public required int JoinsCounter;
+
+    /// <summary>
+    /// The original sequence to which a new one will be appended.
+    /// </summary>
+    public required Sequence PreviousSequence;
+
+    /// <summary>
+    /// Next sequence appended to the original one.
+    /// </summary>
+    public required Sequence NextSequence;
+}
 
 /// <summary>
 /// Main beat sound.
