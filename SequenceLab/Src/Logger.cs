@@ -50,7 +50,7 @@ public class Logger
         var comment = name.IsNullOrEmpty() ? $"[{msg.Comment}]" : $"[{name}] {msg.Comment}{tags}";
         var sequenceName = msg.Sound?.Sequence?.Name ?? "";
 
-        WriteColored($"{now:H:mm:ss}:{now.Millisecond:000}, seq: [{sequenceName,3}] ", AssignedColor(sequenceName));
+        WriteColored($"{now:H:mm:ss}:{now.Millisecond:000}, seq: [{sequenceName,5}] ", AssignedColor(sequenceName));
 
         if (sinceStart.HasValue)
         {
@@ -88,6 +88,11 @@ public class Logger
         if (_availableColors.TryPop(out color))
         {
             _assignedColors[token] = color;
+        }
+        else
+        {
+            // we are out of colors, reset and start again:
+            _availableColors = new(_assignedColors.Values);
         }
         return color;
     }
