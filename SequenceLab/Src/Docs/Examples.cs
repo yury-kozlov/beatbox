@@ -41,4 +41,10 @@ class Examples
         var player = new ConsoleKeyPlayer();
         player.PlayRepeated(result).Wait();
     }
+
+    public void PlaySequencesAtTheSameTime()
+    {
+        // in order to play 2 sequences at the same time
+        // need to add them as followers of an arbitrary sound
+    }
 }
