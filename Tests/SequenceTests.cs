@@ -5,6 +5,98 @@ namespace Tests;
 public class SequenceTests
 {
     [Fact]
+    public void PlayOnceStrategy_ReturnExpected()
+    {
+        // arrange
+        var sequence = new Sequence
+        {
+            Leader = new Metronome()
+            {
+                Followers = [
+                    new Kick(),
+                    new Kick { Strategy = new PlayOnceStrategy() { DelayAfterLeader = 300 }},
+                    new Snare { Strategy = new PlayOnceStrategy() {DelayAfterLeader = 600 }},
+                    new Snare { Strategy = new PlayOnceStrategy() {DelayAfterLeader = 1500 }},
+                    new Kick { Strategy = new PlayOnceStrategy() {DelayAfterLeader = 1800 }},
+                ]
+            },
+        };
+
+        string[] expected = [
+            "0000:no-sound",
+            "0000:k",
+            "0300:k",
+            "0600:s",
+            "1500:s",
+            "1800:k",
+        ];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.GetTimestamps();
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void Metronom_RepeatStrategy_ReturnExpected()
+    {
+        // arrange
+        var sequence = new Sequence
+        {
+            Leader = new Metronome() { Strategy = new RepeatStrategy() { Count = 2, Interval = 1000 } },
+        };
+
+        string[] expected = [
+            "0000:no-sound",
+            "1000:no-sound",
+            "2000:no-sound",
+        ];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.GetTimestamps();
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void PlayOnceStrategy_Repeated_ReturnExpected()
+    {
+        // arrange
+        var sequence = new Sequence
+        {
+            Leader = new Metronome()
+            {
+                Strategy = new RepeatStrategy() { Count = 2, Interval = 1000 },
+                Followers = [
+                    new Kick(),
+                    new Snare { Strategy = new PlayOnceStrategy() {DelayAfterLeader = 500 }},
+                ]
+            },
+        };
+
+        string[] expected = [
+            "0000:no-sound",
+            "0000:k",
+            "0500:s",
+            "1000:no-sound",
+            "1000:k",
+            "1500:s",
+            "2000:no-sound",
+        ];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.GetTimestamps();
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
     public void GenerateSquareLoopSequence_ReturnExpected()
     {
         // arrange
@@ -299,7 +391,7 @@ public class SequenceTests
 
         // act
         var actual = sequence.Generate();
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}{(msg.Sound?.IsSilenced is true ? "-silenced" : "")}");
+        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}{(msg.IsSilenced is true ? "-silenced" : "")}");
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
