@@ -6,15 +6,14 @@ public record Sound
     public const string KickSound = "k";
     public const string SnareSound = "s";
 
-    public Sound(string? name)
+    public Sound(string name)
     {
-        Name = name;
+        Name = name.IsNullOrEmpty() ? NoSound : name;
     }
 
-    public Sound(string? name, string simultaneousSound)
+    public Sound(string name, string simultaneousSound)
+        : this(name)
     {
-        Name = name;
-
         // both sounds will be played at the same time (without any delay between them)
         Followers.Add(new Sound(simultaneousSound) { Strategy = new FollowPreviousSoundStrategy() });
     }
@@ -25,12 +24,20 @@ public record Sound
     public Sound? Leader;
 
     /// <summary>
+    /// In the final sequence, represents absolute position of the sound from the beginning of the whole sequence.
+    /// If the sound is an X iteration inside a loop, position will still be calculated from the very beginning (including all previous iterations).
+    /// NOTE: during sequence generation, this value is calculated relatively to the current leader and then shifted according to leader's position (becomes absolute).
+    /// </summary>
+    public int Timestamp;
+    public string? Comment;
+
+    /// <summary>
     /// Original sequence current sound belongs to.
     /// Used for logging purposes.
     /// NOTE: when appending one sequence to another, the original sequence still remains in place here.
     /// All followers will automatically get this name assigned when a leader sound is added to a sequence.
     /// </summary>
-    public Sequence Sequence;
+    public Sequence? Sequence;
 
     public bool IsSilenced;
 
@@ -42,7 +49,7 @@ public record Sound
 
     public int DelayAfterLeader { set { Strategy.DelayAfterLeader = value; } }
 
-    override public string? ToString() => Name;
+    public override string? ToString() => Name;
 
     internal void SetLeader()
     {

@@ -18,7 +18,7 @@ public class Logger
         ConsoleColor.DarkCyan,
     ]);
 
-    public static void Log(SequenceMessage msg, DateTime startedAt, int? sinceStart = null)
+    public static void Log(Sound msg, DateTime startedAt, int? sinceStart = null)
     {
         DateTime now;
         if (sinceStart.HasValue)
@@ -35,20 +35,20 @@ public class Logger
         }
 
         var name = msg.Name;
-        if (msg.Sound is Metronome)
+        if (msg is Metronome)
         {
             name = "metronome";
         }
-        else if (msg.Sound is Joint j)
+        else if (msg is Joint j)
         {
             name = $"joint #{j.JoinsCounter} {j.PreviousSequence.Name}__{j.NextSequence.Name}";
         }
 
-        var tags = msg.Sound?.Tags?.Count > 0 ? " " + msg.Sound.Tags.Join() : "";
+        var tags = msg?.Tags?.Count > 0 ? " " + msg.Tags.Join() : "";
 
         // text inside square brackets will be colored:
         var comment = name.IsNullOrEmpty() ? $"[{msg.Comment}]" : $"[{name}] {msg.Comment}{tags}";
-        var sequenceName = msg.Sound?.Sequence?.Name ?? "";
+        var sequenceName = msg.Sequence?.Name ?? "";
 
         WriteColored($"{now:H:mm:ss}:{now.Millisecond:000}, seq: [{sequenceName,5}] ", AssignedColor(sequenceName));
 
@@ -65,18 +65,18 @@ public class Logger
         Console.WriteLine();
     }
 
-    private static ConsoleColor GetColor(SequenceMessage msg)
+    private static ConsoleColor GetColor(Sound msg)
     {
-        if (msg.Sound?.Name is null || msg.Sound.IsSilenced)
+        if (msg.Name is null || msg.IsSilenced)
         {
             return ConsoleColor.DarkGray;
         }
-        if (msg.Leads)
+        if (msg.IsLeader())
         {
             return ConsoleColor.Green;
         }
 
-        return AssignedColor(msg.Sound.Name);
+        return AssignedColor(msg.Name);
     }
 
     public static ConsoleColor AssignedColor(string token)

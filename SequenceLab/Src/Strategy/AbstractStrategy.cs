@@ -45,8 +45,9 @@ public abstract class AbstractStrategy
     /// An entry point to generate sequence of messages of leader/follower.
     /// </summary>
     /// <param name="previousMessages">Sequence of previous messages (if any), from which the generated sequence will continue.</param>
-    public List<SequenceMessage> GenerateSequence(Sound sound, List<SequenceMessage>? previousMessages = null)
+    public List<Sound> GenerateSequence(Sound sound, List<Sound>? previousMessages = null)
     {
+        sound = sound with { /* clone */ };
         sound.SetLeader();
 
         CheckedTimes++;
@@ -65,7 +66,7 @@ public abstract class AbstractStrategy
         return GenerateSequenceFor(sound, previousMessages);
     }
 
-    protected abstract List<SequenceMessage> GenerateSequenceFor(Sound sound, List<SequenceMessage>? previousMessages = null);
+    protected abstract List<Sound> GenerateSequenceFor(Sound sound, List<Sound>? previousMessages = null);
 
     private bool IsSilenced()
     {
@@ -99,9 +100,9 @@ public abstract class AbstractStrategy
         return calledTimesInRange == playEveryX;
     }
 
-    protected List<SequenceMessage> GenerateFollowersSequence(Sound sound, int currentTimestamp)
+    protected List<Sound> GenerateFollowersSequence(Sound sound, int currentTimestamp)
     {
-        var mixedSequence = new List<SequenceMessage>();
+        var mixedSequence = new List<Sound>();
         foreach (var follower in sound.Followers)
         {
             // NOTE: separate followers are played independently to allow overlapping sequences (mixed together)
@@ -121,11 +122,11 @@ public abstract class AbstractStrategy
         return mixedSequence;
     }
 
-    protected void AddFollowers(Sound sound, SequenceMessage msg, List<SequenceMessage> sequence)
+    protected void AddFollowers(Sound sound, List<Sound> sequence)
     {
         if (sound.Followers.Count > 0)
         {
-            sequence.AddRange(GenerateFollowersSequence(sound, msg.Timestamp));
+            sequence.AddRange(GenerateFollowersSequence(sound, sound.Timestamp));
         }
     }
 }

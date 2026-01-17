@@ -26,26 +26,23 @@ public class RepeatStrategy : AbstractStrategy
 
     private int _previousIterval;
 
-    protected override List<SequenceMessage> GenerateSequenceFor(Sound sound, List<SequenceMessage>? previousMessages = null)
+    protected override List<Sound> GenerateSequenceFor(Sound sound, List<Sound>? previousMessages = null)
     {
         var originalSound = sound;
-        var sequence = new List<SequenceMessage>();
+        var sequence = new List<Sound>();
         for (int i = 0; i < Count; i++)
         {
-            sound = originalSound;
+            sound = originalSound with { /* clone*/ };
             if (!SilenceEveryXSoundOutOf.IsNullOrEmpty() && IsXOutOf(SilenceEveryXSoundOutOf, i + 1))
             {
                 sound = sound with { IsSilenced = true };
             }
 
-            var msg = new SequenceMessage(sound)
-            {
-                Timestamp = DelayAfterLeader + CalculateInterval(i),
-                Comment = $"#{i + 1}",
-            };
-            sequence.Add(msg);
+            sound.Timestamp = DelayAfterLeader + CalculateInterval(i);
+            sound.Comment = $"#{i + 1}";
+            sequence.Add(sound);
 
-            AddFollowers(sound, msg, sequence);
+            AddFollowers(sound, sequence);
         }
 
         // close sequence with empty sound (acting as a spacer) so that any sound appended as a follower
@@ -72,7 +69,7 @@ public class RepeatStrategy : AbstractStrategy
         return _previousIterval += Interval + (i - 1) * LinearIncrement;
     }
 
-    private SequenceMessage GetEndingMessage(Sound sound)
+    private Sound GetEndingMessage(Sound sound)
     {
         var calledTimesText = CheckedTimes == CalledTimes ? $"call #{CheckedTimes}" : $"call #{CalledTimes}, check #{CheckedTimes}";
 
@@ -85,7 +82,7 @@ public class RepeatStrategy : AbstractStrategy
             timestamp = leaderLoop.Interval;
         }
 
-        return new SequenceMessage(null)
+        return new Sound(Sound.NoSound)
         {
             Timestamp = timestamp,
             Comment = $"{(sound is Metronome ? "metronome" : sound.Name)} repeat x{Count} ends, {calledTimesText}",

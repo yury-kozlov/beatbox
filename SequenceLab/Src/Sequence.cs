@@ -24,7 +24,7 @@ public class Sequence
     /// </summary>
     public Sequence? LastAppendedSequence;
 
-    public List<SequenceMessage> Generate()
+    public List<Sound> Generate()
     {
         var sequence = Leader.Strategy.GenerateSequence(Leader);
         return sequence;
@@ -64,38 +64,9 @@ public class Sequence
     public override string ToString() => Name ?? base.ToString() ?? "";
 }
 
-public class SequenceMessage : TransportMessage
-{
-    public SequenceMessage(Sound? sound)
-        : base(sound?.Name)
-    {
-        Sound = sound;
-        Leads = sound.IsLeader();
-        Name = (Sound?.Name).IsNullOrEmpty() ? Sound.NoSound : Sound.Name;
-    }
-
-    public Sound? Sound;
-
-    public string Name;
-    public string? Comment;
-    public bool Leads;
-
-    /// <summary>
-    /// In the final sequence, represents absolute position of the sound from the beginning of the whole sequence.
-    /// If the sound is an X iteration inside a loop, position will still be calculated from the very beginning (including all previous iterations).
-    /// NOTE: during sequence generation, this value is calculated relatively to the current leader and then shifted according to leader's position (becomes absolute).
-    /// </summary>
-    public int Timestamp;
-
-    override public string ToString()
-    {
-        return $"{Timestamp:0000} {Name}";
-    }
-}
-
 public static class SequencePlayer
 {
-    public static async Task Play(this TcpTransport? transport, List<SequenceMessage> sequenceMessages)
+    public static async Task Play(this TcpTransport? transport, List<Sound> sequenceMessages)
     {
         if (transport is not null)
         {
@@ -103,7 +74,7 @@ public static class SequencePlayer
         }
     }
 
-    public static async Task PlayRepeated(this TcpTransport? transport, List<SequenceMessage> sequenceMessages)
+    public static async Task PlayRepeated(this TcpTransport? transport, List<Sound> sequenceMessages)
     {
         if (transport is not null)
         {
@@ -111,9 +82,9 @@ public static class SequencePlayer
         }
     }
 
-    public static string ToString(this List<SequenceMessage> sequenceMessages)
+    public static string ToString(this List<Sound> sequenceMessages)
     {
-        SequenceMessage? previous = null;
+        Sound? previous = null;
         var str = new StringBuilder();
         foreach (var msg in sequenceMessages)
         {
@@ -130,7 +101,7 @@ public static class SequencePlayer
                 }
             }
             previous = msg;
-            if (msg.Sound is not null && !msg.Sound.IsSilenced && msg.Message is not null)
+            if (!msg.IsSilenced)
             {
                 str.Append(msg.Name);
             }

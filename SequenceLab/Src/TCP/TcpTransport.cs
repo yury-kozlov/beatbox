@@ -1,5 +1,6 @@
 ﻿using System.Net.Sockets;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Beater;
 
@@ -46,7 +47,7 @@ public class TcpTransport
         _channel.Write(message, 0, message.Length);
     }
 
-    public async Task SendScheduled(List<SequenceMessage> sequenceMessages)
+    public async Task SendScheduled(List<Sound> sequenceMessages)
     {
         switch (SendMode)
         {
@@ -62,11 +63,11 @@ public class TcpTransport
         }
     }
 
-    private void SendAllAtOnce(List<SequenceMessage> sequenceMessages)
+    private void SendAllAtOnce(List<Sound> sequenceMessages)
     {
         var startedAt = DateTime.Now;
         var batch = new TransportBatchMessage();
-        SequenceMessage? previous = null;
+        Sound? previous = null;
         foreach (var msg in sequenceMessages)
         {
             var preDelay = msg.Timestamp - previous?.Timestamp;
@@ -75,17 +76,17 @@ public class TcpTransport
                 Console.WriteLine("Predelay can't be negative: check that sequence has properly configured loop interval");
             }
 
-            batch.Add(msg.SoundName, preDelay);
+            batch.Add(msg.Name, preDelay);
             Logger.Log(msg, startedAt, msg.Timestamp);
             previous = msg;
         }
         Send(batch.ToTransportMessage());
     }
 
-    private async Task SendDelayedMessages(List<SequenceMessage> sequenceMessages)
+    private async Task SendDelayedMessages(List<Sound> sequenceMessages)
     {
         var startedAt = DateTime.Now;
-        SequenceMessage? previous = null;
+        Sound? previous = null;
         foreach (var msg in sequenceMessages)
         {
             if (previous is not null)
@@ -99,11 +100,11 @@ public class TcpTransport
             previous = msg;
 
             Logger.Log(msg, startedAt);
-            if (msg.Sound is null || msg.Sound.IsSilenced || msg.Message is null)
+            if (msg.IsSilenced)
             {
                 continue;
             }
-            Send(msg);
+            Send(new TransportMessage(msg.Name));
         }
     }
 }
