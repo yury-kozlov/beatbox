@@ -82,7 +82,7 @@ public class RepeatStrategy : AbstractStrategy
             timestamp = leaderLoop.Interval;
         }
 
-        return new Sound(Sound.NoSound)
+        return new LoopEnd()
         {
             Timestamp = timestamp,
             Comment = $"{(sound is Metronome ? "metronome" : sound.Name)} repeat x{Count} ends, {calledTimesText}",

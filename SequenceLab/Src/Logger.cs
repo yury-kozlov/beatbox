@@ -43,6 +43,10 @@ public class Logger
         {
             name = $"joint #{j.JoinsCounter} {j.PreviousSequence.Name}__{j.NextSequence.Name}";
         }
+        else if (msg is LoopEnd)
+        {
+            name = "end of loop";
+        }
 
         var tags = msg?.Tags?.Count > 0 ? " " + msg.Tags.Join() : "";
 
