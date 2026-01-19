@@ -100,60 +100,6 @@ public record Sound
     }
 }
 
-/// <summary>
-/// Acts like a loop grid without any sound.
-/// The same as NoSound, used for better developer experience.
-/// </summary>
-public record Metronome : NoSound
-{ }
-
-public record NoSound : Sound
-{
-    public NoSound() : base(NoSound)
-    { }
-}
-
-/// <summary>
-/// Joins two sequences.
-/// The same as NoSound, used for better debugging experience.
-/// </summary>
-public record Joint : NoSound
-{
-    /// <summary>
-    /// Indicates number of joined sequences.
-    /// Initialized when a sequence is appended to another sequence.
-    /// </summary>
-    public required int JoinsCounter;
-
-    /// <summary>
-    /// The original sequence to which a new one will be appended.
-    /// </summary>
-    public required Sequence PreviousSequence;
-
-    /// <summary>
-    /// Next sequence appended to the original one.
-    /// </summary>
-    public required Sequence NextSequence;
-}
-
-/// <summary>
-/// Main beat sound.
-/// </summary>
-public record Kick : Sound
-{
-    public Kick() : base(KickSound)
-    { }
-}
-
-/// <summary>
-/// Snare sound.
-/// </summary>
-public record Snare : Sound
-{
-    public Snare() : base(SnareSound)
-    { }
-}
-
 public static class SoundExtensions
 {
     public static bool IsLeader(this Sound? sound)
