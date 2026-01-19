@@ -2,7 +2,7 @@
 
 public class PlayOnceStrategy : AbstractStrategy
 {
-    protected override List<Sound> GenerateSequenceFor(Sound sound, List<Sound>? previousMessages = null)
+    protected override List<Sound> GenerateSequenceFor(Sound sound, List<Sound>? previousSounds = null)
     {
         sound.Timestamp = DelayAfterLeader;
 

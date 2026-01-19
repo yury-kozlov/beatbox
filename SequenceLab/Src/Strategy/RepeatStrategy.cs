@@ -26,7 +26,7 @@ public class RepeatStrategy : AbstractStrategy
 
     private int _previousIterval;
 
-    protected override List<Sound> GenerateSequenceFor(Sound sound, List<Sound>? previousMessages = null)
+    protected override List<Sound> GenerateSequenceFor(Sound sound, List<Sound>? previousSounds = null)
     {
         var originalSound = sound;
         var sequence = new List<Sound>();

@@ -1,6 +1,5 @@
 ﻿using System.Net.Sockets;
 using System.Text;
-using System.Xml.Linq;
 
 namespace Beater;
 
@@ -47,15 +46,15 @@ public class TcpTransport
         _channel.Write(message, 0, message.Length);
     }
 
-    public async Task SendScheduled(List<Sound> sequenceMessages)
+    public async Task SendScheduled(List<Sound> sequence)
     {
         switch (SendMode)
         {
             case SendMode.DelayedMessages:
-                await SendDelayedMessages(sequenceMessages);
+                await SendDelayedMessages(sequence);
                 break;
             case SendMode.AllAtOnce:
-                SendAllAtOnce(sequenceMessages);
+                SendAllAtOnce(sequence);
                 break;
             default:
                 Console.WriteLine($"Unable to send generated messages. Unknown send mode: {SendMode}");
@@ -63,48 +62,48 @@ public class TcpTransport
         }
     }
 
-    private void SendAllAtOnce(List<Sound> sequenceMessages)
+    private void SendAllAtOnce(List<Sound> sequence)
     {
         var startedAt = DateTime.Now;
         var batch = new TransportBatchMessage();
         Sound? previous = null;
-        foreach (var msg in sequenceMessages)
+        foreach (var sound in sequence)
         {
-            var preDelay = msg.Timestamp - previous?.Timestamp;
+            var preDelay = sound.Timestamp - previous?.Timestamp;
             if (preDelay < 0)
             {
                 Console.WriteLine("Predelay can't be negative: check that sequence has properly configured loop interval");
             }
 
-            batch.Add(msg.Name, preDelay);
-            Logger.Log(msg, startedAt, msg.Timestamp);
-            previous = msg;
+            batch.Add(sound.Name, preDelay);
+            Logger.Log(sound, startedAt, sound.Timestamp);
+            previous = sound;
         }
         Send(batch.ToTransportMessage());
     }
 
-    private async Task SendDelayedMessages(List<Sound> sequenceMessages)
+    private async Task SendDelayedMessages(List<Sound> sequence)
     {
         var startedAt = DateTime.Now;
         Sound? previous = null;
-        foreach (var msg in sequenceMessages)
+        foreach (var sound in sequence)
         {
             if (previous is not null)
             {
-                var delay = msg.Timestamp - previous.Timestamp;
+                var delay = sound.Timestamp - previous.Timestamp;
                 if (delay > 0)
                 {
                     await Task.Delay(delay);
                 }
             }
-            previous = msg;
+            previous = sound;
 
-            Logger.Log(msg, startedAt);
-            if (msg.IsSilenced)
+            Logger.Log(sound, startedAt);
+            if (sound.IsSilenced)
             {
                 continue;
             }
-            Send(new TransportMessage(msg.Name));
+            Send(new TransportMessage(sound.Name));
         }
     }
 }
