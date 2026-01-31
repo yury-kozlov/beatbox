@@ -12,10 +12,9 @@ public class RepeatStrategy : AbstractStrategy
     public int LinearIncrement;
 
     /// <summary>
-    /// Indicates whether duration of inner loop may exceed duration of the parent loop (making leader's loop longer than it's defined).
-    /// By default false = don't expand inner loops (make them fit parent loop).
+    /// Determines whether to omit repeated sounds if they exceed duration of parent loop.
     /// </summary>
-    public bool ExpandLeaderLoop;
+    public bool TrimIfExceedsParentLoop = true;
 
     /// <summary>
     /// Will replace current sound with an empty sound preserving the same followers, for example:
@@ -40,6 +39,15 @@ public class RepeatStrategy : AbstractStrategy
 
             sound.Timestamp = DelayAfterLeader + CalculateInterval(i);
             sound.Comment = $"#{i + 1}";
+
+            if (sound.Leader?.Strategy is RepeatStrategy leaderLoop
+                && TrimIfExceedsParentLoop && sound.Timestamp > leaderLoop.Interval)
+            {
+                // sound is positioned outside parent's loop, ignore it
+                Console.WriteLine($"Trimming sound '{sound.Name}' at {sound.Timestamp}ms as it exceeds parent loop interval of {leaderLoop.Interval}ms");
+                continue;
+            }
+
             sequence.Add(sound);
 
             AddFollowers(sound, sequence);
@@ -69,23 +77,30 @@ public class RepeatStrategy : AbstractStrategy
         return _previousIterval += Interval + (i - 1) * LinearIncrement;
     }
 
-    private Sound GetEndingMessage(Sound sound)
+    private Sound GetEndingMessage(Sound lastSound)
     {
         var calledTimesText = CheckedTimes == CalledTimes ? $"call #{CheckedTimes}" : $"call #{CalledTimes}, check #{CheckedTimes}";
 
         var timestamp = DelayAfterLeader + (Interval * Count);
 
+        var trimmedText = "";
+
         // check if current loop falls out of leader's loop (e.g. due to incorrect delay of one of the followers which increases total time):
-        if (!ExpandLeaderLoop && sound.Leader?.Strategy is RepeatStrategy leaderLoop && timestamp > leaderLoop.Interval)
+        if (lastSound.Leader?.Strategy is RepeatStrategy leaderLoop && timestamp > leaderLoop.Interval)
         {
-            // current loop is longer than the leader's loop, make it equal:
-            timestamp = leaderLoop.Interval;
+            // current loop ends outside parent's loop interval
+            if (TrimIfExceedsParentLoop)
+            {
+                // end current loop together with leader's loop (to fit the loop interval)
+                timestamp = leaderLoop.Interval;
+                trimmedText = ", trimmed to fit parent loop";
+            }
         }
 
         return new LoopEnd()
         {
             Timestamp = timestamp,
-            Comment = $"{(sound is Metronome ? "metronome" : sound.Name)} repeat x{Count} ends, {calledTimesText}",
+            Comment = $"{(lastSound is Metronome ? "metronome" : lastSound.Name)} repeat x{Count} ends, {calledTimesText}{trimmedText}",
         };
     }
 }

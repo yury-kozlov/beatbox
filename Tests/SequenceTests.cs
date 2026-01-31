@@ -63,6 +63,39 @@ public class SequenceTests
     }
 
     [Fact]
+    public void RepeatStrategy_SoundsBeyondTheLoopShouldBeIgnored()
+    {
+        // arrange
+        var sequence = new Sequence
+        {
+            Leader = new Kick()
+            {
+                Strategy = new RepeatStrategy() { Count = 1, Interval = 1000 },
+                Followers = [
+                    new Snare { Strategy = new RepeatStrategy() {
+                        Interval = 600, Count = 3, // third iteration at 1200ms will exceed leader's loop of 1000ms
+                        TrimIfExceedsParentLoop = true}},
+                ]
+            },
+        };
+
+        string[] expected = [
+            "0000:k",
+            "0000:s",
+            "0600:s",
+            "1000:no-sound",
+            "1000:no-sound",
+        ];
+
+        // act
+        var actual = sequence.Generate();
+        var actualTimestamps = actual.GetTimestamps();
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
     public void PlayOnceStrategy_Repeated_ReturnExpected()
     {
         // arrange
