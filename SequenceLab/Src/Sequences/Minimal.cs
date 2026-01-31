@@ -143,6 +143,42 @@ public class Minimal
         };
     }
 
+    /// NOTE: this sequence is identical to <see cref="SlowBeat1WithoutRepeats"/> , but uses k1,s1 instead of k,s to be able to play different sampler sets together
+    internal static Sequence SlowBeat1WithoutRepeatsK1S1()
+    {
+        return new Sequence
+        {
+            Duration = 5100,
+            Name = "sb1",
+            Leader = new Sound("k1")
+            {
+                Tags = ["group-1"],
+                Followers = [
+                    new Sound("k1") { DelayAfterLeader = 330 },
+                    new Sound("s1") { DelayAfterLeader = 330*2 },
+
+                    new Sound("k1") { DelayAfterLeader = 330*4 + 290, Tags = ["group-2"],
+                        Followers = [new Sound("s1") { DelayAfterLeader = 330 }]
+                    },
+
+                    new Sound("k1") { DelayAfterLeader = 2550, Tags = ["group-3"],
+                        Followers = [
+                            new Sound("k1") { DelayAfterLeader = 330 },
+                            new Sound("s1") { DelayAfterLeader = 330*2 },
+
+                            new Sound("k1") { DelayAfterLeader = 330*3 + 170, Tags = ["group-4"],
+                                Followers = [
+                                    new Sound("k1") { DelayAfterLeader = 450 },
+                                    new Sound("s1") { DelayAfterLeader = 450+330 },
+                                ]
+                            }
+                        ]
+                    },
+                ]
+            }
+        };
+    }
+
     /// <summary>
     /// K         K   S      S   S   K      K      S           
     /// </summary>
