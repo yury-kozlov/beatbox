@@ -66,7 +66,7 @@ public abstract class AbstractStrategy
         return GenerateSequenceFor(sound, previousSounds);
     }
 
-    protected abstract Sequence GenerateSequenceFor(Sound sound, Sequence? previousSounds = null);
+    protected abstract Sequence GenerateSequenceFor(Sound leader, Sequence? previousSounds = null);
 
     private bool IsSilenced()
     {

@@ -5,9 +5,9 @@ namespace Beater;
 /// </summary>
 public class Scsi9_Nebula_Hotel
 {
-    internal static MiniSequence GetSequence()
+    internal static SequenceDesign GetSequence()
     {
-        var sequence = new MiniSequence
+        var sequence = new SequenceDesign
         {
             Leader = new Metronome()
             {

@@ -20,7 +20,7 @@ public record Sound
 
     public string? Name;
     public AbstractStrategy Strategy = new PlayOnceStrategy();
-    public Sequence Followers = new();
+    public Sequence Followers = new(); /// TODO: should this be <see cref="SequenceDesign"/> instead?
     public Sound? Leader;
 
     /// <summary>
@@ -37,7 +37,7 @@ public record Sound
     /// NOTE: when appending one sequence to another, the original sequence still remains in place here.
     /// All followers will automatically get this name assigned when a leader sound is added to a sequence.
     /// </summary>
-    public MiniSequence? Sequence;
+    public SequenceDesign? Sequence;
 
     public bool IsSilenced;
 
@@ -84,7 +84,7 @@ public record Sound
     /// <summary>
     /// Sets sequence to the current sound if it's missing.
     /// </summary>
-    public Sound WithSequenceIfMissing(MiniSequence sequence)
+    public Sound WithSequenceIfMissing(SequenceDesign sequence)
     {
         if (Sequence is null)
         {

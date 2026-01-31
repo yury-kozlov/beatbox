@@ -5,11 +5,11 @@ namespace Beater;
 /// </summary>
 public class Pitch_Perfect_Cups
 {
-    internal static MiniSequence GetSequence()
+    internal static SequenceDesign GetSequence()
     {
         // NOTE: this sequence doesn't have clear borders, so when listening from the middle, the pattern may be unrecognizable.
         // in order to put accent to its start, need to add some distinguishable sound at the beginning of each loop
-        return new MiniSequence
+        return new SequenceDesign
         {
             Leader = new Metronome()
             {

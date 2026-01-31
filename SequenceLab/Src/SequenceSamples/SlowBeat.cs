@@ -2,10 +2,10 @@
 
 public class SlowBeat
 {
-    internal static MiniSequence WithMovingSoundBetweenGroups()
+    internal static SequenceDesign WithMovingSoundBetweenGroups()
     {
         var count = 0;
-        var sequence = new MiniSequence();
+        var sequence = new SequenceDesign();
         for (int i = 4; i > 0; i--)
         {
             count++;
@@ -20,9 +20,9 @@ public class SlowBeat
         return sequence;
     }
 
-    internal static MiniSequence WithMovingSequenceBetweenGroups()
+    internal static SequenceDesign WithMovingSequenceBetweenGroups()
     {
-        var sequence = new MiniSequence();
+        var sequence = new SequenceDesign();
         for (int i = 1; i <= 3; i++)
         {
 

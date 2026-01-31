@@ -6,7 +6,7 @@ public class FollowPreviousSoundStrategy : AbstractStrategy
     /// Generate sequence relatively to the previous sound.
     /// So that delays will be calculated based on position of the previous sound (rather than position of the leader).
     /// </summary>
-    protected override Sequence GenerateSequenceFor(Sound sound, Sequence? previousSounds = null)
+    protected override Sequence GenerateSequenceFor(Sound leader, Sequence? previousSounds = null)
     {
         var delay = DelayAfterLeader;
         if (previousSounds?.Count > 0)
@@ -17,11 +17,11 @@ public class FollowPreviousSoundStrategy : AbstractStrategy
             delay += previousSounds.Last().Timestamp;
         }
 
-        sound.Timestamp = delay;
+        leader.Timestamp = delay;
 
-        var sequence = new Sequence() { sound };
+        var sequence = new Sequence() { leader };
 
-        AddFollowers(sound, sequence);
+        AddFollowers(leader, sequence);
 
         return sequence;
     }

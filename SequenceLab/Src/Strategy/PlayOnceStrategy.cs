@@ -2,13 +2,13 @@
 
 public class PlayOnceStrategy : AbstractStrategy
 {
-    protected override Sequence GenerateSequenceFor(Sound sound, Sequence? previousSounds = null)
+    protected override Sequence GenerateSequenceFor(Sound leader, Sequence? previousSounds = null)
     {
-        sound.Timestamp = DelayAfterLeader;
+        leader.Timestamp = DelayAfterLeader;
 
-        var sequence = new Sequence() { sound };
+        var sequence = new Sequence() { leader };
 
-        AddFollowers(sound, sequence);
+        AddFollowers(leader, sequence);
 
         return sequence;
     }

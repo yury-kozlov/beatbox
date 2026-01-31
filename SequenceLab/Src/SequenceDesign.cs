@@ -1,6 +1,6 @@
 ﻿namespace Beater;
 
-public class MiniSequence
+public class SequenceDesign
 {
     private int JoinsCounter;
 
@@ -22,7 +22,7 @@ public class MiniSequence
     /// <summary>
     /// Last sequence that was appended to the current one.
     /// </summary>
-    public MiniSequence? LastAppendedSequence;
+    public SequenceDesign? LastAppendedSequence;
 
     public Sequence Generate()
     {
@@ -30,13 +30,13 @@ public class MiniSequence
         return sequence;
     }
 
-    public static MiniSequence? FromJson(string json) => Serialization.FromJson<MiniSequence>(json);
+    public static SequenceDesign? FromJson(string json) => Serialization.FromJson<SequenceDesign>(json);
 
     /// <summary>
     /// Appends new sequence to the end of the current one.
     /// NOTE: duration of the current sequence is increased after adding the new one.
     /// </summary>
-    internal MiniSequence Append(MiniSequence next)
+    internal SequenceDesign Append(SequenceDesign next)
     {
         if (Leader.Followers.Count == 0)
         {

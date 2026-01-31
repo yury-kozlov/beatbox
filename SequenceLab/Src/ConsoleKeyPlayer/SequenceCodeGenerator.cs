@@ -11,7 +11,7 @@ internal class SequenceCodeGenerator
         return new string(' ', level * 4);
     }
 
-    public static string GenerateCode(MiniSequence? seq, string sequenceName, string? description)
+    public static string GenerateCode(SequenceDesign? seq, string sequenceName, string? description)
     {
         var code = new StringBuilder();
         code.AppendLine("namespace Beater;");
@@ -52,7 +52,7 @@ internal class SequenceCodeGenerator
     public static void GenerateCodeFromSequenceJson(string sequenceFilePath, string? description)
     {
         var json = File.ReadAllText(sequenceFilePath);
-        var seq = MiniSequence.FromJson(json);
+        var seq = SequenceDesign.FromJson(json);
 
         var sequenceName = Path.GetFileNameWithoutExtension(sequenceFilePath).Replace("-", "");
         var code = GenerateCode(seq, sequenceName, description);
@@ -74,7 +74,7 @@ internal class SequenceCodeGenerator
         var totalTime = delays.Sum();
         var iterationsCount = 4;
         var loop = new Metronome() { Strategy = new RepeatStrategy { Count = iterationsCount, Interval = totalTime } };
-        var seq = new MiniSequence { Leader = loop };
+        var seq = new SequenceDesign { Leader = loop };
         Sound? previousSound = null;
 
 

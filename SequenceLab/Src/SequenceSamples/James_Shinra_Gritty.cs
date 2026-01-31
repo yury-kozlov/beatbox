@@ -5,9 +5,9 @@ namespace Beater;
 /// </summary>
 public class James_Shinra_Gritty
 {
-    internal static MiniSequence GetSequence()
+    internal static SequenceDesign GetSequence()
     {
-        var sequence = new MiniSequence
+        var sequence = new SequenceDesign
         {
             Leader = new Metronome()
             {

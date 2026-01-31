@@ -15,10 +15,10 @@ public record Joint : NoSound
     /// <summary>
     /// The original sequence to which a new one will be appended.
     /// </summary>
-    public required MiniSequence PreviousSequence;
+    public required SequenceDesign PreviousSequence;
 
     /// <summary>
     /// Next sequence appended to the original one.
     /// </summary>
-    public required MiniSequence NextSequence;
+    public required SequenceDesign NextSequence;
 }

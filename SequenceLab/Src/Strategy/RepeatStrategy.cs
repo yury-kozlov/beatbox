@@ -25,37 +25,37 @@ public class RepeatStrategy : AbstractStrategy
 
     private int _previousIterval;
 
-    protected override Sequence GenerateSequenceFor(Sound sound, Sequence? previousSounds = null)
+    protected override Sequence GenerateSequenceFor(Sound leader, Sequence? previousSounds = null)
     {
-        var originalSound = sound;
+        var originalSound = leader;
         var sequence = new Sequence();
         for (int i = 0; i < Count; i++)
         {
-            sound = originalSound with { /* clone*/ };
+            leader = originalSound with { /* clone*/ };
             if (!SilenceEveryXSoundOutOf.IsNullOrEmpty() && IsXOutOf(SilenceEveryXSoundOutOf, i + 1))
             {
-                sound = sound with { IsSilenced = true };
+                leader = leader with { IsSilenced = true };
             }
 
-            sound.Timestamp = DelayAfterLeader + CalculateInterval(i);
-            sound.Comment = $"#{i + 1}";
+            leader.Timestamp = DelayAfterLeader + CalculateInterval(i);
+            leader.Comment = $"#{i + 1}";
 
-            if (sound.Leader?.Strategy is RepeatStrategy leaderLoop
-                && TrimIfExceedsParentLoop && sound.Timestamp > leaderLoop.Interval)
+            if (leader.Leader?.Strategy is RepeatStrategy leaderLoop
+                && TrimIfExceedsParentLoop && leader.Timestamp > leaderLoop.Interval)
             {
                 // sound is positioned outside parent's loop, ignore it
-                Console.WriteLine($"Trimming sound '{sound.Name}' at {sound.Timestamp}ms as it exceeds parent loop interval of {leaderLoop.Interval}ms");
+                Console.WriteLine($"Trimming sound '{leader.Name}' at {leader.Timestamp}ms as it exceeds parent loop interval of {leaderLoop.Interval}ms");
                 continue;
             }
 
-            sequence.Add(sound);
+            sequence.Add(leader);
 
-            AddFollowers(sound, sequence);
+            AddFollowers(leader, sequence);
         }
 
         // close sequence with empty sound (acting as a spacer) so that any sound appended as a follower
         // to the current sequence later will continue only after current sequence ends
-        sequence.Add(GetEndingMessage(sound));
+        sequence.Add(GetEndingMessage(leader));
 
         return sequence;
     }
