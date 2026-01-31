@@ -10,6 +10,8 @@ public class Sequence
 
     /// <summary>
     /// In milliseconds (represents full loop of a sequence including ending space).
+    /// Duration of sequence should be known ahead for each predefined sequence if it's going to be played in loop
+    /// (otherwise we will not be able to place next iteration at correct timing).
     /// </summary>
     public int Duration;
 
