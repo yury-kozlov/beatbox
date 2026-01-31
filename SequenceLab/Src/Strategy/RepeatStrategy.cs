@@ -32,7 +32,7 @@ public class RepeatStrategy : AbstractStrategy
         for (int i = 0; i < Count; i++)
         {
             leader = originalSound with { /* clone*/ };
-            if (!SilenceEveryXSoundOutOf.IsNullOrEmpty() && IsXOutOf(SilenceEveryXSoundOutOf, i + 1))
+            if (IsXOutOf(SilenceEveryXSoundOutOf, i + 1))
             {
                 leader = leader with { IsSilenced = true };
             }

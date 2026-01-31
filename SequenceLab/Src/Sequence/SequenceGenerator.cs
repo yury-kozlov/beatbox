@@ -71,16 +71,12 @@ public class SequenceGenerator
 
     private static bool IsSilenced(Sound sound)
     {
-        if (!sound.Strategy.SilenceEveryXOutOf.IsNullOrEmpty())
-        {
-            return sound.Strategy.IsXOutOf(sound.Strategy.SilenceEveryXOutOf, sound.Strategy.CheckedTimes);
-        }
-        return false;
+        return sound.Strategy.IsXOutOf(sound.Strategy.SilenceEveryXOutOf, sound.Strategy.CheckedTimes);
     }
 
     private static bool IsSkipped(Sound sound)
     {
-        if (!sound.Strategy.PlayEveryXOutOf.IsNullOrEmpty())
+        if (sound.Strategy.PlayEveryXOutOf.HasValue())
         {
             return !sound.Strategy.IsXOutOf(sound.Strategy.PlayEveryXOutOf, sound.Strategy.CheckedTimes);
         }

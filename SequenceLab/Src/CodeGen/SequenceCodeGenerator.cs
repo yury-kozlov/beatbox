@@ -17,7 +17,7 @@ internal class SequenceCodeGenerator
         code.AppendLine("namespace Beater;");
         code.AppendLine();
 
-        if (!description.IsNullOrEmpty())
+        if (description.HasValue())
         {
             code.AppendLine("/// <summary>");
             code.AppendLine($"/// {description}");

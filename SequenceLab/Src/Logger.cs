@@ -48,7 +48,7 @@ public class Logger
             name = "end of loop";
         }
 
-        var tags = msg?.Tags?.Count > 0 ? " " + msg.Tags.Join() : "";
+        var tags = msg.Tags?.Count > 0 ? " " + msg.Tags.Join() : "";
 
         // text inside square brackets will be colored:
         var comment = name.IsNullOrEmpty() ? $"[{msg.Comment}]" : $"[{name}] {msg.Comment}{tags}";

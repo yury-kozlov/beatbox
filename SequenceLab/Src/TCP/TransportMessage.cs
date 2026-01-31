@@ -10,7 +10,7 @@ public class TransportMessage
     public TransportMessage(string? soundName = null)
     {
         SoundName = soundName;
-        if (!soundName.IsNullOrEmpty())
+        if (soundName.HasValue())
         {
             Message = Encoding.ASCII.GetBytes(soundName.TrimEnd(';') + ';');
         }

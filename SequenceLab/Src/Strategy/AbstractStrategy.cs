@@ -43,8 +43,13 @@ public abstract class AbstractStrategy
 
     public abstract Sequence GenerateSequenceFor(Sound leader, Sequence? previousSounds = null);
 
-    public bool IsXOutOf(string xOutOfY, int x)
+    public bool IsXOutOf(string? xOutOfY, int x)
     {
+        if (xOutOfY.IsNullOrEmpty())
+        {
+            return false;
+        }
+
         // count calls within loop (for example, every 3rd time within repeated range of 4)
         var fraction = Numbers.GetFraction(xOutOfY);
         var playEveryX = fraction.Numerator;
