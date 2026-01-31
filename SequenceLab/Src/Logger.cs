@@ -18,7 +18,7 @@ public class Logger
         ConsoleColor.DarkCyan,
     ]);
 
-    public static void Log(Sound msg, DateTime startedAt, int? sinceStart = null)
+    public static void Log(Sound sound, DateTime startedAt, int? sinceStart = null)
     {
         DateTime now;
         if (sinceStart.HasValue)
@@ -34,53 +34,53 @@ public class Logger
             sinceStart = (int)(now - startedAt).TotalMilliseconds;
         }
 
-        var name = msg.Name;
-        if (msg is Metronome)
+        var name = sound.Name;
+        if (sound is Metronome)
         {
             name = "metronome";
         }
-        else if (msg is Joint j)
+        else if (sound is Joint j)
         {
             name = $"joint #{j.JoinsCounter} {j.PreviousSequence.Name}__{j.NextSequence.Name}";
         }
-        else if (msg is LoopEnd)
+        else if (sound is LoopEnd)
         {
             name = "end of loop";
         }
 
-        var tags = msg.Tags?.Count > 0 ? " " + msg.Tags.Join() : "";
+        var tags = sound.Tags?.Count > 0 ? " " + sound.Tags.Join() : "";
 
         // text inside square brackets will be colored:
-        var comment = name.IsNullOrEmpty() ? $"[{msg.Comment}]" : $"[{name}] {msg.Comment}{tags}";
-        var sequenceName = msg.Sequence?.Name ?? "";
+        var comment = name.IsNullOrEmpty() ? $"[{sound.Comment}]" : $"[{name}] {sound.Comment}{tags}";
+        var sequenceName = sound.Sequence?.Name ?? "";
 
         WriteColored($"{now:H:mm:ss}:{now.Millisecond:000}, seq: [{sequenceName,5}] ", AssignedColor(sequenceName));
 
         if (sinceStart.HasValue)
         {
             // don't show schedule because they are equal
-            WriteColored($"timestamp: {sinceStart:0000}, {comment}", GetColor(msg));
+            WriteColored($"timestamp: {sinceStart:0000}, {comment}", GetColor(sound));
         }
         else
         {
-            WriteColored($"sinceStart: {sinceStart:0000}, schedule: {msg.Timestamp:0000}, {comment}", GetColor(msg));
+            WriteColored($"sinceStart: {sinceStart:0000}, schedule: {sound.Timestamp:0000}, {comment}", GetColor(sound));
         }
 
         Console.WriteLine();
     }
 
-    private static ConsoleColor GetColor(Sound msg)
+    private static ConsoleColor GetColor(Sound sound)
     {
-        if (msg.Name is null || msg.IsSilenced)
+        if (sound.Name is null || sound.IsSilenced)
         {
             return ConsoleColor.DarkGray;
         }
-        if (msg.IsLeader())
+        if (sound.IsLeader())
         {
             return ConsoleColor.Green;
         }
 
-        return AssignedColor(msg.Name);
+        return AssignedColor(sound.Name);
     }
 
     public static ConsoleColor AssignedColor(string token)
