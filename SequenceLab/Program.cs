@@ -14,7 +14,7 @@ public static partial class Program
             player.SaveCode();
             player.PlayRepeated().Wait();
 
-            using (var test = new BeatBox().Init())
+            using (var test = new SequencePlayerExample().Init())
             {
                 test.Run().Wait();
             }

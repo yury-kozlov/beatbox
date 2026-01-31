@@ -3,11 +3,11 @@
 /// <summary>
 /// based on https://learn.microsoft.com/en-us/dotnet/api/system.net.sockets.tcpclient
 /// </summary>
-internal class BeatBox : IDisposable
+internal class SequencePlayerExample : IDisposable
 {
     private TcpTransport? _transport;
 
-    public BeatBox Init()
+    public SequencePlayerExample Init()
     {
         _transport = new TcpTransport();
 
