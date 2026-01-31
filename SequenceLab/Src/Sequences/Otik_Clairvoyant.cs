@@ -5,9 +5,9 @@ namespace Beater;
 /// </summary>
 public class Otik_Clairvoyant
 {
-    internal static Sequence GetSequence()
+    internal static MiniSequence GetSequence()
     {
-        var sequence = new Sequence
+        var sequence = new MiniSequence
         {
             Leader = new Metronome()
             {

@@ -139,13 +139,13 @@ public class ConsoleKeyPlayer : IDisposable
     /// <summary>
     /// Generates sequence from pressed keys interactively.
     /// </summary>
-    public Sequence GenerateSequence()
+    public MiniSequence GenerateSequence()
     {
         var iterationsCount = 4;
 
         // this will be the main loop (acting like a metronome, without any sound):
         var loop = new Metronome() { Strategy = new RepeatStrategy { Count = iterationsCount, Interval = TotalTime } };
-        var seq = new Sequence { Leader = loop };
+        var seq = new MiniSequence { Leader = loop };
 
         KeyPressed? previousKey = null;
         Sound? previousSound = null;
@@ -167,7 +167,7 @@ public class ConsoleKeyPlayer : IDisposable
         return seq;
     }
 
-    public async Task PlayRepeated(Sequence? seq = null)
+    public async Task PlayRepeated(MiniSequence? seq = null)
     {
         seq ??= GenerateSequence();
         await _transport.PlayRepeated(seq.Generate());
@@ -176,7 +176,7 @@ public class ConsoleKeyPlayer : IDisposable
     public async Task PlayRepeated(string sequenceFilePath)
     {
         var json = File.ReadAllText(sequenceFilePath);
-        var seq = Sequence.FromJson(json);
+        var seq = MiniSequence.FromJson(json);
 
         await PlayRepeated(seq);
     }

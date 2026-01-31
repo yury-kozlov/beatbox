@@ -8,7 +8,7 @@ public class SequenceTests
     public void PlayOnceStrategy_ReturnExpected()
     {
         // arrange
-        var sequence = new Sequence
+        var sequence = new MiniSequence
         {
             Leader = new Metronome()
             {
@@ -43,7 +43,7 @@ public class SequenceTests
     public void Metronom_RepeatStrategy_ReturnExpected()
     {
         // arrange
-        var sequence = new Sequence
+        var sequence = new MiniSequence
         {
             Leader = new Metronome() { Strategy = new RepeatStrategy() { Count = 2, Interval = 1000 } },
         };
@@ -66,7 +66,7 @@ public class SequenceTests
     public void RepeatStrategy_SoundsBeyondTheLoopShouldBeIgnored()
     {
         // arrange
-        var sequence = new Sequence
+        var sequence = new MiniSequence
         {
             Leader = new Kick()
             {
@@ -99,7 +99,7 @@ public class SequenceTests
     public void PlayOnceStrategy_Repeated_ReturnExpected()
     {
         // arrange
-        var sequence = new Sequence
+        var sequence = new MiniSequence
         {
             Leader = new Metronome()
             {
@@ -133,7 +133,7 @@ public class SequenceTests
     public void GenerateSquareLoopSequence_ReturnExpected()
     {
         // arrange
-        var sequence = new Sequence
+        var sequence = new MiniSequence
         {
             Leader = new Kick
             {
@@ -244,7 +244,7 @@ public class SequenceTests
     public void FollowPreviousSoundStrategy_ReturnExpected()
     {
         // arrange
-        var sequence = new Sequence
+        var sequence = new MiniSequence
         {
             Leader = new Sound("")
             {
@@ -272,7 +272,7 @@ public class SequenceTests
     public void GenerateFollowers_PlayEvery2_ReturnExpected()
     {
         // arrange
-        var sequence = new Sequence
+        var sequence = new MiniSequence
         {
             Leader = new Kick
             {
@@ -302,7 +302,7 @@ public class SequenceTests
     public void GenerateFollowers_PlayEvery3_ReturnExpected()
     {
         // arrange
-        var sequence = new Sequence
+        var sequence = new MiniSequence
         {
             Leader = new Metronome()
             {
@@ -344,7 +344,7 @@ public class SequenceTests
     public void GenerateFollowerEvery3rdOutOf4_ReturnExpected()
     {
         // arrange
-        var sequence = new Sequence
+        var sequence = new MiniSequence
         {
             Leader = new Kick
             {
@@ -368,7 +368,7 @@ public class SequenceTests
     public void GenerateFollowerEvery1stOutOf2_ReturnExpected()
     {
         // arrange
-        var sequence = new Sequence
+        var sequence = new MiniSequence
         {
             Leader = new Kick
             {
@@ -392,7 +392,7 @@ public class SequenceTests
     public void SilenceEveryXOutOf4_ReturnExpected()
     {
         // arrange
-        var sequence = new Sequence
+        var sequence = new MiniSequence
         {
             Leader = new Kick
             {
@@ -434,7 +434,7 @@ public class SequenceTests
     public void AppendSequences_ReturnJoined()
     {
         // arrange
-        var getSequence = () => new Sequence
+        var getSequence = () => new MiniSequence
         {
             Duration = 500,
             Leader = new Kick()
@@ -446,7 +446,7 @@ public class SequenceTests
         var seq2 = getSequence();
 
         // act
-        var sequence = new Sequence();
+        var sequence = new MiniSequence();
         sequence.Append(seq1);
         sequence.Append(seq2);
         var actual = sequence.Generate();

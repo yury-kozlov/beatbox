@@ -6,7 +6,7 @@ namespace Beater;
 
 public static class Serialization
 {
-    public static string ToJson(this Sequence seq)
+    public static string ToJson(this MiniSequence seq)
     {
         var settings = new JsonSerializerSettings
         {

@@ -37,7 +37,7 @@ public record Sound
     /// NOTE: when appending one sequence to another, the original sequence still remains in place here.
     /// All followers will automatically get this name assigned when a leader sound is added to a sequence.
     /// </summary>
-    public Sequence? Sequence;
+    public MiniSequence? Sequence;
 
     public bool IsSilenced;
 
@@ -84,7 +84,7 @@ public record Sound
     /// <summary>
     /// Sets sequence to the current sound if it's missing.
     /// </summary>
-    public Sound WithSequenceIfMissing(Sequence sequence)
+    public Sound WithSequenceIfMissing(MiniSequence sequence)
     {
         if (Sequence is null)
         {

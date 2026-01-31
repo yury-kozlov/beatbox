@@ -2,9 +2,9 @@ namespace Beater;
 
 public class James_Shinra_Poppin
 {
-    internal static Sequence GetSequence()
+    internal static MiniSequence GetSequence()
     {
-        var sequence = new Sequence
+        var sequence = new MiniSequence
         {
             Leader = new Metronome()
             {

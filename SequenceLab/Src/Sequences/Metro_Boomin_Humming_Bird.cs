@@ -2,9 +2,9 @@ namespace Beater;
 
 public class Metro_Boomin_Humming_Bird
 {
-    internal static Sequence GetSequence1()
+    internal static MiniSequence GetSequence1()
     {
-        return new Sequence
+        return new MiniSequence
         {
             Leader = new Metronome()
             {
@@ -31,9 +31,9 @@ public class Metro_Boomin_Humming_Bird
         };
     }
 
-    internal static Sequence GetSequence2()
+    internal static MiniSequence GetSequence2()
     {
-        return new Sequence
+        return new MiniSequence
         {
             Leader = new Metronome()
             {
