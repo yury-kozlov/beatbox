@@ -26,7 +26,7 @@ public class MiniSequence
     /// </summary>
     public MiniSequence? LastAppendedSequence;
 
-    public List<Sound> Generate()
+    public Sequence Generate()
     {
         var sequence = Leader.Strategy.GenerateSequence(Leader);
         return sequence;
@@ -68,31 +68,31 @@ public class MiniSequence
 
 public static class SequencePlayer
 {
-    public static async Task Play(this TcpTransport? transport, List<Sound> sequenceMessages)
+    public static async Task Play(this TcpTransport? transport, Sequence sequence)
     {
         if (transport is not null)
         {
-            await transport.SendScheduled(sequenceMessages);
+            await transport.SendScheduled(sequence);
         }
     }
 
-    public static async Task PlayRepeated(this TcpTransport? transport, List<Sound> sequenceMessages)
+    public static async Task PlayRepeated(this TcpTransport? transport, Sequence sequence)
     {
         if (transport is not null)
         {
-            await Repeat(() => transport.SendScheduled(sequenceMessages), transport.Dispose);
+            await Repeat(() => transport.SendScheduled(sequence), transport.Dispose);
         }
     }
 
-    public static string ToString(this List<Sound> sequenceMessages)
+    public static string ToString(this Sequence sequence)
     {
         Sound? previous = null;
         var str = new StringBuilder();
-        foreach (var msg in sequenceMessages)
+        foreach (var sound in sequence)
         {
             if (previous is not null)
             {
-                var delay = msg.Timestamp - previous.Timestamp;
+                var delay = sound.Timestamp - previous.Timestamp;
                 if (delay > 0)
                 {
                     var spacesCount = (int)(delay / 100.0);
@@ -102,10 +102,10 @@ public static class SequencePlayer
                     }
                 }
             }
-            previous = msg;
-            if (!msg.IsSilenced)
+            previous = sound;
+            if (!sound.IsSilenced)
             {
-                str.Append(msg.Name);
+                str.Append(sound.Name);
             }
         }
         return str.ToString();

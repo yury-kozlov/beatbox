@@ -2,8 +2,8 @@
 
 public static class TestExtensions
 {
-    public static List<string>? GetTimestamps(this List<Sound>? source)
+    public static List<string>? GetTimestamps(this Sequence? source)
     {
-        return source?.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}").ToList();
+        return source?.Select(sound => $"{sound.Timestamp:0000}:{sound.Name?.Trim()}").ToList();
     }
 }

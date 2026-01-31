@@ -45,7 +45,7 @@ public abstract class AbstractStrategy
     /// An entry point to generate sequence of sounds of leader/follower.
     /// </summary>
     /// <param name="previousSounds">Sequence of previous sounds (if any), from which the generated sequence will continue.</param>
-    public List<Sound> GenerateSequence(Sound sound, List<Sound>? previousSounds = null)
+    public Sequence GenerateSequence(Sound sound, Sequence? previousSounds = null)
     {
         sound = sound with { /* clone */ };
         sound.SetLeader();
@@ -66,7 +66,7 @@ public abstract class AbstractStrategy
         return GenerateSequenceFor(sound, previousSounds);
     }
 
-    protected abstract List<Sound> GenerateSequenceFor(Sound sound, List<Sound>? previousSounds = null);
+    protected abstract Sequence GenerateSequenceFor(Sound sound, Sequence? previousSounds = null);
 
     private bool IsSilenced()
     {
@@ -100,14 +100,14 @@ public abstract class AbstractStrategy
         return calledTimesInRange == playEveryX;
     }
 
-    protected void AddFollowers(Sound leader, List<Sound> sequence)
+    protected void AddFollowers(Sound leader, Sequence sequence)
     {
         if (leader.Followers.Count == 0)
         {
             return;
         }
 
-        var mixedSequence = new List<Sound>();
+        var mixedSequence = new Sequence();
         foreach (var follower in leader.Followers)
         {
             // NOTE: separate followers are played independently to allow overlapping sequences (mixed together)

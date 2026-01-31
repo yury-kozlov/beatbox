@@ -20,7 +20,7 @@ public record Sound
 
     public string? Name;
     public AbstractStrategy Strategy = new PlayOnceStrategy();
-    public List<Sound> Followers = new();
+    public Sequence Followers = new();
     public Sound? Leader;
 
     /// <summary>
