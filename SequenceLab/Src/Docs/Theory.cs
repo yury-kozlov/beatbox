@@ -26,4 +26,13 @@ internal class Theory
         // each sound may have followers
         // it depends on the followers which sounds will be played after the current sound
     }
+
+    public void Lifecycle()
+    {
+        // first we define a markup sequence (with rules of follower's strategies)
+        // then we pass it to the player
+        // player generates sequence of sounds with timestamps based on each sound strategy
+        //   (for example, expands repeat strategy into multiple iterations of the same sound)
+        // player sends messages with sound timestamps to a sampler
+    }
 }
