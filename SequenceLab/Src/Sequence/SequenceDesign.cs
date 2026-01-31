@@ -24,12 +24,6 @@ public class SequenceDesign
     /// </summary>
     public SequenceDesign? LastAppendedSequence;
 
-    public Sequence Generate()
-    {
-        var sequence = Leader.Strategy.GenerateSequence(Leader);
-        return sequence;
-    }
-
     public static SequenceDesign? FromJson(string json) => Serialization.FromJson<SequenceDesign>(json);
 
     /// <summary>

@@ -139,7 +139,7 @@ public class ConsoleKeyPlayer : IDisposable
     /// <summary>
     /// Generates sequence from pressed keys interactively.
     /// </summary>
-    public SequenceDesign GenerateSequence()
+    public SequenceDesign GenerateInteractively()
     {
         var iterationsCount = 4;
 
@@ -167,10 +167,11 @@ public class ConsoleKeyPlayer : IDisposable
         return seq;
     }
 
-    public async Task PlayRepeated(SequenceDesign? seq = null)
+    public async Task PlayRepeated(SequenceDesign? design = null)
     {
-        seq ??= GenerateSequence();
-        await _transport.PlayRepeated(seq.Generate());
+        design ??= GenerateInteractively();
+        var sequence = SequenceGenerator.Generate(design);
+        await _transport.PlayRepeated(sequence);
     }
 
     public async Task PlayRepeated(string sequenceFilePath)
@@ -195,7 +196,7 @@ public class ConsoleKeyPlayer : IDisposable
     {
         if (!IsEmpty)
         {
-            var seq = GenerateSequence();
+            var seq = GenerateInteractively();
             var json = seq.ToJson();
             _jsonFilePath = $"C:/music/samples/sequences/seq{DateTime.Now:yyyy-MM-dd-HHmm}.json";
             File.WriteAllText(_jsonFilePath, json);

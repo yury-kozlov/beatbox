@@ -32,7 +32,7 @@ public class SequenceTests
         ];
 
         // act
-        var actual = sequence.Generate();
+        var actual = SequenceGenerator.Generate(sequence);
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
@@ -55,7 +55,7 @@ public class SequenceTests
         ];
 
         // act
-        var actual = sequence.Generate();
+        var actual = SequenceGenerator.Generate(sequence);
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
@@ -88,7 +88,7 @@ public class SequenceTests
         ];
 
         // act
-        var actual = sequence.Generate();
+        var actual = SequenceGenerator.Generate(sequence);
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
@@ -122,7 +122,7 @@ public class SequenceTests
         ];
 
         // act
-        var actual = sequence.Generate();
+        var actual = SequenceGenerator.Generate(sequence);
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
@@ -233,7 +233,7 @@ public class SequenceTests
         ];
 
         // act
-        var actual = sequence.Generate();
+        var actual = SequenceGenerator.Generate(sequence);
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
@@ -261,7 +261,7 @@ public class SequenceTests
         string[] expected = ["0000:no-sound", "0000:k", "0100:s", "0300:b3", "0600:b4", "1000:no-sound", "1000:k", "1100:s", "1300:b3", "1600:b4", "2000:no-sound"];
 
         // act
-        var actual = sequence.Generate();
+        var actual = SequenceGenerator.Generate(sequence);
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
@@ -291,7 +291,7 @@ public class SequenceTests
         ];
 
         // act
-        var actual = sequence.Generate();
+        var actual = SequenceGenerator.Generate(sequence);
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
@@ -333,7 +333,7 @@ public class SequenceTests
         ];
 
         // act
-        var actual = sequence.Generate();
+        var actual = SequenceGenerator.Generate(sequence);
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
@@ -357,7 +357,7 @@ public class SequenceTests
         string[] expected = ["0000:k", "0500:k", "1000:k", "1000:s", "1500:k", "2000:k", "2500:k", "3000:k", "3000:s", "3500:k", "4000:no-sound"];
 
         // act
-        var actual = sequence.Generate();
+        var actual = SequenceGenerator.Generate(sequence);
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
@@ -381,7 +381,7 @@ public class SequenceTests
         string[] expected = ["0000:k", "0100:ts1", "0500:k", "1000:k", "1100:ts1", "1500:k", "2000:no-sound"];
 
         // act
-        var actual = sequence.Generate();
+        var actual = SequenceGenerator.Generate(sequence);
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
@@ -423,7 +423,7 @@ public class SequenceTests
         ];
 
         // act
-        var actual = sequence.Generate();
+        var actual = SequenceGenerator.Generate(sequence);
         var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}{(msg.IsSilenced is true ? "-silenced" : "")}");
 
         // assert
@@ -449,7 +449,7 @@ public class SequenceTests
         var sequence = new SequenceDesign();
         sequence.Append(seq1);
         sequence.Append(seq2);
-        var actual = sequence.Generate();
+        var actual = SequenceGenerator.Generate(sequence);
         var actualTimestamps = actual.GetTimestamps();
 
         string[] expected = [

@@ -22,16 +22,16 @@ internal class SequencePlayerExample : IDisposable
 
     public async Task Run()
     {
-        var seq0 = Minimal.TechnoBeat1().Generate();
+        var seq0 = SequenceGenerator.Generate(Minimal.TechnoBeat1());
         await _transport.PlayRepeated(seq0);
 
-        var seq1 = Minimal.TechnoBeat2().Generate();
+        var seq1 = SequenceGenerator.Generate(Minimal.TechnoBeat2());
         await _transport.PlayRepeated(seq1);
 
-        var seq2 = Minimal.BrokenBeat1().Generate();
+        var seq2 = SequenceGenerator.Generate(Minimal.BrokenBeat1());
         await _transport.PlayRepeated(seq2);
 
-        var seq3 = Minimal.SlowBeat1WithRepeats().Generate();
+        var seq3 = SequenceGenerator.Generate(Minimal.SlowBeat1WithRepeats());
         await _transport.PlayRepeated(seq3);
 
         Console.WriteLine("");

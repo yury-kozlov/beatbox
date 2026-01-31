@@ -1,0 +1,91 @@
+﻿
+namespace Beater;
+
+public class SequenceGenerator
+{
+    public static Sequence Generate(SequenceDesign seq)
+    {
+        return GenerateSequence(seq.Leader);
+    }
+
+    /// <summary>
+    /// An entry point to generate sequence of sounds of leader/follower.
+    /// </summary>
+    /// <param name="previousSounds">Sequence of previous sounds (if any), from which the generated sequence will continue.</param>
+    private static Sequence GenerateSequence(Sound leader, Sequence? previousSounds = null)
+    {
+        leader = leader with { /* clone */ };
+        leader.SetLeader();
+
+        leader.Strategy.CheckedTimes++;
+        if (IsSkipped(leader))
+        {
+            // skip
+            return new();
+        }
+
+        if (IsSilenced(leader))
+        {
+            leader = leader with { IsSilenced = true };
+        }
+
+        leader.Strategy.CalledTimes++;
+
+        var sequence = leader.Strategy.GenerateSequenceFor(leader, previousSounds);
+
+        // note: followers are generated separately from the leader - meaning leader will not be able to take decisions based on its followers
+        var followers = new Sequence();
+        foreach (var sound in sequence)
+        {
+            if (sound.Followers.HasItems())
+            {
+                followers.AddRange(GenerateFollowersSequence(sound));
+            }
+        }
+
+        // mix leader with all its followers:
+        sequence.AddRange(followers);
+        sequence.Sort((a, b) => a.Timestamp.CompareTo(b.Timestamp));
+
+        return sequence;
+    }
+
+    private static Sequence GenerateFollowersSequence(Sound leader)
+    {
+        var mixedSequence = new Sequence();
+        foreach (var follower in leader.Followers)
+        {
+            // NOTE: separate followers are played independently to allow overlapping sequences (mixed together)
+            var followerSequence = GenerateSequence(follower, mixedSequence);
+            mixedSequence.AddRange(followerSequence);
+        }
+
+        foreach (var mixedSound in mixedSequence)
+        {
+            // shift timestamp relatively to the leader (so that each sound will have an absolute position from the beginning of the whole sequence):
+            mixedSound.Timestamp += leader.Timestamp;
+        }
+
+        return mixedSequence;
+    }
+
+    private static bool IsSilenced(Sound sound)
+    {
+        if (!sound.Strategy.SilenceEveryXOutOf.IsNullOrEmpty())
+        {
+            return sound.Strategy.IsXOutOf(sound.Strategy.SilenceEveryXOutOf, sound.Strategy.CheckedTimes);
+        }
+        return false;
+    }
+
+    private static bool IsSkipped(Sound sound)
+    {
+        if (!sound.Strategy.PlayEveryXOutOf.IsNullOrEmpty())
+        {
+            return !sound.Strategy.IsXOutOf(sound.Strategy.PlayEveryXOutOf, sound.Strategy.CheckedTimes);
+        }
+
+        // count every call
+        return sound.Strategy.CheckedTimes % sound.Strategy.PlayEveryX > 0;
+    }
+}

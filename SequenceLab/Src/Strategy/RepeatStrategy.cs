@@ -25,7 +25,7 @@ public class RepeatStrategy : AbstractStrategy
 
     private int _previousIterval;
 
-    protected override Sequence GenerateSequenceFor(Sound leader, Sequence? previousSounds = null)
+    public override Sequence GenerateSequenceFor(Sound leader, Sequence? previousSounds = null)
     {
         var originalSound = leader;
         var sequence = new Sequence();
@@ -49,8 +49,6 @@ public class RepeatStrategy : AbstractStrategy
             }
 
             sequence.Add(leader);
-
-            AddFollowers(leader, sequence);
         }
 
         // close sequence with empty sound (acting as a spacer) so that any sound appended as a follower
