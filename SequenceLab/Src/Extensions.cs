@@ -14,17 +14,17 @@ public static class Extensions
         return !string.IsNullOrEmpty(value);
     }
 
-    public static bool ContainsSafe<T>(this List<T>? source, T item)
+    public static bool ContainsSafe<T>(this IEnumerable<T>? source, T item)
     {
         return source is not null && source.Contains(item);
     }
 
-    public static bool HasItems<T>(this List<T>? source)
+    public static bool HasItems<T>(this IEnumerable<T>? source)
     {
-        return source is not null && source.Count > 0;
+        return source is not null && source.Count() > 0;
     }
 
-    public static string Join<T>(this List<T>? source, char delimiter = ',')
+    public static string Join<T>(this IEnumerable<T>? source, char delimiter = ',')
     {
         return string.Join(delimiter, source ?? []);
     }
