@@ -2,7 +2,7 @@
 
 namespace KeyBeatListener;
 
-public static partial class Example
+public static partial class ConsoleKeyPlayerExample
 {
     public static void Test()
     {
