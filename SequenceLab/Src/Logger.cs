@@ -35,17 +35,17 @@ public class Logger
         }
 
         var name = sound.Name;
-        if (sound is Metronome)
+        if (sound is Metronome m)
         {
-            name = "metronome";
+            name = m.FriendlyName;
         }
         else if (sound is Joint j)
         {
-            name = $"joint #{j.JoinsCounter} {j.PreviousSequence.Name}__{j.NextSequence.Name}";
+            name = j.FriendlyName;
         }
-        else if (sound is LoopEnd)
+        else if (sound is LoopEnd e)
         {
-            name = "end of loop";
+            name = e.FriendlyName;
         }
 
         var tags = sound.Tags?.Count > 0 ? " " + sound.Tags.Join() : "";

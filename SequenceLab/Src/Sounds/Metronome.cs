@@ -5,4 +5,8 @@
 /// The same as NoSound, used for better developer experience.
 /// </summary>
 public record Metronome : NoSound
-{ }
+{
+    public string FriendlyName => "metronome";
+
+    public override string? ToString() => FriendlyName;
+}

@@ -21,4 +21,8 @@ public record Joint : NoSound
     /// Next sequence appended to the original one.
     /// </summary>
     public required SequenceDesign NextSequence;
+
+    public string FriendlyName => $"joint #{JoinsCounter} {PreviousSequence.Name}__{NextSequence.Name}";
+
+    public override string? ToString() => FriendlyName;
 }

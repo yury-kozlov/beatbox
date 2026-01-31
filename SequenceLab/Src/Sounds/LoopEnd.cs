@@ -5,4 +5,8 @@
 // to this sequence later will continue only after current sequence ends.
 /// </summary>
 public record LoopEnd : NoSound
-{ }
+{
+    public string FriendlyName => "end of loop";
+
+    public override string? ToString() => $"{FriendlyName}: {Comment}";
+}
