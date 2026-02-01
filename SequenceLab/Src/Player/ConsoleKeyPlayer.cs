@@ -145,7 +145,7 @@ public class ConsoleKeyPlayer : IDisposable
 
         // this will be the main loop (acting like a metronome, without any sound):
         var loop = new Metronome() { Strategy = new RepeatStrategy { Count = iterationsCount, Interval = TotalTime } };
-        var seq = new SequenceDesign { Leader = loop };
+        var seq = new SequenceDesign(SequenceCodeGenerator.NewSequenceName()) { Leader = loop };
 
         KeyPressed? previousKey = null;
         Sound? previousSound = null;
@@ -198,7 +198,7 @@ public class ConsoleKeyPlayer : IDisposable
         {
             var seq = GenerateInteractively();
             var json = seq.ToJson();
-            _jsonFilePath = $"C:/music/samples/sequences/seq{DateTime.Now:yyyy-MM-dd-HHmm}.json";
+            _jsonFilePath = $"C:/music/samples/sequences/{seq.Name}.json";
             File.WriteAllText(_jsonFilePath, json);
         }
     }

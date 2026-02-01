@@ -4,7 +4,7 @@ public class Metro_Boomin_Humming_Bird
 {
     internal static SequenceDesign GetSequence1()
     {
-        return new SequenceDesign
+        return new SequenceDesign(nameof(Metro_Boomin_Humming_Bird))
         {
             Leader = new Metronome()
             {
@@ -33,7 +33,7 @@ public class Metro_Boomin_Humming_Bird
 
     internal static SequenceDesign GetSequence2()
     {
-        return new SequenceDesign
+        return new SequenceDesign(nameof(GetSequence2))
         {
             Leader = new Metronome()
             {

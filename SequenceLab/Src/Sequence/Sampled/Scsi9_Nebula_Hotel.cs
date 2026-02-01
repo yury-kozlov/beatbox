@@ -7,7 +7,7 @@ public class Scsi9_Nebula_Hotel
 {
     internal static SequenceDesign GetSequence()
     {
-        var sequence = new SequenceDesign
+        var sequence = new SequenceDesign(nameof(Scsi9_Nebula_Hotel))
         {
             Leader = new Metronome()
             {

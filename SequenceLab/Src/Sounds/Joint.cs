@@ -22,7 +22,10 @@ public record Joint : NoSound
     /// </summary>
     public required SequenceDesign NextSequence;
 
-    public string FriendlyName => $"joint #{JoinsCounter} {PreviousSequence.Name}__{NextSequence.Name}";
+    public Joint()
+    {
+        FriendlyName = "joint";
+    }
 
-    public override string? ToString() => FriendlyName;
+    public override string? ToString() => $"{FriendlyName} #{JoinsCounter} {PreviousSequence.Name}__{NextSequence.Name}";
 }

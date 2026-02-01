@@ -6,7 +6,10 @@
 /// </summary>
 public record Metronome : NoSound
 {
-    public string FriendlyName => "metronome";
+    public Metronome()
+    {
+        FriendlyName = "metronome";
+    }
 
     public override string? ToString() => FriendlyName;
 }

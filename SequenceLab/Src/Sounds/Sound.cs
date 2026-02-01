@@ -1,4 +1,5 @@
-﻿namespace Beater;
+﻿
+namespace Beater;
 
 public record Sound
 {
@@ -19,6 +20,8 @@ public record Sound
     }
 
     public string? Name;
+    public string? FriendlyName;
+
     public AbstractStrategy Strategy = new PlayOnceStrategy();
     public Sequence Followers = new(); /// TODO: should this be <see cref="SequenceDesign"/> instead?
     public Sound? Leader;
@@ -82,7 +85,7 @@ public record Sound
     }
 
     /// <summary>
-    /// Sets sequence to the current sound if it's missing.
+    /// Make sure that current sound and all its followers have initialized sequence if it's missing.
     /// </summary>
     public Sound WithSequenceIfMissing(SequenceDesign sequence)
     {
@@ -96,6 +99,12 @@ public record Sound
             follower.WithSequenceIfMissing(Sequence);
         }
 
+        return this;
+    }
+
+    public Sound WithFollower(Sound follower)
+    {
+        Followers.Add(follower);
         return this;
     }
 }

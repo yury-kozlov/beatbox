@@ -7,7 +7,7 @@ public class Otik_Clairvoyant
 {
     internal static SequenceDesign GetSequence()
     {
-        var sequence = new SequenceDesign
+        var sequence = new SequenceDesign(nameof(Otik_Clairvoyant))
         {
             Leader = new Metronome()
             {

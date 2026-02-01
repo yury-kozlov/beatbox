@@ -5,7 +5,7 @@ public class SlowBeat
     internal static SequenceDesign WithMovingSoundBetweenGroups()
     {
         var count = 0;
-        var sequence = new SequenceDesign();
+        var sequence = new SequenceDesign(nameof(SlowBeat));
         for (int i = 4; i > 0; i--)
         {
             count++;
@@ -22,7 +22,7 @@ public class SlowBeat
 
     internal static SequenceDesign WithMovingSequenceBetweenGroups()
     {
-        var sequence = new SequenceDesign();
+        var sequence = new SequenceDesign(nameof(SlowBeat));
         for (int i = 1; i <= 3; i++)
         {
 

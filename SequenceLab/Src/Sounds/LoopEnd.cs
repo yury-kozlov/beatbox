@@ -6,7 +6,10 @@
 /// </summary>
 public record LoopEnd : NoSound
 {
-    public string FriendlyName => "end of loop";
+    public LoopEnd()
+    {
+        FriendlyName = "end-of-loop";
+    }
 
     public override string? ToString() => $"{FriendlyName}: {Comment}";
 }

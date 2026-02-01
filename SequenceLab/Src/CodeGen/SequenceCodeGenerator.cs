@@ -60,6 +60,8 @@ internal class SequenceCodeGenerator
         SaveFile(sequenceName, code);
     }
 
+    public static string NewSequenceName() => $"seq{DateTime.Now:yyyyMMddHHmmss}";
+
     /// <summary>
     /// Generates cs-file with a loop where each sound is delayed after another by a number of milliseconds.
     /// May be used to re-create a sequence from a recorded audio loop with known intervals between its sounds.
@@ -71,10 +73,11 @@ internal class SequenceCodeGenerator
             return "";
         }
 
+        var sequenceName = NewSequenceName();
         var totalTime = delays.Sum();
         var iterationsCount = 4;
         var loop = new Metronome() { Strategy = new RepeatStrategy { Count = iterationsCount, Interval = totalTime } };
-        var seq = new SequenceDesign { Leader = loop };
+        var seq = new SequenceDesign(sequenceName) { Leader = loop };
         Sound? previousSound = null;
 
 
@@ -89,7 +92,6 @@ internal class SequenceCodeGenerator
             previousSound = sound;
         }
 
-        var sequenceName = $"seq{DateTime.Now:yyyyMMddHHmm}";
         var code = GenerateCode(seq, sequenceName, seq.ToString());
         SaveFile(sequenceName, code);
 

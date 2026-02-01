@@ -4,7 +4,7 @@ public class James_Shinra_Poppin
 {
     internal static SequenceDesign GetSequence()
     {
-        var sequence = new SequenceDesign
+        var sequence = new SequenceDesign(nameof(James_Shinra_Poppin))
         {
             Leader = new Metronome()
             {

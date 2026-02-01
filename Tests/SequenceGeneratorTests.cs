@@ -8,7 +8,7 @@ public class SequenceGeneratorTests
     public void PlayOnceStrategy_ReturnExpected()
     {
         // arrange
-        var sequence = new SequenceDesign
+        var sequence = new SequenceDesign("test")
         {
             Leader = new Metronome()
             {
@@ -23,7 +23,8 @@ public class SequenceGeneratorTests
         };
 
         string[] expected = [
-            "0000:no-sound",
+            "0000:sequence-start-test",
+            "0000:metronome",
             "0000:k",
             "0300:k",
             "0600:s",
@@ -43,15 +44,16 @@ public class SequenceGeneratorTests
     public void Metronom_RepeatStrategy_ReturnExpected()
     {
         // arrange
-        var sequence = new SequenceDesign
+        var sequence = new SequenceDesign("test")
         {
             Leader = new Metronome() { Strategy = new RepeatStrategy() { Count = 2, Interval = 1000 } },
         };
 
         string[] expected = [
-            "0000:no-sound",
-            "1000:no-sound",
-            "2000:no-sound",
+            "0000:sequence-start-test",
+            "0000:metronome",
+            "1000:metronome",
+            "2000:end-of-loop",
         ];
 
         // act
@@ -66,7 +68,7 @@ public class SequenceGeneratorTests
     public void RepeatStrategy_SoundsBeyondTheLoopShouldBeIgnored()
     {
         // arrange
-        var sequence = new SequenceDesign
+        var sequence = new SequenceDesign("test")
         {
             Leader = new Kick()
             {
@@ -80,11 +82,12 @@ public class SequenceGeneratorTests
         };
 
         string[] expected = [
+            "0000:sequence-start-test",
             "0000:k",
             "0000:s",
             "0600:s",
-            "1000:no-sound",
-            "1000:no-sound",
+            "1000:end-of-loop",
+            "1000:end-of-loop",
         ];
 
         // act
@@ -99,7 +102,7 @@ public class SequenceGeneratorTests
     public void PlayOnceStrategy_Repeated_ReturnExpected()
     {
         // arrange
-        var sequence = new SequenceDesign
+        var sequence = new SequenceDesign("test")
         {
             Leader = new Metronome()
             {
@@ -112,13 +115,14 @@ public class SequenceGeneratorTests
         };
 
         string[] expected = [
-            "0000:no-sound",
+            "0000:sequence-start-test",
+            "0000:metronome",
             "0000:k",
             "0500:s",
-            "1000:no-sound",
+            "1000:metronome",
             "1000:k",
             "1500:s",
-            "2000:no-sound",
+            "2000:end-of-loop",
         ];
 
         // act
@@ -133,7 +137,7 @@ public class SequenceGeneratorTests
     public void GenerateSquareLoopSequence_ReturnExpected()
     {
         // arrange
-        var sequence = new SequenceDesign
+        var sequence = new SequenceDesign("test")
         {
             Leader = new Kick
             {
@@ -147,77 +151,78 @@ public class SequenceGeneratorTests
             },
         };
         string[] expected = [
+            "0000:sequence-start-test",
             "0000:k",
             "0150:ts1",
             "0230:ts1",
-            "0310:no-sound",
+            "0310:end-of-loop",
             "0500:k",
             "0650:ts1",
             "0730:ts1",
-            "0810:no-sound",
+            "0810:end-of-loop",
             "1000:k",
             "1150:ts1",
             "1230:ts1",
-            "1310:no-sound",
+            "1310:end-of-loop",
             "1500:k",
             "1500:ts2",
             "1650:ts1",
             "1730:ts1",
             "1750:s",
-            "1810:no-sound",
+            "1810:end-of-loop",
             "2000:k",
             "2150:ts1",
             "2230:ts1",
-            "2310:no-sound",
+            "2310:end-of-loop",
             "2500:k",
             "2650:ts1",
             "2730:ts1",
-            "2810:no-sound",
+            "2810:end-of-loop",
             "3000:k",
             "3150:ts1",
             "3230:ts1",
-            "3310:no-sound",
+            "3310:end-of-loop",
             "3500:k",
             "3500:ts2",
             "3580:ts3",
             "3650:ts1",
             "3660:ts3",
-            "3730:ts1",
             "3730:ts3",
+            "3730:ts1",
             "3750:s",
             "3790:ts3",
-            "3810:no-sound",
-            "3900:no-sound",
+            "3810:end-of-loop",
+            "3900:end-of-loop",
             "4000:k",
             "4150:ts1",
             "4230:ts1",
-            "4310:no-sound",
+            "4310:end-of-loop",
             "4500:k",
             "4650:ts1",
             "4730:ts1",
-            "4810:no-sound",
+            "4810:end-of-loop",
             "5000:k",
             "5150:ts1",
             "5230:ts1",
-            "5310:no-sound",
-            "5500:k",
+            "5310:end-of-loop",
             "5500:ts2",
+            "5500:k",
             "5650:ts1",
             "5730:ts1",
             "5750:s",
-            "5810:no-sound",
+            "5810:end-of-loop",
             "6000:k",
             "6150:ts1",
             "6230:ts1",
-            "6310:no-sound",
+            "6310:end-of-loop",
             "6500:k",
             "6650:ts1",
             "6730:ts1",
-            "6810:no-sound",
+            "6810:end-of-loop",
             "7000:k",
             "7150:ts1",
             "7230:ts1",
-            "7310:no-sound",
+            "7310:end-of-loop",
             "7500:k",
             "7500:ts2",
             "7580:ts3",
@@ -227,9 +232,9 @@ public class SequenceGeneratorTests
             "7730:ts3",
             "7750:s",
             "7790:ts3",
-            "7810:no-sound",
-            "7900:no-sound",
-            "8000:no-sound",
+            "7810:end-of-loop",
+            "7900:end-of-loop",
+            "8000:end-of-loop"
         ];
 
         // act
@@ -244,7 +249,7 @@ public class SequenceGeneratorTests
     public void FollowPreviousSoundStrategy_ReturnExpected()
     {
         // arrange
-        var sequence = new SequenceDesign
+        var sequence = new SequenceDesign("test")
         {
             Leader = new Sound("")
             {
@@ -258,7 +263,20 @@ public class SequenceGeneratorTests
             }
         };
 
-        string[] expected = ["0000:no-sound", "0000:k", "0100:s", "0300:b3", "0600:b4", "1000:no-sound", "1000:k", "1100:s", "1300:b3", "1600:b4", "2000:no-sound"];
+        string[] expected = [
+            "0000:sequence-start-test",
+            "0000:no-sound",
+            "0000:k",
+            "0100:s",
+            "0300:b3",
+            "0600:b4",
+            "1000:no-sound",
+            "1000:k",
+            "1100:s",
+            "1300:b3",
+            "1600:b4",
+            "2000:end-of-loop",
+        ];
 
         // act
         var actual = SequenceGenerator.Generate(sequence);
@@ -272,7 +290,7 @@ public class SequenceGeneratorTests
     public void GenerateFollowers_PlayEvery2_ReturnExpected()
     {
         // arrange
-        var sequence = new SequenceDesign
+        var sequence = new SequenceDesign("test")
         {
             Leader = new Kick
             {
@@ -281,13 +299,14 @@ public class SequenceGeneratorTests
             },
         };
         string[] expected = [
+            "0000:sequence-start-test",
             "0000:k",
             "1000:k",
             "1100:every-2nd",
             "2000:k",
             "3000:k",
             "3100:every-2nd",
-            "4000:no-sound",
+            "4000:end-of-loop",
         ];
 
         // act
@@ -302,7 +321,7 @@ public class SequenceGeneratorTests
     public void GenerateFollowers_PlayEvery3_ReturnExpected()
     {
         // arrange
-        var sequence = new SequenceDesign
+        var sequence = new SequenceDesign("test")
         {
             Leader = new Metronome()
             {
@@ -319,7 +338,8 @@ public class SequenceGeneratorTests
             },
         };
         string[] expected = [
-            "0000:no-sound",
+            "0000:sequence-start-test",
+            "0000:metronome",
             "0000:k",
             "0100:k",
             "0200:k",
@@ -328,8 +348,8 @@ public class SequenceGeneratorTests
             "0400:k",
             "0500:k",
             "0550:every-3rd",
-            "0600:no-sound",
-            "1000:no-sound",
+            "0600:end-of-loop",
+            "1000:end-of-loop",
         ];
 
         // act
@@ -344,7 +364,7 @@ public class SequenceGeneratorTests
     public void GenerateFollowerEvery3rdOutOf4_ReturnExpected()
     {
         // arrange
-        var sequence = new SequenceDesign
+        var sequence = new SequenceDesign("test")
         {
             Leader = new Kick
             {
@@ -354,7 +374,20 @@ public class SequenceGeneratorTests
                 ]
             },
         };
-        string[] expected = ["0000:k", "0500:k", "1000:k", "1000:s", "1500:k", "2000:k", "2500:k", "3000:k", "3000:s", "3500:k", "4000:no-sound"];
+        string[] expected = [
+            "0000:sequence-start-test",
+            "0000:k",
+            "0500:k",
+            "1000:k",
+            "1000:s",
+            "1500:k",
+            "2000:k",
+            "2500:k",
+            "3000:k",
+            "3000:s",
+            "3500:k",
+            "4000:end-of-loop",
+        ];
 
         // act
         var actual = SequenceGenerator.Generate(sequence);
@@ -368,7 +401,7 @@ public class SequenceGeneratorTests
     public void GenerateFollowerEvery1stOutOf2_ReturnExpected()
     {
         // arrange
-        var sequence = new SequenceDesign
+        var sequence = new SequenceDesign("test")
         {
             Leader = new Kick
             {
@@ -378,7 +411,16 @@ public class SequenceGeneratorTests
                 ]
             },
         };
-        string[] expected = ["0000:k", "0100:ts1", "0500:k", "1000:k", "1100:ts1", "1500:k", "2000:no-sound"];
+        string[] expected = [
+            "0000:sequence-start-test",
+            "0000:k",
+            "0100:ts1",
+            "0500:k",
+            "1000:k",
+            "1100:ts1",
+            "1500:k",
+            "2000:end-of-loop",
+        ];
 
         // act
         var actual = SequenceGenerator.Generate(sequence);
@@ -392,7 +434,7 @@ public class SequenceGeneratorTests
     public void SilenceEveryXOutOf4_ReturnExpected()
     {
         // arrange
-        var sequence = new SequenceDesign
+        var sequence = new SequenceDesign("test")
         {
             Leader = new Kick
             {
@@ -403,6 +445,7 @@ public class SequenceGeneratorTests
             },
         };
         string[] expected = [
+            "0000:sequence-start-test",
             "0000:k",
             "0100:ts1",
             "0500:k",
@@ -419,12 +462,17 @@ public class SequenceGeneratorTests
             "3100:ts1",
             "3500:k",
             "3600:ts1",
-            "4000:no-sound",
+            "4000:end-of-loop",
         ];
 
         // act
         var actual = SequenceGenerator.Generate(sequence);
-        var actualTimestamps = actual.Select(msg => $"{msg.Timestamp:0000}:{msg.Name?.Trim()}{(msg.IsSilenced is true ? "-silenced" : "")}");
+        foreach (var sound in actual)
+        {
+            // adjust sound name for easier assertion:
+            sound.Name += (sound.IsSilenced is true ? "-silenced" : "");
+        }
+        var actualTimestamps = actual.GetTimestamps();
 
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
@@ -434,7 +482,7 @@ public class SequenceGeneratorTests
     public void AppendSequences_ReturnJoined()
     {
         // arrange
-        var getSequence = () => new SequenceDesign
+        var getSequence = (string name) => new SequenceDesign(name)
         {
             Duration = 500,
             Leader = new Kick()
@@ -442,22 +490,24 @@ public class SequenceGeneratorTests
                 Followers = [new Snare() { DelayAfterLeader = 100 }, new Snare() { DelayAfterLeader = 150 }]
             }
         };
-        var seq1 = getSequence();
-        var seq2 = getSequence();
+        var seq1 = getSequence("test1");
+        var seq2 = getSequence("test2");
 
         // act
-        var sequence = new SequenceDesign();
+        var sequence = new SequenceDesign("main");
         sequence.Append(seq1);
         sequence.Append(seq2);
         var actual = SequenceGenerator.Generate(sequence);
         var actualTimestamps = actual.GetTimestamps();
 
         string[] expected = [
-            "0000:no-sound", // sequence start
+            "0000:sequence-start-main",
+            "0000:sequence-start-test1",
             "0000:k",
             "0100:s",
             "0150:s",
-            "0500:no-sound", // joint
+            "0500:joint",
+            "0500:sequence-start-test2",
             "0500:k",
             "0600:s",
             "0650:s",

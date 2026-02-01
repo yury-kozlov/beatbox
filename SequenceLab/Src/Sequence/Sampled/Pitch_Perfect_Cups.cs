@@ -9,7 +9,7 @@ public class Pitch_Perfect_Cups
     {
         // NOTE: this sequence doesn't have clear borders, so when listening from the middle, the pattern may be unrecognizable.
         // in order to put accent to its start, need to add some distinguishable sound at the beginning of each loop
-        return new SequenceDesign
+        return new SequenceDesign(nameof(Pitch_Perfect_Cups))
         {
             Leader = new Metronome()
             {

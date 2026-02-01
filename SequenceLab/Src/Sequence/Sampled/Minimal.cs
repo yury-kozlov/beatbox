@@ -5,7 +5,7 @@ public class Minimal
 {
     internal static SequenceDesign TechnoBeat1()
     {
-        return new SequenceDesign
+        return new SequenceDesign(nameof(TechnoBeat1))
         {
             Leader = new Kick
             {
@@ -22,7 +22,7 @@ public class Minimal
 
     internal static SequenceDesign TechnoBeat2()
     {
-        return new SequenceDesign
+        return new SequenceDesign(nameof(TechnoBeat2))
         {
             Leader = new Kick
             {
@@ -41,7 +41,7 @@ public class Minimal
 
     internal static SequenceDesign BrokenBeat1()
     {
-        return new SequenceDesign
+        return new SequenceDesign(nameof(BrokenBeat1))
         {
             Leader = new Metronome()
             {
@@ -77,7 +77,7 @@ public class Minimal
 
     internal static SequenceDesign SlowBeat1WithRepeats()
     {
-        return new SequenceDesign
+        return new SequenceDesign(nameof(SlowBeat1WithRepeats))
         {
             Leader = new Metronome()
             {
@@ -111,7 +111,7 @@ public class Minimal
 
     internal static SequenceDesign SlowBeat1WithoutRepeats()
     {
-        return new SequenceDesign
+        return new SequenceDesign(nameof(SlowBeat1WithoutRepeats))
         {
             Duration = 5100,
             Leader = new Kick()
@@ -146,7 +146,7 @@ public class Minimal
     /// NOTE: this sequence is identical to <see cref="SlowBeat1WithoutRepeats"/> , but uses k1,s1 instead of k,s to be able to play different sampler sets together
     internal static SequenceDesign SlowBeat1WithoutRepeatsK1S1()
     {
-        return new SequenceDesign
+        return new SequenceDesign("SlowBeat")
         {
             Duration = 5100,
             Name = "sb1",
@@ -184,7 +184,7 @@ public class Minimal
     /// </summary>
     internal static SequenceDesign SlowBeat2()
     {
-        return new SequenceDesign
+        return new SequenceDesign(nameof(SlowBeat2))
         {
             Leader = new Metronome()
             {
@@ -210,7 +210,7 @@ public class Minimal
     /// </summary>
     internal static SequenceDesign SlowBeat3()
     {
-        return new SequenceDesign
+        return new SequenceDesign(nameof(SlowBeat3))
         {
             Leader = new Metronome()
             {
@@ -236,7 +236,7 @@ public class Minimal
     /// </summary>
     internal static SequenceDesign SlowBeat4()
     {
-        return new SequenceDesign
+        return new SequenceDesign(nameof(SlowBeat4))
         {
             Leader = new Metronome()
             {

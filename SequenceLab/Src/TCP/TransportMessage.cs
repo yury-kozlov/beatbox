@@ -4,7 +4,7 @@ namespace Beater;
 
 public class TransportMessage
 {
-    public byte[]? Message;
+    public byte[] Message = [];
     public string? SoundName;
 
     public TransportMessage(string? soundName = null)

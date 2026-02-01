@@ -12,7 +12,7 @@ class Examples
     public void AppendSequence()
     {
         // how to append one sequence to another
-        var result = new SequenceDesign();
+        var result = new SequenceDesign("example");
         var sequence1 = Minimal.SlowBeat1WithoutRepeats();
         var sequence2 = Minimal.SlowBeat1WithoutRepeats();
         var sequence3 = Minimal.SlowBeat1WithoutRepeats();
@@ -27,7 +27,7 @@ class Examples
     public void InjectSound()
     {
         // how to inject sounds into each repetition of a sequence
-        var result = new SequenceDesign();
+        var result = new SequenceDesign("example");
         for (int i = 0; i < 4; i++)
         {
             var sequence = Minimal.SlowBeat1WithoutRepeats();

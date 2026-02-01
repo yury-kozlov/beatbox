@@ -1,10 +1,28 @@
-﻿namespace Beater;
+﻿
+namespace Beater;
 
 public class SequenceDesign
 {
     private int JoinsCounter;
 
-    public Sound Leader { get; set => field = value.WithSequenceIfMissing(this); } = new NoSound();
+    public SequenceDesign(string name)
+    {
+        Name = name;
+        Leader = SequenceStart = new SequenceStart(name);
+    }
+
+    public SequenceStart SequenceStart;
+
+    public Sound Leader { get; set => field = InitLeader(value); }
+
+    private Sound InitLeader(Sound leader)
+    {
+        if (leader == SequenceStart)
+        {
+            return leader; // already initialized
+        }
+        return SequenceStart.WithFollower(leader).WithSequenceIfMissing(this);
+    }
 
     /// <summary>
     /// In milliseconds (represents full loop of a sequence including ending space).
@@ -17,7 +35,7 @@ public class SequenceDesign
     /// Name of the current sequence.
     /// Used for logging purposes.
     /// </summary>
-    public string? Name;
+    public string Name;
 
     /// <summary>
     /// Last sequence that was appended to the current one.
