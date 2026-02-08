@@ -23,7 +23,7 @@ public record Sound
     public string? FriendlyName;
 
     public AbstractStrategy Strategy = new PlayOnceStrategy();
-    public Sequence Followers = new(); /// TODO: should this be <see cref="SequenceDesign"/> instead?
+    public Sequence Followers = new(); /// TODO: should this be <see cref="SequenceDesign"/> instead? Should each Sound here be a SoundDesign instead?
     public Sound? Leader;
 
     /// <summary>
