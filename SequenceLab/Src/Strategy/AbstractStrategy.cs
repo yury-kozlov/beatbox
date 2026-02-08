@@ -23,7 +23,8 @@ public abstract class AbstractStrategy
     /// The sound will be played every X-th time:
     ///   1 - every time without skipping
     ///   2 - at even times (2,4,6...), while all odd times (1,3,5...) will be skipped.
-    /// NOTE: this counter is related to the strategy, not to the sound itself.
+    /// NOTE: this counter is related to the strategy, not to the sound itself. 
+    ///       Meaning if sound has "repeat strategy" - the whole loop will be played every X times (not every X sound inside the loop).
     /// </summary>
     public int PlayEveryX = 1; // play every time by default
 

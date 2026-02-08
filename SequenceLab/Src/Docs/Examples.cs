@@ -45,6 +45,27 @@ class Examples
     public void PlaySequencesAtTheSameTime()
     {
         // in order to play 2 sequences at the same time
-        // need to add them as followers of an arbitrary sound
+        // just add them to the same parent sequence:
+        var kicks = new SequenceDesign("kicks")
+        {
+            Leader = new Kick { Strategy = new RepeatStrategy { Interval = 500, Count = 4 } },
+        };
+
+        var snares = new SequenceDesign("snares")
+        {
+            Leader = new Metronome
+            {
+                Strategy = new RepeatStrategy { Interval = 400, Count = 4 },
+                Followers = [new Snare { Strategy = new PlayOnceStrategy { PlayEveryX = 2, DelayAfterLeader = 100 } }],
+            },
+        };
+
+        var parent = new SequenceDesign("main")
+            .Append(kicks)
+            .Append(snares);
+
+        // play
+        var player = new ConsoleKeyPlayer();
+        player.PlayRepeated(parent).Wait();
     }
 }
