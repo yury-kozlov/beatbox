@@ -8,6 +8,7 @@ public static partial class Program
         {
             var player = new ConsoleKeyPlayer();
 
+            player.PlayRepeated(SlowBeat.WithMovingSequenceBetweenGroups()).Wait();
             player.Listen();
             player.PrintFormatted();
             player.SaveSequence();
