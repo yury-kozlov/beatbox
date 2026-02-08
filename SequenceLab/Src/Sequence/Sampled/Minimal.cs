@@ -146,10 +146,9 @@ public class Minimal
     /// NOTE: this sequence is identical to <see cref="SlowBeat1WithoutRepeats"/> , but uses k1,s1 instead of k,s to be able to play different sampler sets together
     internal static SequenceDesign SlowBeat1WithoutRepeatsK1S1()
     {
-        return new SequenceDesign("SlowBeat")
+        return new SequenceDesign("sb1")
         {
             Duration = 5100,
-            Name = "sb1",
             Leader = new Sound("k1")
             {
                 Tags = ["group-1"],

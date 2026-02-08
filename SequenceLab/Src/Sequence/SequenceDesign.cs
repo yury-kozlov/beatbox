@@ -29,7 +29,7 @@ public class SequenceDesign
     /// Duration of sequence should be known ahead for each predefined sequence if it's going to be played in loop
     /// (otherwise we will not be able to place next iteration at correct timing).
     /// </summary>
-    public int Duration;
+    public int Duration; /// TODO: should we add <see cref="LoopEnd"/> sound at the end of each sequence?
 
     /// <summary>
     /// Name of the current sequence.

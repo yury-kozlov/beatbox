@@ -5,6 +5,7 @@ public class SequenceGenerator
 {
     public static Sequence Generate(SequenceDesign seq)
     {
+        seq.Leader.WithSequenceIfMissing(seq);
         return GenerateSequence(seq.Leader);
     }
 
@@ -66,7 +67,44 @@ public class SequenceGenerator
             mixedSound.Timestamp += leader.Timestamp;
         }
 
+        if (leader is SequenceStart sequenceStart)
+        {
+            // this is only to improve debugging experience
+            AlignSequenceStartTimestamp(sequenceStart, mixedSequence);
+        }
+
+        RemoveSoundsExceedingSequenceDuration(leader, mixedSequence);
+
         return mixedSequence;
+    }
+
+    private static void AlignSequenceStartTimestamp(SequenceStart sequenceStart, Sequence mixedSequence)
+    {
+        // copy delay from the first sound of the sequence, so that they will always come together in the final output
+        sequenceStart.Timestamp = mixedSequence.FirstOrDefault()?.Timestamp ?? 0;
+    }
+
+    private static void RemoveSoundsExceedingSequenceDuration(Sound leader, Sequence seq)
+    {
+        var unmatchedSequence = seq.Where(HasOtherSequenceDuration(leader)).ToList();
+        if (unmatchedSequence.HasItems())
+        {
+            foreach (var sound in unmatchedSequence)
+            {
+                var maxAllowedTimestamp = leader.Timestamp + leader.Sequence!.Duration;
+                if (sound.Timestamp > maxAllowedTimestamp)
+                {
+                    seq.Remove(sound);
+                }
+            }
+        }
+    }
+
+    private static Func<Sound, bool> HasOtherSequenceDuration(Sound leader)
+    {
+        return sound => leader.Sequence?.Duration > 0
+                      && sound.Sequence?.Duration > 0
+                      && leader.Sequence.Duration != sound.Sequence.Duration;
     }
 
     private static bool IsSilenced(Sound sound)

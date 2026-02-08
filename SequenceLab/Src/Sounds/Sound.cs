@@ -50,6 +50,10 @@ public record Sound
     /// </summary>
     public List<string>? Tags;
 
+    /// <summary>
+    /// Assigns delay to the underlying strategy.
+    /// NOTE: if sound strategy property is initialized inside the same block after delay is set, the current delay value will be ignored.
+    /// </summary>
     public int DelayAfterLeader { set { Strategy.DelayAfterLeader = value; } }
 
     public override string? ToString() => Name;

@@ -25,13 +25,6 @@ public class SlowBeat
         var sequence = new SequenceDesign(nameof(SlowBeat));
         for (int i = 1; i <= 3; i++)
         {
-
-            /******************
-             * NOTE: because the second sequence is longer than the first, it goes outside the loop pattern of the first one
-             * (starting from iteration 2 - the longer sequence is going beyond the limits)
-             * need to add functionality to trim the second sequence if it goes beyond
-             */
-
             var slowBeat1 = Minimal.SlowBeat1WithoutRepeatsK1S1();
             slowBeat1.Name += $".{i}";
             // var slowBeat2 = Minimal.SlowBeat1WithoutRepeats();

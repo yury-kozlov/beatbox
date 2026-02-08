@@ -47,6 +47,10 @@ public class Logger
         {
             name = e.FriendlyName;
         }
+        else if (sound is SequenceStart st)
+        {
+            name = st.FriendlyName;
+        }
 
         var tags = sound.Tags?.Count > 0 ? " " + sound.Tags.Join() : "";
 

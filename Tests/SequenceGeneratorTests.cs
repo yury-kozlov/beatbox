@@ -516,4 +516,51 @@ public class SequenceGeneratorTests
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
     }
+
+    [Fact]
+    public void AppendSequences_SecondSequenceExceedsDurationOfFirst_Trim()
+    {
+        // arrange
+        var seq1 = new SequenceDesign("seq1")
+        {
+            Name = "seq1",
+            Duration = 200,
+            Leader = new Kick()
+            {
+                Followers = [new Kick() { DelayAfterLeader = 100 }, new Kick() { DelayAfterLeader = 150 }]
+            }
+        };
+        var seq2 = new SequenceDesign("seq2")
+        {
+            Name = "seq2",
+            Duration = 300,
+            Leader = new Snare()
+            {
+                DelayAfterLeader = 150,
+                Followers = [new Snare() { DelayAfterLeader = 160 }, new Snare() { DelayAfterLeader = 300 }]
+            }
+        };
+        seq1.Leader.Followers.Add(seq2.Leader);
+
+        // act
+        var sequence = new SequenceDesign("main");
+        sequence.Append(seq1);
+        var actual = SequenceGenerator.Generate(sequence);
+        var actualTimestamps = actual.GetTimestamps();
+
+        string[] expected = [
+            "0000:sequence-start-main",
+            "0000:sequence-start-seq1",
+            "0000:k",
+            "0100:k",
+            "0150:k",
+            "0150:sequence-start-seq2",
+            "0150:s",
+            // "0310:s", // this one exceeds first sequence duration and is trimmed
+            // "0450:s", // this one exceeds first sequence duration and is trimmed
+        ];
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
 }
