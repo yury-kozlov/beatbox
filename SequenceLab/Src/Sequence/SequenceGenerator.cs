@@ -46,7 +46,7 @@ public class SequenceGenerator
 
         // mix leader with all its followers:
         sequence.AddRange(followers);
-        sequence.Sort((a, b) => a.Timestamp.CompareTo(b.Timestamp));
+        sequence.SortByTimestamp();
 
         return sequence;
     }
