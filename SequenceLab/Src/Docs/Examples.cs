@@ -42,6 +42,25 @@ class Examples
         player.PlayRepeated(result).Wait();
     }
 
+    public void RepeatSequenceInLoop()
+    {
+        // append same sequence in loop
+        var main = new SequenceDesign("main");
+        for (int i = 1; i <= 4; i++)
+        {
+            var kicks = new SequenceDesign($"kicks.{i}")
+            {
+                Duration = 2000, // TODO: is it possible to omit duraiton and calculate it when generating actual sequence?
+                Leader = new Kick { Strategy = new RepeatStrategy { Interval = 500, Count = 4 } },
+            };
+            main.Append(kicks);
+        }
+
+        // play
+        var player = new ConsoleKeyPlayer();
+        player.PlayRepeated(main).Wait();
+    }
+
     public void PlaySequencesAtTheSameTime()
     {
         // in order to play 2 sequences at the same time
