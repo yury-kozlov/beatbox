@@ -22,7 +22,30 @@ public class SequenceDesign
     /// </summary>
     public Sound Leader { get; set => field = InitLeader(value); }
 
-    public AbstractStrategy Strategy { get => SequenceStart.Strategy; set => SequenceStart.Strategy = value; }
+    public AbstractStrategy Strategy
+    {
+        get => SequenceStart.Strategy;
+        set { SequenceStart.Strategy = value; TrySetDuration(value); }
+    }
+
+    private void TrySetDuration(AbstractStrategy strategy)
+    {
+        if (strategy is RepeatStrategy repeat)
+        {
+            var sequenceDuration = Duration;
+            if (repeat.Interval == 0 && sequenceDuration > 0)
+            {
+                // automatically set sequence loop interval as the original duration of the sequence
+                repeat.Interval = sequenceDuration;
+
+            }
+            if (repeat.Count > 0)
+            {
+                // automatically update sequence duration as full duration of the repeat:
+                Duration = repeat.Interval * repeat.Count;
+            }
+        }
+    }
 
     /// <summary>
     /// Wrap actual leader with "SequenceStart" sound.

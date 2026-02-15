@@ -63,7 +63,7 @@ class Examples
         // sequence may be repeated in a few ways: in a loop or using a strategy
         // this example shows how to apply repeat strategy for a sequence:
         var kicks = new PrimitiveSequences.Square<Kick>() { Interval = 500 };
-        kicks.Strategy = new RepeatStrategy { Count = 2, Interval = kicks.Duration }; // TODO: Use sequence duration as interval automatically if not specified
+        kicks.Strategy = new RepeatStrategy { Count = 2 };
 
         // play
         var player = new ConsoleKeyPlayer();
