@@ -11,18 +11,30 @@ public class SequenceDesign
         Leader = SequenceStart = new SequenceStart(name);
     }
 
+    /// <summary>
+    /// SequenceStart is a "meta" sound that allows to abstract current sequence to one sound.
+    /// </summary>
     public SequenceStart SequenceStart;
 
+    /// <summary>
+    /// Leader of a sequence design is always an instance of <see cref="nameof(SequenceStart)"/> type.
+    /// Actual leader will be the first follower of <see cref="SequenceStart"/>.
+    /// </summary>
     public Sound Leader { get; set => field = InitLeader(value); }
 
     public AbstractStrategy Strategy { get => SequenceStart.Strategy; set => SequenceStart.Strategy = value; }
 
+    /// <summary>
+    /// Wrap actual leader with "SequenceStart" sound.
+    /// </summary>
     private Sound InitLeader(Sound leader)
     {
         if (leader == SequenceStart)
         {
-            return leader; // already initialized
+            // this is an init call (from ctor)
+            return SequenceStart;
         }
+        // "real" leader is assigned
         return SequenceStart.WithFollower(leader).WithSequenceIfMissing(this);
     }
 
