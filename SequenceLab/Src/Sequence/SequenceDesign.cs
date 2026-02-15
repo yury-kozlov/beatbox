@@ -15,6 +15,8 @@ public class SequenceDesign
 
     public Sound Leader { get; set => field = InitLeader(value); }
 
+    public AbstractStrategy Strategy { get => SequenceStart.Strategy; set => SequenceStart.Strategy = value; }
+
     private Sound InitLeader(Sound leader)
     {
         if (leader == SequenceStart)

@@ -44,13 +44,14 @@ class Examples
 
     public void RepeatSequenceInLoop()
     {
-        // append same sequence in loop
+        // sequence may be repeated in a few ways: in a loop or using a strategy
+        // this example shows how to repeat/append a sequence in loop:
         var main = new SequenceDesign("main");
         for (int i = 1; i <= 4; i++)
         {
             var kicks = new SequenceDesign($"kicks.{i}")
             {
-                Duration = 2000, // TODO: is it possible to omit duraiton and calculate it when generating actual sequence?
+                Duration = 2000, // TODO: is it possible to omit duration and calculate it when generating actual sequence?
                 Leader = new Kick { Strategy = new RepeatStrategy { Interval = 500, Count = 4 } },
             };
             main.Append(kicks);
@@ -59,6 +60,22 @@ class Examples
         // play
         var player = new ConsoleKeyPlayer();
         player.PlayRepeated(main).Wait();
+    }
+
+    public void RepeatSequenceWithStrategy()
+    {
+        // sequence may be repeated in a few ways: in a loop or using a strategy
+        // this example shows how to apply repeat strategy for a sequence:
+        var kicks = new SequenceDesign("kicks")
+        {
+            Duration = 2000, // TODO: is it possible to omit duration and calculate it when generating actual sequence?
+            Leader = new Kick { Strategy = new RepeatStrategy { Interval = 500, Count = 4 } },
+        };
+        kicks.Strategy = new RepeatStrategy { Count = 4, Interval = kicks.Duration }; // TODO: Use sequence duration as interval automatically if not specified
+
+        // play
+        var player = new ConsoleKeyPlayer();
+        player.PlayRepeated(kicks).Wait();
     }
 
     public void PlaySequencesAtTheSameTime()
