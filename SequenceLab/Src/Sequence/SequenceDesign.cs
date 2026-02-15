@@ -3,7 +3,7 @@ namespace Beater;
 
 public class SequenceDesign
 {
-    private int JoinsCounter;
+    private int _joinsCounter;
 
     public SequenceDesign(string name)
     {
@@ -61,10 +61,10 @@ public class SequenceDesign
             return this;
         }
 
-        JoinsCounter++;
+        _joinsCounter++;
         Leader.Followers.Add(new Joint()
         {
-            JoinsCounter = JoinsCounter,
+            JoinsCounter = _joinsCounter,
             DelayAfterLeader = Duration, // wait for the original sequence to finish, only then start playing the next one
             Followers = [next.Leader],
             PreviousSequence = LastAppendedSequence!,
