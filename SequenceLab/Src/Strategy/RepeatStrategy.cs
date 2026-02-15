@@ -101,4 +101,6 @@ public class RepeatStrategy : AbstractStrategy
             Comment = $"{(lastSound is Metronome ? "metronome" : lastSound.Name)} repeat x{Count} ends, {calledTimesText}{trimmedText}",
         };
     }
+
+    public override string ToString() => $"{base.ToString()}: x{Count} every {Interval}ms";
 }
