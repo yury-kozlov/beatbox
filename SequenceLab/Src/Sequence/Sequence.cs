@@ -13,19 +13,15 @@ public class Sequence : List<Sound>
                 {
                     return -1; // put "end-of-loop" sound before any other sound
                 }
-                if (a is Joint)
-                {
-                    return b is LoopEnd ? 1 : -1; // put "joint" sound before other sounds, but after "end-of-loop"
-                }
                 if (a is SequenceStart)
                 {
                     if (b is SequenceStart)
                     {
                         return 0; // leave as is
                     }
-                    if (b is LoopEnd or Joint)
+                    if (b is LoopEnd)
                     {
-                        // put "sequence-start" sounds after "end-of-loop" and "joint"
+                        // put "sequence-start" sounds after "end-of-loop"
                         return 1;
                     }
                     // put "sequence-start" after reqular sounds only if they belong to another sequence
@@ -33,15 +29,15 @@ public class Sequence : List<Sound>
                 }
                 if (a is Metronome)
                 {
-                    if (b is SequenceStart or Joint or LoopEnd)
+                    if (b is SequenceStart or LoopEnd)
                     {
-                        return 1; // put "metronome" after "sequence-start" and "joint"
+                        return 1; // put "metronome" after "sequence-start"
                     }
                     return -1; // put "metronome" before regular sounds
                 }
-                if (b is LoopEnd or SequenceStart or Joint or Metronome)
+                if (b is LoopEnd or SequenceStart or Metronome)
                 {
-                    // put regular sounds after "end-of-loop", "sequence-start", "joint", "metronome" only if they belong to the same sequence
+                    // put regular sounds after "end-of-loop", "sequence-start", "metronome" only if they belong to the same sequence
                     return a.Sequence == b.Sequence ? 1 : -1;
                 }
             }

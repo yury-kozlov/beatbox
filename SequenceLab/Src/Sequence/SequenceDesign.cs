@@ -3,8 +3,6 @@ namespace Beater;
 
 public class SequenceDesign
 {
-    private int _joinsCounter;
-
     public SequenceDesign(string name)
     {
         Name = name;
@@ -74,11 +72,6 @@ public class SequenceDesign
     /// </summary>
     public string Name;
 
-    /// <summary>
-    /// Last sequence that was appended to the current one.
-    /// </summary>
-    public SequenceDesign? LastAppendedSequence;
-
     public static SequenceDesign? FromJson(string json) => Serialization.FromJson<SequenceDesign>(json);
 
     /// <summary>
@@ -90,23 +83,16 @@ public class SequenceDesign
         if (Leader.Followers.Count == 0)
         {
             // this is the first sequence
-            Leader.Followers = [next.Leader];
+            Leader.Followers = [next.SequenceStart];
             Duration = next.Duration;
-            LastAppendedSequence = next;
             return this;
         }
 
-        _joinsCounter++;
-        Leader.Followers.Add(new Joint()
+        Leader.Followers.Add(next.SequenceStart with
         {
-            JoinsCounter = _joinsCounter,
             DelayAfterLeader = Duration, // wait for the original sequence to finish, only then start playing the next one
-            Followers = [next.Leader],
-            PreviousSequence = LastAppendedSequence!,
-            NextSequence = next,
         });
         Duration += next.Duration;
-        LastAppendedSequence = next;
         return this;
     }
 

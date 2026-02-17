@@ -39,10 +39,6 @@ public class Logger
         {
             name = m.FriendlyName;
         }
-        else if (sound is Joint j)
-        {
-            name = j.FriendlyName;
-        }
         else if (sound is LoopEnd e)
         {
             name = e.FriendlyName;

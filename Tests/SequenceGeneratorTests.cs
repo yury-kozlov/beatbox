@@ -506,7 +506,6 @@ public class SequenceGeneratorTests
             "0000:k",
             "0100:s",
             "0150:s",
-            "0500:joint",
             "0500:sequence-start-test2",
             "0500:k",
             "0600:s",
