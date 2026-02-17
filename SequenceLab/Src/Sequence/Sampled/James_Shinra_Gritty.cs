@@ -11,7 +11,7 @@ public class James_Shinra_Gritty
         {
             Leader = new Metronome()
             {
-                Strategy = new RepeatStrategy() { Count = 4, Interval = 1880, PlayEveryX = 1 },
+                Strategy = new RepeatStrategy() { Count = 4, Interval = 1880 },
                 Followers = [
                     new Kick { Strategy = new FollowPreviousSoundStrategy() },
                     new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 350 } },

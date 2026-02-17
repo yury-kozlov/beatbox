@@ -98,6 +98,7 @@ public class RepeatStrategy : AbstractStrategy
         return new LoopEnd()
         {
             Timestamp = timestamp,
+            Sequence = lastSound.Sequence,
             Comment = $"{(lastSound is Metronome ? "metronome" : lastSound.Name)} repeat x{Count} ends, {calledTimesText}{trimmedText}",
         };
     }

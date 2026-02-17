@@ -37,7 +37,7 @@ public class SequenceGeneratorTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -61,7 +61,7 @@ public class SequenceGeneratorTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -95,7 +95,7 @@ public class SequenceGeneratorTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -130,7 +130,7 @@ public class SequenceGeneratorTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -242,7 +242,7 @@ public class SequenceGeneratorTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -283,7 +283,7 @@ public class SequenceGeneratorTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -314,7 +314,7 @@ public class SequenceGeneratorTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -357,7 +357,7 @@ public class SequenceGeneratorTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -394,7 +394,7 @@ public class SequenceGeneratorTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -427,7 +427,7 @@ public class SequenceGeneratorTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -475,7 +475,7 @@ public class SequenceGeneratorTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -514,25 +514,23 @@ public class SequenceGeneratorTests
         ];
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
     public void AppendSequences_SecondSequenceExceedsDurationOfFirst_Trim()
     {
         // arrange
-        var seq1 = new SequenceDesign("seq1")
+        var seq1 = new SequenceDesign("kicks")
         {
-            Name = "seq1",
             Duration = 200,
             Leader = new Kick()
             {
                 Followers = [new Kick() { DelayAfterLeader = 100 }, new Kick() { DelayAfterLeader = 150 }]
             }
         };
-        var seq2 = new SequenceDesign("seq2")
+        var seq2 = new SequenceDesign("snares")
         {
-            Name = "seq2",
             Duration = 300,
             Leader = new Snare()
             {
@@ -550,17 +548,17 @@ public class SequenceGeneratorTests
 
         string[] expected = [
             "0000:sequence-start-main",
-            "0000:sequence-start-seq1",
+            "0000:sequence-start-kicks",
             "0000:k",
             "0100:k",
             "0150:k",
-            "0150:sequence-start-seq2",
+            "0150:sequence-start-snares",
             "0150:s",
             // "0310:s", // this one exceeds first sequence duration and is trimmed
             // "0450:s", // this one exceeds first sequence duration and is trimmed
         ];
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 }

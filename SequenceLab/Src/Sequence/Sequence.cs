@@ -13,14 +13,36 @@ public class Sequence : List<Sound>
                 {
                     return -1; // put "end-of-loop" sound before any other sound
                 }
+                if (a is Joint)
+                {
+                    return b is LoopEnd ? 1 : -1; // put "joint" sound before other sounds, but after "end-of-loop"
+                }
                 if (a is SequenceStart)
                 {
-                    // put "sequence-start" sounds before regular sounds, but after "end-of-loop"
-                    return b is LoopEnd ? 1 : -1;
+                    if (b is SequenceStart)
+                    {
+                        return 0; // leave as is
+                    }
+                    if (b is LoopEnd or Joint)
+                    {
+                        // put "sequence-start" sounds after "end-of-loop" and "joint"
+                        return 1;
+                    }
+                    // put "sequence-start" after reqular sounds only if they belong to another sequence
+                    return a.Sequence != b.Sequence ? 1 : -1;
                 }
-                if (b is LoopEnd or SequenceStart)
+                if (a is Metronome)
                 {
-                    return 1; // put regular sounds after "end-of-loop" and "sequence-start"
+                    if (b is SequenceStart or Joint or LoopEnd)
+                    {
+                        return 1; // put "metronome" after "sequence-start" and "joint"
+                    }
+                    return -1; // put "metronome" before regular sounds
+                }
+                if (b is LoopEnd or SequenceStart or Joint or Metronome)
+                {
+                    // put regular sounds after "end-of-loop", "sequence-start", "joint", "metronome" only if they belong to the same sequence
+                    return a.Sequence == b.Sequence ? 1 : -1;
                 }
             }
             return order;

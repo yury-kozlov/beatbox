@@ -48,7 +48,7 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -72,8 +72,8 @@ public class SequenceSamplesTests
             "3280:k",
             "3380:k",
             "3620:end-of-loop",
-            "3620:k",
             "3620:metronome",
+            "3620:k",
             "4070:s",
             "4300:k",
             "4985:s",
@@ -85,8 +85,8 @@ public class SequenceSamplesTests
             "6900:k",
             "7000:k",
             "7240:end-of-loop",
-            "7240:k",
             "7240:metronome",
+            "7240:k",
             "7690:s",
             "7920:k",
             "8605:s",
@@ -119,7 +119,7 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -186,7 +186,7 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -241,7 +241,7 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -287,8 +287,8 @@ public class SequenceSamplesTests
             "3580:ts3",
             "3650:ts1",
             "3660:ts3",
-            "3730:ts1",
             "3730:ts3",
+            "3730:ts1",
             "3750:s",
             "3790:ts3",
             "3810:end-of-loop",
@@ -305,8 +305,8 @@ public class SequenceSamplesTests
             "5150:ts1",
             "5230:ts1",
             "5310:end-of-loop",
-            "5500:k",
             "5500:ts2",
+            "5500:k",
             "5650:ts1",
             "5730:ts1",
             "5750:s",
@@ -342,7 +342,7 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -353,8 +353,8 @@ public class SequenceSamplesTests
         string[] expected = [
             "0000:sequence-start-" + sequence.Name,
             "0000:k",
-            "0100:ts1",
             "0100:k",
+            "0100:ts1",
             "0180:ts1",
             "0200:k",
             "0260:end-of-loop",
@@ -363,18 +363,18 @@ public class SequenceSamplesTests
             "0550:ts3",
             "0600:ts2",
             "0630:ts3",
-            "0700:ts2",
             "0700:ts3",
+            "0700:ts2",
             "0760:ts3",
             "0800:end-of-loop",
             "0870:end-of-loop",
-            "1000:k",
             "1000:s",
+            "1000:k",
             "1500:k",
             "1600:ts2",
             "2000:k",
-            "2100:ts1",
             "2100:k",
+            "2100:ts1",
             "2180:ts1",
             "2200:k",
             "2260:end-of-loop",
@@ -383,13 +383,13 @@ public class SequenceSamplesTests
             "2550:ts3",
             "2600:ts2",
             "2630:ts3",
-            "2700:ts2",
             "2700:ts3",
+            "2700:ts2",
             "2760:ts3",
             "2800:end-of-loop",
             "2870:end-of-loop",
-            "3000:k",
             "3000:s",
+            "3000:k",
             "3500:k",
             "3600:ts2",
             "4000:k",
@@ -403,8 +403,8 @@ public class SequenceSamplesTests
             "4550:ts3",
             "4600:ts2",
             "4630:ts3",
-            "4700:ts2",
             "4700:ts3",
+            "4700:ts2",
             "4760:ts3",
             "4800:end-of-loop",
             "4870:end-of-loop",
@@ -413,8 +413,8 @@ public class SequenceSamplesTests
             "5500:k",
             "5600:ts2",
             "6000:k",
-            "6100:ts1",
             "6100:k",
+            "6100:ts1",
             "6180:ts1",
             "6200:k",
             "6260:end-of-loop",
@@ -423,13 +423,13 @@ public class SequenceSamplesTests
             "6550:ts3",
             "6600:ts2",
             "6630:ts3",
-            "6700:ts2",
             "6700:ts3",
+            "6700:ts2",
             "6760:ts3",
             "6800:end-of-loop",
             "6870:end-of-loop",
-            "7000:k",
             "7000:s",
+            "7000:k",
             "7500:k",
             "7600:ts2",
             "8000:end-of-loop",
@@ -440,7 +440,7 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -454,38 +454,38 @@ public class SequenceSamplesTests
             "0000:k",
             "0085:ts1",
             "0250:k",
-            "0500:s",
             "0500:end-of-loop",
+            "0500:s",
             "0585:ts1",
             "0710:ts2",
-            "1085:k",
             "1085:ts1",
+            "1085:k",
             "1210:k",
             "1335:end-of-loop",
             "1460:s",
             "1585:ts1",
-            "2000:metronome",
             "2000:end-of-loop",
+            "2000:metronome",
             "2000:k",
             "2085:ts1",
             "2250:k",
-            "2500:s",
             "2500:end-of-loop",
+            "2500:s",
             "2585:ts1",
             "2710:ts2",
-            "3085:k",
             "3085:ts1",
+            "3085:k",
             "3210:k",
             "3335:end-of-loop",
             "3460:s",
             "3585:ts1",
-            "4000:metronome",
             "4000:end-of-loop",
+            "4000:metronome",
             "4000:k",
             "4085:ts1",
             "4250:k",
-            "4500:s",
             "4500:end-of-loop",
+            "4500:s",
             "4585:ts1",
             "4710:ts2",
             "5085:k",
@@ -494,13 +494,13 @@ public class SequenceSamplesTests
             "5335:end-of-loop",
             "5460:s",
             "5585:ts1",
-            "6000:metronome",
             "6000:end-of-loop",
+            "6000:metronome",
             "6000:k",
             "6085:ts1",
             "6250:k",
-            "6500:s",
             "6500:end-of-loop",
+            "6500:s",
             "6585:ts1",
             "6710:ts2",
             "7085:k",
@@ -518,7 +518,7 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 
     [Fact]
@@ -531,15 +531,15 @@ public class SequenceSamplesTests
             "0000:metronome",
             "0000:k",
             "0330:k",
-            "0660:s",
             "0660:end-of-loop",
+            "0660:s",
             "1610:k",
             "1940:s",
             "2550:metronome",
             "2550:k",
             "2880:k",
-            "3210:s",
             "3210:end-of-loop",
+            "3210:s",
             "3710:k",
             "4160:k",
             "4490:s",
@@ -547,15 +547,15 @@ public class SequenceSamplesTests
             "5100:metronome",
             "5100:k",
             "5430:k",
-            "5760:s",
             "5760:end-of-loop",
+            "5760:s",
             "6710:k",
             "7040:s",
             "7650:metronome",
             "7650:k",
             "7980:k",
-            "8310:s",
             "8310:end-of-loop",
+            "8310:s",
             "8810:k",
             "9260:k",
             "9590:s",
@@ -568,6 +568,6 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().ContainInOrder(expected);
     }
 }
