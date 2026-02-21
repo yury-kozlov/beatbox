@@ -100,6 +100,9 @@ public class SequenceGenerator
         }
     }
 
+    /// <summary>
+    /// A delegate for checking if sound's sequence has a different duration than its leader's sequence.
+    /// </summary>
     private static Func<Sound, bool> HasOtherSequenceDuration(Sound leader)
     {
         return sound => leader.Sequence?.Duration > 0
