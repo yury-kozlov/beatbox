@@ -44,4 +44,12 @@ public class Sequence : List<Sound>
             return order;
         });
     }
+
+    public Sequence Mix(Sequence followers)
+    {
+        AddRange(followers);
+        SortByTimestamp();
+
+        return this;
+    }
 }

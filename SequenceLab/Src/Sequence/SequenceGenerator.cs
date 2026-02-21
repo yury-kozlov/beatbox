@@ -32,50 +32,48 @@ public class SequenceGenerator
 
         leader.Strategy.CalledTimes++;
 
-        var sequence = leader.Strategy.GenerateSequenceFor(leader, previousSounds);
+        // in most cases "leaders" will contain single sound (current leader), except for repeat strategy which will clone leader in loop
+        var leaders = leader.Strategy.GenerateSequenceFor(leader, previousSounds);
 
         // note: followers are generated separately from the leader - meaning leader will not be able to take decisions based on its followers
         var followers = new Sequence();
-        foreach (var sound in sequence)
+        foreach (var currentLeader in leaders)
         {
-            if (sound.Followers.HasItems())
+            if (currentLeader.Followers.HasItems())
             {
-                followers.AddRange(GenerateFollowersSequence(sound));
+                followers.AddRange(GenerateFollowersSequence(currentLeader));
             }
         }
 
-        // mix leader with all its followers:
-        sequence.AddRange(followers);
-        sequence.SortByTimestamp();
-
-        return sequence;
+        // mix leaders with all followers:
+        return leaders.Mix(followers);
     }
 
     private static Sequence GenerateFollowersSequence(Sound leader)
     {
-        var mixedSequence = new Sequence();
+        var allFollowers = new Sequence();
         foreach (var follower in leader.Followers)
         {
             // NOTE: separate followers are played independently to allow overlapping sequences (mixed together)
-            var followerSequence = GenerateSequence(follower, mixedSequence);
-            mixedSequence.AddRange(followerSequence);
+            var followerSequence = GenerateSequence(follower, allFollowers);
+            allFollowers.AddRange(followerSequence);
         }
 
-        foreach (var mixedSound in mixedSequence)
+        foreach (var follower in allFollowers)
         {
             // shift timestamp relatively to the leader (so that each sound will have an absolute position from the beginning of the whole sequence):
-            mixedSound.Timestamp += leader.Timestamp;
+            follower.Timestamp += leader.Timestamp;
         }
 
         if (leader is SequenceStart sequenceStart)
         {
             // this is only to improve debugging experience
-            AlignSequenceStartTimestamp(sequenceStart, mixedSequence);
+            AlignSequenceStartTimestamp(sequenceStart, allFollowers);
         }
 
-        RemoveSoundsExceedingSequenceDuration(leader, mixedSequence);
+        RemoveSoundsExceedingSequenceDuration(leader, allFollowers);
 
-        return mixedSequence;
+        return allFollowers;
     }
 
     private static void AlignSequenceStartTimestamp(SequenceStart sequenceStart, Sequence mixedSequence)
