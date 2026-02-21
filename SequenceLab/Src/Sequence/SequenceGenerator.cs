@@ -13,7 +13,7 @@ public class SequenceGenerator
     /// An entry point to generate sequence of sounds of leader/follower.
     /// </summary>
     /// <param name="previousSounds">Sequence of previous sounds (if any), from which the generated sequence will continue.</param>
-    private static Sequence GenerateSequence(Sound leader, Sequence? previousSounds = null)
+    private static Sequence GenerateSequence(Sound leader)
     {
         leader = leader with { /* clone */ };
         leader.Followers.SetLeader(leader);
@@ -33,7 +33,7 @@ public class SequenceGenerator
         leader.Strategy.CalledTimes++;
 
         // in most cases "leaders" will contain single sound (current leader), except for repeat strategy which will clone leader in loop
-        Sequence leaders = ApplyStrategy(leader, previousSounds);
+        Sequence leaders = ApplyStrategy(leader);
 
         // note: followers are generated separately from the leader - meaning leader will not be able to take decisions based on its followers
         var followers = new Sequence();
@@ -49,7 +49,7 @@ public class SequenceGenerator
         return leaders.Mix(followers);
     }
 
-    private static Sequence ApplyStrategy(Sound leader, Sequence? previousSounds)
+    private static Sequence ApplyStrategy(Sound leader)
     {
         if (leader.Strategy is PlayOnceStrategy playOnce)
         {
@@ -58,7 +58,7 @@ public class SequenceGenerator
 
         if (leader.Strategy is FollowPreviousSoundStrategy followPrevious)
         {
-            return followPrevious.ApplyStrategy(leader, previousSounds?.LastOrDefault());
+            return followPrevious.ApplyStrategy(leader);
         }
 
         if (leader.Strategy is RepeatStrategy repeat)
@@ -74,8 +74,10 @@ public class SequenceGenerator
         var allFollowers = new Sequence();
         foreach (var follower in leader.Followers)
         {
+            follower.PreviousSounds = allFollowers;
+
             // NOTE: separate followers are played independently to allow overlapping sequences (mixed together)
-            var nestedFollowers = GenerateSequence(follower, allFollowers);
+            var nestedFollowers = GenerateSequence(follower);
             allFollowers.AddRange(nestedFollowers);
         }
 

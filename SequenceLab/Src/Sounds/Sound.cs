@@ -56,6 +56,11 @@ public record Sound
     /// </summary>
     public int DelayAfterLeader { set { Strategy.DelayAfterLeader = value; } }
 
+    /// <summary>
+    /// Previous sounds that were generated before the current sound (for the same leader).
+    /// </summary>
+    internal Sequence? PreviousSounds { get; set; }
+
     public override string? ToString() => Name;
 
     /// <summary>
