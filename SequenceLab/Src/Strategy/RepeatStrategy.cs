@@ -25,7 +25,7 @@ public class RepeatStrategy : AbstractStrategy
 
     private int _previousIterval;
 
-    public override Sequence GenerateSequenceFor(Sound leader, Sequence? previousSounds = null)
+    public Sequence ApplyStrategy(Sound leader)
     {
         var originalSound = leader;
         var sequence = new Sequence();

@@ -42,8 +42,6 @@ public abstract class AbstractStrategy
     /// </summary>
     public string? SilenceEveryXOutOf;
 
-    public abstract Sequence GenerateSequenceFor(Sound leader, Sequence? previousSounds = null);
-
     public bool IsXOutOf(string? xOutOfY, int x)
     {
         if (xOutOfY.IsNullOrEmpty())
