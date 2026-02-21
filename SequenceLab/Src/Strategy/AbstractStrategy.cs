@@ -41,4 +41,6 @@ public abstract class AbstractStrategy
     /// NOTE: this counter is related to the strategy, not to the sound itself.
     /// </summary>
     public string? SilenceEveryXOutOf;
+
+    public abstract Sequence ApplyStrategy(Sound leader);
 }

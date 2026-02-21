@@ -2,7 +2,7 @@
 
 public class PlayOnceStrategy : AbstractStrategy
 {
-    public Sequence ApplyStrategy(Sound leader)
+    public override Sequence ApplyStrategy(Sound leader)
     {
         leader.Timestamp = DelayAfterLeader;
 

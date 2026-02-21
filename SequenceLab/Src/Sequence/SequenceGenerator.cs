@@ -33,7 +33,7 @@ public class SequenceGenerator
         leader.Strategy.CalledTimes++;
 
         // in most cases "leaders" will contain single sound (current leader), except for repeat strategy which will clone leader in loop
-        Sequence leaders = ApplyStrategy(leader);
+        Sequence leaders = leader.Strategy.ApplyStrategy(leader);
 
         // note: followers are generated separately from the leader - meaning leader will not be able to take decisions based on its followers
         var followers = new Sequence();
@@ -47,26 +47,6 @@ public class SequenceGenerator
 
         // mix leaders with all followers:
         return leaders.Mix(followers);
-    }
-
-    private static Sequence ApplyStrategy(Sound leader)
-    {
-        if (leader.Strategy is PlayOnceStrategy playOnce)
-        {
-            return playOnce.ApplyStrategy(leader);
-        }
-
-        if (leader.Strategy is FollowPreviousSoundStrategy followPrevious)
-        {
-            return followPrevious.ApplyStrategy(leader);
-        }
-
-        if (leader.Strategy is RepeatStrategy repeat)
-        {
-            return repeat.ApplyStrategy(leader);
-        }
-
-        throw new NotImplementedException($"Unsupported strategy: {leader.Strategy?.GetType()}");
     }
 
     private static Sequence GenerateFollowersSequence(Sound leader)
