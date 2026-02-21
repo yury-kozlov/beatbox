@@ -28,19 +28,19 @@ public class SequenceDesign
 
     private void TrySetDuration(AbstractStrategy strategy)
     {
-        if (strategy is RepeatStrategy repeat)
+        if (strategy is RepeatStrategy repeatStrategy)
         {
             var sequenceDuration = Duration;
-            if (repeat.Interval == 0 && sequenceDuration > 0)
+            if (repeatStrategy.Interval == 0 && sequenceDuration > 0)
             {
                 // automatically set sequence loop interval as the original duration of the sequence
-                repeat.Interval = sequenceDuration;
+                repeatStrategy.Interval = sequenceDuration;
 
             }
-            if (repeat.Count > 0)
+            if (repeatStrategy.Count > 0)
             {
-                // automatically update sequence duration as full duration of the repeat:
-                Duration = repeat.Interval * repeat.Count;
+                // automatically update sequence duration as full duration of the loop:
+                Duration = repeatStrategy.Interval * repeatStrategy.Count;
             }
         }
     }
@@ -62,7 +62,9 @@ public class SequenceDesign
     /// <summary>
     /// In milliseconds (represents full loop of a sequence including ending space).
     /// Duration of sequence should be known ahead for each predefined sequence if it's going to be played in loop
-    /// (otherwise we will not be able to place next iteration at correct timing).
+    /// (otherwise we will not be able to place next iteration at correct timing). This is especially important for sequences 
+    /// without loops since we will not be able to automatically calculate duration of such sequences based on their strategy.
+    /// Duration is also required when appending one sequence to another (otherwise we will not know at which point to start the second sequence).
     /// </summary>
     public int Duration; /// TODO: should we add <see cref="LoopEnd"/> sound at the end of each sequence?
 
