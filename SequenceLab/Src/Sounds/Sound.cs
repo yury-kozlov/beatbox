@@ -3,7 +3,6 @@ namespace Beater;
 
 public record Sound
 {
-    public const string KickSound = "k";
     public const string SnareSound = "s";
 
     public Sound(string name)
