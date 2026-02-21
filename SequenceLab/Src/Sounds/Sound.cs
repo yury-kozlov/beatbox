@@ -58,14 +58,6 @@ public record Sound
 
     public override string? ToString() => Name;
 
-    internal void SetLeader()
-    {
-        foreach (var follower in Followers)
-        {
-            follower.Leader = this;
-        }
-    }
-
     /// <summary>
     /// Finds recursively and returns the first sound that has the specified tag.
     /// </summary>

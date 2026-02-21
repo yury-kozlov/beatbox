@@ -16,7 +16,7 @@ public class SequenceGenerator
     private static Sequence GenerateSequence(Sound leader, Sequence? previousSounds = null)
     {
         leader = leader with { /* clone */ };
-        leader.SetLeader();
+        leader.Followers.SetLeader(leader);
 
         leader.Strategy.CheckedTimes++;
         if (IsSkipped(leader))

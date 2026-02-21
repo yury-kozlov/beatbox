@@ -2,6 +2,14 @@
 
 public class Sequence : List<Sound>
 {
+    public void SetLeader(Sound leader)
+    {
+        foreach (var sound in this)
+        {
+            sound.Leader = leader;
+        }
+    }
+
     public void SortByTimestamp()
     {
         Sort((a, b) =>
