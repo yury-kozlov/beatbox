@@ -37,7 +37,7 @@ public class TransportBatchMessage
     {
         _items.Add(new BatchItem
         {
-            SoundName = soundName ?? Sound.NoSound, // if no sound should be played - delay still must be applied
+            SoundName = soundName ?? NoSound.Name, // if no sound should be played - delay still must be applied
             PreDelay = preDelay ?? 0,
         });
     }
@@ -50,7 +50,7 @@ public class TransportBatchMessage
         for (int i = 0; i < _items.Count; i++)
         {
             var item = _items[i];
-            if (item.SoundName == Sound.NoSound)
+            if (item.SoundName == NoSound.Name)
             {
                 if (item.PreDelay == 0 || i == _items.Count - 1)
                 {

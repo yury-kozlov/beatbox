@@ -137,7 +137,7 @@ internal class SequenceCodeGenerator
 
     private static string GetSoundName(Sound sound)
     {
-        return sound.Name.IsNullOrEmpty() ? $"{nameof(Sound)}.{nameof(Sound.NoSound)}" : $"\"{sound.Name}\"";
+        return sound.Name.IsNullOrEmpty() ? $"{nameof(NoSound)}.{nameof(NoSound.Name)}" : $"\"{sound.Name}\"";
     }
 
     private static IEnumerable<(string name, object? value, object? defaultValue)> GetFieldsAndProperties(object obj)
