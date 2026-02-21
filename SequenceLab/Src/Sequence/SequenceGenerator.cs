@@ -55,14 +55,14 @@ public class SequenceGenerator
         foreach (var follower in leader.Followers)
         {
             // NOTE: separate followers are played independently to allow overlapping sequences (mixed together)
-            var followerSequence = GenerateSequence(follower, allFollowers);
-            allFollowers.AddRange(followerSequence);
+            var nestedFollowers = GenerateSequence(follower, allFollowers);
+            allFollowers.AddRange(nestedFollowers);
         }
 
-        foreach (var follower in allFollowers)
+        foreach (var nestedFollower in allFollowers)
         {
             // shift timestamp relatively to the leader (so that each sound will have an absolute position from the beginning of the whole sequence):
-            follower.Timestamp += leader.Timestamp;
+            nestedFollower.Timestamp += leader.Timestamp;
         }
 
         if (leader is SequenceStart sequenceStart)
