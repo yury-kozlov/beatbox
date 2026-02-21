@@ -41,21 +41,4 @@ public abstract class AbstractStrategy
     /// NOTE: this counter is related to the strategy, not to the sound itself.
     /// </summary>
     public string? SilenceEveryXOutOf;
-
-    public bool IsXOutOf(string? xOutOfY, int x)
-    {
-        if (xOutOfY.IsNullOrEmpty())
-        {
-            return false;
-        }
-
-        // count calls within loop (for example, every 3rd time within repeated range of 4)
-        var fraction = Numbers.GetFraction(xOutOfY);
-        var playEveryX = fraction.Numerator;
-        var range = fraction.Denominator;
-        var iterationNumber = (x - 1) / range;
-        var calledTimesInRange = x - (range * iterationNumber);
-
-        return calledTimesInRange == playEveryX;
-    }
 }

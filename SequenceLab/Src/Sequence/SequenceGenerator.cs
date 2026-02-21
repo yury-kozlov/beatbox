@@ -130,14 +130,14 @@ public class SequenceGenerator
 
     private static bool IsSilenced(Sound sound)
     {
-        return sound.Strategy.IsXOutOf(sound.Strategy.SilenceEveryXOutOf, sound.Strategy.CheckedTimes);
+        return Numbers.IsXOutOf(sound.Strategy.SilenceEveryXOutOf, sound.Strategy.CheckedTimes);
     }
 
     private static bool IsSkipped(Sound sound)
     {
         if (sound.Strategy.PlayEveryXOutOf.HasValue())
         {
-            return !sound.Strategy.IsXOutOf(sound.Strategy.PlayEveryXOutOf, sound.Strategy.CheckedTimes);
+            return !Numbers.IsXOutOf(sound.Strategy.PlayEveryXOutOf, sound.Strategy.CheckedTimes);
         }
 
         // count every call
