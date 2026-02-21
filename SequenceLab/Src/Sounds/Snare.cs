@@ -5,8 +5,10 @@
 /// </summary>
 public record Snare : Sound
 {
-    public Snare() : base(SnareSound)
+    public Snare() : base(Name)
     { }
 
     public override string? ToString() => base.ToString();
+
+    public static new string Name = "s";
 }

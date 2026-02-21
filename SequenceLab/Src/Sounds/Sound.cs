@@ -3,8 +3,6 @@ namespace Beater;
 
 public record Sound
 {
-    public const string SnareSound = "s";
-
     public Sound(string name)
     {
         Name = name.IsNullOrEmpty() ? NoSound.Name : name;

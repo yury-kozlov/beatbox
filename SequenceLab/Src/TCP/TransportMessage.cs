@@ -72,7 +72,7 @@ public class TransportBatchMessage
 public static class Samples
 {
     public static TransportMessage K = new(Kick.Name);
-    public static TransportMessage S = new(Sound.SnareSound);
+    public static TransportMessage S = new(Snare.Name);
     public static TransportMessage TS1 = new("ts1");
     public static TransportMessage TS2 = new("ts2");
     public static TransportMessage TS3 = new("ts3");
