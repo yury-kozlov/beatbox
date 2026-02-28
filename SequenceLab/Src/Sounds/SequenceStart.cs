@@ -7,5 +7,5 @@ public record SequenceStart : NoSound
         FriendlyName = $"sequence-start-{sequenceName}";
     }
 
-    public override string? ToString() => FriendlyName;
+    public override string? ToString() => Format(FriendlyName);
 }

@@ -11,5 +11,5 @@ public record LoopEnd : NoSound
         FriendlyName = "end-of-loop";
     }
 
-    public override string? ToString() => $"{FriendlyName}: {Comment}";
+    public override string? ToString() => $"{Format(FriendlyName)}: {Comment}";
 }

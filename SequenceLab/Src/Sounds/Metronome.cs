@@ -11,5 +11,5 @@ public record Metronome : NoSound
         FriendlyName = "metronome";
     }
 
-    public override string? ToString() => FriendlyName;
+    public override string? ToString() => Format(FriendlyName);
 }

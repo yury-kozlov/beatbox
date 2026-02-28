@@ -57,7 +57,12 @@ public record Sound
     /// </summary>
     internal Sequence? PreviousSounds { get; set; }
 
-    public override string? ToString() => Name;
+    public override string? ToString() => Format(Name);
+
+    protected string Format(string? friendlyName)
+    {
+        return $"{friendlyName}: {Timestamp:0000}";
+    }
 
     /// <summary>
     /// Finds recursively and returns the first sound that has the specified tag.
