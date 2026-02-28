@@ -67,25 +67,9 @@ public class SequenceGenerator
             nestedFollower.Timestamp += leader.Timestamp;
         }
 
-        if (leader is SequenceStart sequenceStart)
-        {
-            // this is only to improve debugging experience
-            AlignSequenceStartTimestamp(sequenceStart, allFollowers);
-        }
-
         RemoveSoundsExceedingSequenceDuration(leader, allFollowers);
 
         return allFollowers;
-    }
-
-    private static void AlignSequenceStartTimestamp(SequenceStart sequenceStart, Sequence mixedSequence)
-    {
-        // TODO: delete this whole method because it leads to confusion (when reading broken range of shifted sequences in the final output)
-        // this alignment only happens when the first sound has explicit DelayAfterLeader which is incorrect
-        // because this property should be defined on the SequenceStart itself not on the first sound
-
-        // copy delay from the first sound of the sequence, so that they will always come together in the final output
-        sequenceStart.Timestamp = mixedSequence.FirstOrDefault()?.Timestamp ?? 0;
     }
 
     private static void RemoveSoundsExceedingSequenceDuration(Sound leader, Sequence seq)

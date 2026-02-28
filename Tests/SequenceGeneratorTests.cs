@@ -531,9 +531,9 @@ public class SequenceGeneratorTests
         var seq2 = new SequenceDesign("snares")
         {
             Duration = 300,
+            DelayAfterLeader = 150,
             Leader = new Snare()
             {
-                DelayAfterLeader = 150,
                 Followers = [new Snare() { DelayAfterLeader = 160 }, new Snare() { DelayAfterLeader = 300 }]
             }
         };
