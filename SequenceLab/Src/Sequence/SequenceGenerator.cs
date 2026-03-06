@@ -79,11 +79,18 @@ public class SequenceGenerator
         {
             foreach (var sound in unmatchedSequence)
             {
-                var maxAllowedTimestamp = leader.Timestamp + leader.Sequence!.Duration;
+                var maxAllowedTimestamp = leader.Timestamp + Math.Max(leader.Sequence!.Duration, leader.Sequence!.AutoDuration);
                 if (sound.Timestamp > maxAllowedTimestamp)
                 {
                     seq.Remove(sound);
                 }
+            }
+
+            // delete sequence-start if it's the only remaining sound here
+            var remainingSounds = unmatchedSequence.Intersect(seq).ToList();
+            if (remainingSounds.Count == 1 && remainingSounds[0] is SequenceStart sequenceStart)
+            {
+                seq.Remove(sequenceStart);
             }
         }
     }
@@ -91,12 +98,12 @@ public class SequenceGenerator
     /// <summary>
     /// A delegate for checking if sound's sequence has a different duration than its leader's sequence.
     /// </summary>
-    private static Func<Sound, bool> HasOtherSequenceDuration(Sound leader)
+    private static Func<Sound, bool> HasOtherSequenceDuration(Sound leader) => sound =>
     {
-        return sound => leader.Sequence?.Duration > 0
-                      && sound.Sequence?.Duration > 0
-                      && leader.Sequence.Duration != sound.Sequence.Duration;
-    }
+        var leaderSequenceDuration = Math.Max(leader.Sequence.Duration, leader.Sequence.AutoDuration);
+        var followerSequenceDuration = Math.Max(sound.Sequence.Duration, sound.Sequence.AutoDuration);
+        return leaderSequenceDuration > 0 && followerSequenceDuration > 0 && leaderSequenceDuration != followerSequenceDuration;
+    };
 
     private static bool IsSilenced(Sound sound)
     {

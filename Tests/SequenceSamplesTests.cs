@@ -41,6 +41,7 @@ public class SequenceSamplesTests
             "6785:k",
             "7025:s",
             "7520:end-of-loop",
+            "7520:sequence-end-" + sequence.Name,
         ];
 
         // act
@@ -48,7 +49,8 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().ContainInOrder(expected);
+        actualTimestamps.Should().BeEquivalentTo(expected);
+        sequence.AutoDuration.Should().Be(7520);
     }
 
     [Fact]
@@ -112,6 +114,7 @@ public class SequenceSamplesTests
             "14240:k",
             "14480:end-of-loop",
             "14480:end-of-loop",
+            "14480:sequence-end-" + sequence.Name,
         ];
 
         // act
@@ -119,7 +122,8 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().ContainInOrder(expected);
+        actualTimestamps.Should().BeEquivalentTo(expected);
+        sequence.AutoDuration.Should().Be(14480);
     }
 
     [Fact]
@@ -179,6 +183,7 @@ public class SequenceSamplesTests
              "15030:k",
              "15280:s",
              "15760:end-of-loop",
+             "15760:sequence-end-" + sequence.Name,
         ];
 
         // act
@@ -186,7 +191,8 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().ContainInOrder(expected);
+        actualTimestamps.Should().BeEquivalentTo(expected);
+        sequence.AutoDuration.Should().Be(15760);
     }
 
     [Fact]
@@ -234,6 +240,7 @@ public class SequenceSamplesTests
              "6935:k",
              "7035:s",
              "7600:end-of-loop",
+             "7600:sequence-end-" + sequence.Name,
         ];
 
         // act
@@ -241,7 +248,8 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().ContainInOrder(expected);
+        actualTimestamps.Should().BeEquivalentTo(expected);
+        sequence.AutoDuration.Should().Be(7600);
     }
 
     [Fact]
@@ -282,8 +290,8 @@ public class SequenceSamplesTests
             "3150:ts1",
             "3230:ts1",
             "3310:end-of-loop",
-            "3500:k",
             "3500:ts2",
+            "3500:k",
             "3580:ts3",
             "3650:ts1",
             "3660:ts3",
@@ -323,8 +331,8 @@ public class SequenceSamplesTests
             "7150:ts1",
             "7230:ts1",
             "7310:end-of-loop",
-            "7500:k",
             "7500:ts2",
+            "7500:k",
             "7580:ts3",
             "7650:ts1",
             "7660:ts3",
@@ -335,6 +343,7 @@ public class SequenceSamplesTests
             "7810:end-of-loop",
             "7900:end-of-loop",
             "8000:end-of-loop",
+            "8000:sequence-end-" + sequence.Name,
         ];
 
         // act
@@ -342,7 +351,8 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().ContainInOrder(expected);
+        actualTimestamps.Should().BeEquivalentTo(expected);
+        sequence.AutoDuration.Should().Be(8000);
     }
 
     [Fact]
@@ -403,8 +413,8 @@ public class SequenceSamplesTests
             "4550:ts3",
             "4600:ts2",
             "4630:ts3",
-            "4700:ts3",
             "4700:ts2",
+            "4700:ts3",
             "4760:ts3",
             "4800:end-of-loop",
             "4870:end-of-loop",
@@ -413,8 +423,8 @@ public class SequenceSamplesTests
             "5500:k",
             "5600:ts2",
             "6000:k",
-            "6100:k",
             "6100:ts1",
+            "6100:k",
             "6180:ts1",
             "6200:k",
             "6260:end-of-loop",
@@ -423,8 +433,8 @@ public class SequenceSamplesTests
             "6550:ts3",
             "6600:ts2",
             "6630:ts3",
-            "6700:ts3",
             "6700:ts2",
+            "6700:ts3",
             "6760:ts3",
             "6800:end-of-loop",
             "6870:end-of-loop",
@@ -433,6 +443,7 @@ public class SequenceSamplesTests
             "7500:k",
             "7600:ts2",
             "8000:end-of-loop",
+            "8000:sequence-end-" + sequence.Name,
         ];
 
         // act
@@ -440,7 +451,8 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().ContainInOrder(expected);
+        actualTimestamps.Should().BeEquivalentTo(expected);
+        sequence.AutoDuration.Should().Be(8000);
     }
 
     [Fact]
@@ -511,6 +523,7 @@ public class SequenceSamplesTests
             "7585:ts1",
             "8000:end-of-loop",
             "8000:end-of-loop",
+            "8000:sequence-end-" + sequence.Name,
         ];
 
         // act
@@ -518,7 +531,8 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().ContainInOrder(expected);
+        actualTimestamps.Should().BeEquivalentTo(expected);
+        sequence.AutoDuration.Should().Be(8000);
     }
 
     [Fact]
@@ -561,6 +575,7 @@ public class SequenceSamplesTests
             "9590:s",
             "9710:end-of-loop",
             "10200:end-of-loop",
+            "10200:sequence-end-" + sequence.Name,
         ];
 
         // act
@@ -568,6 +583,7 @@ public class SequenceSamplesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().ContainInOrder(expected);
+        actualTimestamps.Should().BeEquivalentTo(expected);
+        sequence.AutoDuration.Should().Be(10200);
     }
 }

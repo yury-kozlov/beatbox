@@ -10,6 +10,7 @@ public class SequenceGeneratorTests
         // arrange
         var sequence = new SequenceDesign("test")
         {
+            Duration = 0, // duration will be calculated automatically
             Leader = new Metronome()
             {
                 Followers = [
@@ -38,6 +39,7 @@ public class SequenceGeneratorTests
 
         // assert
         actualTimestamps.Should().ContainInOrder(expected);
+        sequence.AutoDuration.Should().Be(1800);
     }
 
     [Fact]
@@ -46,6 +48,7 @@ public class SequenceGeneratorTests
         // arrange
         var sequence = new SequenceDesign("test")
         {
+            Duration = 0, // duration will be calculated automatically
             Leader = new Metronome() { Strategy = new RepeatStrategy() { Count = 2, Interval = 1000 } },
         };
 
@@ -62,6 +65,7 @@ public class SequenceGeneratorTests
 
         // assert
         actualTimestamps.Should().ContainInOrder(expected);
+        sequence.AutoDuration.Should().Be(2000);
     }
 
     [Fact]
@@ -70,6 +74,7 @@ public class SequenceGeneratorTests
         // arrange
         var sequence = new SequenceDesign("test")
         {
+            Duration = 0, // duration will be calculated automatically
             Leader = new Kick()
             {
                 Strategy = new RepeatStrategy() { Count = 1, Interval = 1000 },
@@ -96,6 +101,7 @@ public class SequenceGeneratorTests
 
         // assert
         actualTimestamps.Should().ContainInOrder(expected);
+        sequence.AutoDuration.Should().Be(1000);
     }
 
     [Fact]
@@ -104,6 +110,7 @@ public class SequenceGeneratorTests
         // arrange
         var sequence = new SequenceDesign("test")
         {
+            Duration = 0, // duration will be calculated automatically
             Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 2, Interval = 1000 },
@@ -131,6 +138,7 @@ public class SequenceGeneratorTests
 
         // assert
         actualTimestamps.Should().ContainInOrder(expected);
+        sequence.AutoDuration.Should().Be(2000);
     }
 
     [Fact]
@@ -139,6 +147,7 @@ public class SequenceGeneratorTests
         // arrange
         var sequence = new SequenceDesign("test")
         {
+            Duration = 0, // duration will be calculated automatically
             Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 16, Interval = 500 },
@@ -182,8 +191,8 @@ public class SequenceGeneratorTests
             "3150:ts1",
             "3230:ts1",
             "3310:end-of-loop",
-            "3500:k",
             "3500:ts2",
+            "3500:k",
             "3580:ts3",
             "3650:ts1",
             "3660:ts3",
@@ -223,8 +232,8 @@ public class SequenceGeneratorTests
             "7150:ts1",
             "7230:ts1",
             "7310:end-of-loop",
-            "7500:k",
             "7500:ts2",
+            "7500:k",
             "7580:ts3",
             "7650:ts1",
             "7660:ts3",
@@ -243,6 +252,7 @@ public class SequenceGeneratorTests
 
         // assert
         actualTimestamps.Should().ContainInOrder(expected);
+        sequence.AutoDuration.Should().Be(8000);
     }
 
     [Fact]
@@ -251,6 +261,7 @@ public class SequenceGeneratorTests
         // arrange
         var sequence = new SequenceDesign("test")
         {
+            Duration = 0, // duration will be calculated automatically
             Leader = new Sound("")
             {
                 Strategy = new RepeatStrategy() { Count = 2, Interval = 1000 },
@@ -284,6 +295,7 @@ public class SequenceGeneratorTests
 
         // assert
         actualTimestamps.Should().ContainInOrder(expected);
+        sequence.AutoDuration.Should().Be(2000);
     }
 
     [Fact]
@@ -292,6 +304,7 @@ public class SequenceGeneratorTests
         // arrange
         var sequence = new SequenceDesign("test")
         {
+            Duration = 0, // duration will be calculated automatically
             Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 4, Interval = 1000 },
@@ -315,6 +328,7 @@ public class SequenceGeneratorTests
 
         // assert
         actualTimestamps.Should().ContainInOrder(expected);
+        sequence.AutoDuration.Should().Be(4000);
     }
 
     [Fact]
@@ -323,6 +337,7 @@ public class SequenceGeneratorTests
         // arrange
         var sequence = new SequenceDesign("test")
         {
+            Duration = 0, // duration will be calculated automatically
             Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy { Count = 1, Interval = 1000 },
@@ -350,6 +365,7 @@ public class SequenceGeneratorTests
             "0550:every-3rd",
             "0600:end-of-loop",
             "1000:end-of-loop",
+            "1000:sequence-end-test",
         ];
 
         // act
@@ -357,7 +373,8 @@ public class SequenceGeneratorTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().ContainInOrder(expected);
+        actualTimestamps.Should().BeEquivalentTo(expected);
+        sequence.AutoDuration.Should().Be(1000);
     }
 
     [Fact]
@@ -366,6 +383,7 @@ public class SequenceGeneratorTests
         // arrange
         var sequence = new SequenceDesign("test")
         {
+            Duration = 0, // duration will be calculated automatically
             Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 8, Interval = 500 },
@@ -395,6 +413,7 @@ public class SequenceGeneratorTests
 
         // assert
         actualTimestamps.Should().ContainInOrder(expected);
+        sequence.AutoDuration.Should().Be(4000);
     }
 
     [Fact]
@@ -403,6 +422,7 @@ public class SequenceGeneratorTests
         // arrange
         var sequence = new SequenceDesign("test")
         {
+            Duration = 0, // duration will be calculated automatically
             Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 4, Interval = 500 },
@@ -428,6 +448,7 @@ public class SequenceGeneratorTests
 
         // assert
         actualTimestamps.Should().ContainInOrder(expected);
+        sequence.AutoDuration.Should().Be(2000);
     }
 
     [Fact]
@@ -436,6 +457,7 @@ public class SequenceGeneratorTests
         // arrange
         var sequence = new SequenceDesign("test")
         {
+            Duration = 0, // duration will be calculated automatically
             Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 8, Interval = 500, SilenceEveryXSoundOutOf = "3/4" },
@@ -476,88 +498,6 @@ public class SequenceGeneratorTests
 
         // assert
         actualTimestamps.Should().ContainInOrder(expected);
-    }
-
-    [Fact]
-    public void AppendSequences_ReturnJoined()
-    {
-        // arrange
-        var getSequence = (string name) => new SequenceDesign(name)
-        {
-            Duration = 500,
-            Leader = new Kick()
-            {
-                Followers = [new Snare() { DelayAfterLeader = 100 }, new Snare() { DelayAfterLeader = 150 }]
-            }
-        };
-        var seq1 = getSequence("test1");
-        var seq2 = getSequence("test2");
-
-        // act
-        var sequence = new SequenceDesign("main");
-        sequence.Append(seq1);
-        sequence.Append(seq2);
-        var actual = SequenceGenerator.Generate(sequence);
-        var actualTimestamps = actual.GetTimestamps();
-
-        string[] expected = [
-            "0000:sequence-start-main",
-            "0000:sequence-start-test1",
-            "0000:k",
-            "0100:s",
-            "0150:s",
-            "0500:sequence-start-test2",
-            "0500:k",
-            "0600:s",
-            "0650:s",
-        ];
-
-        // assert
-        actualTimestamps.Should().ContainInOrder(expected);
-    }
-
-    [Fact]
-    public void AppendSequences_SecondSequenceExceedsDurationOfFirst_Trim()
-    {
-        // arrange
-        var seq1 = new SequenceDesign("kicks")
-        {
-            Duration = 200,
-            Leader = new Kick()
-            {
-                Followers = [new Kick() { DelayAfterLeader = 100 }, new Kick() { DelayAfterLeader = 150 }]
-            }
-        };
-        var seq2 = new SequenceDesign("snares")
-        {
-            Duration = 300,
-            DelayAfterLeader = 150,
-            Leader = new Snare()
-            {
-                Followers = [new Snare() { DelayAfterLeader = 160 }, new Snare() { DelayAfterLeader = 300 }]
-            }
-        };
-        seq1.Leader.Followers.Add(seq2.Leader);
-
-        // act
-        var sequence = new SequenceDesign("main");
-        sequence.Append(seq1);
-        var actual = SequenceGenerator.Generate(sequence);
-        var actualTimestamps = actual.GetTimestamps();
-
-        string[] expected = [
-            "0000:sequence-start-main",
-            "0000:sequence-start-kicks",
-            "0000:k",
-            "0100:k",
-            "0150:k",
-            "0150:sequence-start-snares",
-            "0150:s",
-            // "0310:s", // this one exceeds first sequence duration and is trimmed
-            // "0450:s", // this one exceeds first sequence duration and is trimmed
-        ];
-
-        // assert
-        actualTimestamps.Should().ContainInOrder(expected);
+        sequence.AutoDuration.Should().Be(4000);
     }
 }

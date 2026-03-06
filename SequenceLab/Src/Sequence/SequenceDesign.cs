@@ -6,7 +6,7 @@ public class SequenceDesign
     public SequenceDesign(string name)
     {
         Name = name;
-        Leader = SequenceStart = new SequenceStart(name);
+        Leader = SequenceStart = new SequenceStart(name) { Sequence = this };
     }
 
     /// <summary>
@@ -56,7 +56,9 @@ public class SequenceDesign
             return SequenceStart;
         }
         // "real" leader is assigned
-        return SequenceStart.WithFollower(leader).WithSequenceIfMissing(this);
+        return SequenceStart
+            .WithFollower(leader.WithSequenceIfMissing(this))
+            .WithFollower(new SequenceEnd(this));
     }
 
     /// <summary>
@@ -71,8 +73,14 @@ public class SequenceDesign
     /// (otherwise we will not be able to place next iteration at correct timing). This is especially important for sequences 
     /// without loops since we will not be able to automatically calculate duration of such sequences based on their strategy.
     /// Duration is also required when appending one sequence to another (otherwise we will not know at which point to start the second sequence).
+    /// - May be initialized at design time or based on RepeatStrategy parameters.
     /// </summary>
-    public int Duration; /// TODO: should we add <see cref="LoopEnd"/> sound at the end of each sequence?
+    public int Duration;
+
+    /// <summary>
+    /// Calculcated automatically during generation of sequence timestamps (each sound from SequenceStart until SequenceEnd will increment auto duration).
+    /// </summary>
+    public int AutoDuration;
 
     /// <summary>
     /// Name of the current sequence.
@@ -88,19 +96,9 @@ public class SequenceDesign
     /// </summary>
     internal SequenceDesign Append(SequenceDesign next)
     {
-        if (Leader.Followers.Count == 0)
-        {
-            // this is the first sequence
-            Leader.Followers = [next.SequenceStart];
-            Duration = next.Duration;
-            return this;
-        }
-
-        Leader.Followers.Add(next.SequenceStart with
-        {
-            DelayAfterLeader = Duration, // wait for the original sequence to finish, only then start playing the next one
-        });
+        Leader.Followers.Add(next.SequenceStart);
         Duration += next.Duration;
+
         return this;
     }
 

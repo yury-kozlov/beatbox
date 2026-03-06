@@ -36,7 +36,7 @@ public record Sound
     /// NOTE: when appending one sequence to another, the original sequence still remains in place here.
     /// All followers will automatically get this name assigned when a leader sound is added to a sequence.
     /// </summary>
-    public SequenceDesign? Sequence;
+    public SequenceDesign Sequence;
 
     public bool IsSilenced;
 

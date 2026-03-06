@@ -35,17 +35,9 @@ public class Logger
         }
 
         var name = sound.Name;
-        if (sound is Metronome m)
+        if (sound is Metronome or LoopEnd or SequenceStart or SequenceEnd)
         {
-            name = m.FriendlyName;
-        }
-        else if (sound is LoopEnd e)
-        {
-            name = e.FriendlyName;
-        }
-        else if (sound is SequenceStart st)
-        {
-            name = st.FriendlyName;
+            name = sound.FriendlyName;
         }
 
         var tags = sound.Tags?.Count > 0 ? " " + sound.Tags.Join() : "";

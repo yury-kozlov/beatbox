@@ -20,6 +20,18 @@ public class FollowPreviousSoundStrategy : AbstractStrategy
 
         leader.Timestamp = delay;
 
+        if (leader is SequenceStart)
+        {
+            // sync timestamp of SequenceStart because current leader was cloned from it while timestamp of the original sound is not initialized
+            // (we do this initialization only here because SequenceStart has FollowPreviousSoundStrategy)
+            leader.Sequence.SequenceStart.Timestamp = leader.Timestamp;
+        }
+        else
+        {
+            // at this point, timestamp is relative to the sequence-start (and will be shifted according to the sequence leader position later down the flow)
+            leader.Sequence.AutoDuration = leader.Timestamp;
+        }
+
         return new Sequence() { leader };
     }
 }
