@@ -6,13 +6,8 @@ public class SequenceDesign
     public SequenceDesign(string name)
     {
         Name = name;
-        Leader = SequenceStart = new SequenceStart(name) { Sequence = this };
+        Leader = new SequenceStart(name) { Sequence = this };
     }
-
-    /// <summary>
-    /// SequenceStart is a "meta" sound that allows to abstract current sequence to one sound.
-    /// </summary>
-    public SequenceStart SequenceStart;
 
     /// <summary>
     /// Leader of a sequence design is always an instance of <see cref="nameof(SequenceStart)"/> type.
@@ -22,8 +17,8 @@ public class SequenceDesign
 
     public AbstractStrategy Strategy
     {
-        get => SequenceStart.Strategy;
-        set { SequenceStart.Strategy = value; TrySetDuration(value); }
+        get => Leader.Strategy;
+        set { Leader.Strategy = value; TrySetDuration(value); }
     }
 
     private void TrySetDuration(AbstractStrategy strategy)
@@ -35,7 +30,6 @@ public class SequenceDesign
             {
                 // automatically set sequence loop interval as the original duration of the sequence
                 repeatStrategy.Interval = sequenceDuration;
-
             }
             if (repeatStrategy.Count > 0)
             {
@@ -50,13 +44,13 @@ public class SequenceDesign
     /// </summary>
     private Sound InitLeader(Sound leader)
     {
-        if (leader == SequenceStart)
+        if (leader is SequenceStart)
         {
             // this is an init call (from ctor)
-            return SequenceStart;
+            return leader;
         }
         // "real" leader is assigned
-        return SequenceStart
+        return Leader
             .WithFollower(leader.WithSequenceIfMissing(this))
             .WithFollower(new SequenceEnd(this));
     }
@@ -96,7 +90,7 @@ public class SequenceDesign
     /// </summary>
     internal SequenceDesign Append(SequenceDesign next)
     {
-        Leader.Followers.Add(next.SequenceStart);
+        Leader.Followers.Add(next.Leader);
         Duration += next.Duration;
 
         return this;

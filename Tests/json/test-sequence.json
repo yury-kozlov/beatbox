@@ -1,91 +1,9 @@
 {
-  "SequenceStart": {
-    "$type": "Beater.SequenceStart, Beater",
-    "Name": "no-sound",
-    "FriendlyName": "sequence-start-seq20260306213125",
-    "Strategy": {
-      "$type": "Beater.FollowPreviousSoundStrategy, Beater",
-      "PlayEveryX": 1
-    },
-    "Followers": {
-      "$type": "Beater.Sequence, Beater",
-      "$values": [
-        {
-          "$type": "Beater.Metronome, Beater",
-          "Name": "no-sound",
-          "FriendlyName": "metronome",
-          "Strategy": {
-            "$type": "Beater.RepeatStrategy, Beater",
-            "Count": 4,
-            "Interval": 2200,
-            "TrimIfExceedsParentLoop": true,
-            "PlayEveryX": 1
-          },
-          "Followers": {
-            "$type": "Beater.Sequence, Beater",
-            "$values": [
-              {
-                "$type": "Beater.Sound, Beater",
-                "Name": "k",
-                "Strategy": {
-                  "$type": "Beater.FollowPreviousSoundStrategy, Beater",
-                  "PlayEveryX": 1
-                },
-                "Followers": {
-                  "$type": "Beater.Sequence, Beater",
-                  "$values": []
-                }
-              },
-              {
-                "$type": "Beater.Sound, Beater",
-                "Name": "k",
-                "Strategy": {
-                  "$type": "Beater.FollowPreviousSoundStrategy, Beater",
-                  "DelayAfterLeader": 600,
-                  "PlayEveryX": 1
-                },
-                "Followers": {
-                  "$type": "Beater.Sequence, Beater",
-                  "$values": []
-                }
-              },
-              {
-                "$type": "Beater.Sound, Beater",
-                "Name": "s",
-                "Strategy": {
-                  "$type": "Beater.FollowPreviousSoundStrategy, Beater",
-                  "DelayAfterLeader": 800,
-                  "PlayEveryX": 1
-                },
-                "Followers": {
-                  "$type": "Beater.Sequence, Beater",
-                  "$values": []
-                }
-              }
-            ]
-          }
-        },
-        {
-          "$type": "Beater.SequenceEnd, Beater",
-          "Name": "no-sound",
-          "FriendlyName": "sequence-end-seq20260306213125",
-          "Strategy": {
-            "$type": "Beater.FollowPreviousSoundStrategy, Beater",
-            "PlayEveryX": 1
-          },
-          "Followers": {
-            "$type": "Beater.Sequence, Beater",
-            "$values": []
-          }
-        }
-      ]
-    }
-  },
-  "Name": "seq20260306213125",
+  "Name": "seq20260306222026",
   "Leader": {
     "$type": "Beater.SequenceStart, Beater",
     "Name": "no-sound",
-    "FriendlyName": "sequence-start-seq20260306213125",
+    "FriendlyName": "sequence-start-seq20260306222026",
     "Strategy": {
       "$type": "Beater.FollowPreviousSoundStrategy, Beater",
       "PlayEveryX": 1
@@ -100,7 +18,7 @@
           "Strategy": {
             "$type": "Beater.RepeatStrategy, Beater",
             "Count": 4,
-            "Interval": 2200,
+            "Interval": 2100,
             "TrimIfExceedsParentLoop": true,
             "PlayEveryX": 1
           },
@@ -124,7 +42,7 @@
                 "Name": "k",
                 "Strategy": {
                   "$type": "Beater.FollowPreviousSoundStrategy, Beater",
-                  "DelayAfterLeader": 600,
+                  "DelayAfterLeader": 700,
                   "PlayEveryX": 1
                 },
                 "Followers": {
@@ -137,7 +55,7 @@
                 "Name": "s",
                 "Strategy": {
                   "$type": "Beater.FollowPreviousSoundStrategy, Beater",
-                  "DelayAfterLeader": 800,
+                  "DelayAfterLeader": 400,
                   "PlayEveryX": 1
                 },
                 "Followers": {
@@ -151,7 +69,7 @@
         {
           "$type": "Beater.SequenceEnd, Beater",
           "Name": "no-sound",
-          "FriendlyName": "sequence-end-seq20260306213125",
+          "FriendlyName": "sequence-end-seq20260306222026",
           "Strategy": {
             "$type": "Beater.FollowPreviousSoundStrategy, Beater",
             "PlayEveryX": 1
