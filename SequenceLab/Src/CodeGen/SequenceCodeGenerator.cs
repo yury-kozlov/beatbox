@@ -32,9 +32,9 @@ internal class SequenceCodeGenerator
         }
 
         var _ = GetIndetation(1);
-        code.AppendLine($"{_}internal static Sequence GetSequence()");
+        code.AppendLine($"{_}internal static SequenceDesign GetSequence()");
         code.AppendLine($"{_}{{");
-        code.AppendLine($"{_}{_}return new Sequence");
+        code.AppendLine($"{_}{_}return new SequenceDesign(\"{sequenceName}\")");
         code.AppendLine($"{_}{_}{{");
         code.AppendLine($"{_}{_}{_}Leader = new Sound({GetSoundName(seq.Leader)})");
         code.AppendLine(NewSoundCode(seq.Leader, level: 3));
