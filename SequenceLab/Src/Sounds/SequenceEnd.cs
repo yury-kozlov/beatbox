@@ -5,6 +5,12 @@
 /// </summary>
 public record SequenceEnd : NoSound
 {
+    public SequenceEnd()
+    {
+        // a default ctor is supposed to be used only for JSON deserialization purposes
+        Strategy = new FollowPreviousSoundStrategy();
+    }
+
     public SequenceEnd(SequenceDesign sequence)
     {
         FriendlyName = $"sequence-end-{sequence.Name}";

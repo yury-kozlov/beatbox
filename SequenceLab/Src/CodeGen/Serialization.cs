@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System.Reflection;
 
@@ -11,16 +12,49 @@ public static class Serialization
         var settings = new JsonSerializerSettings
         {
             ContractResolver = new TypedBaseClassesContractResolver(),
-            DefaultValueHandling = DefaultValueHandling.Ignore
+            DefaultValueHandling = DefaultValueHandling.Ignore,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore, // circular reference: Sequence -> SequenceStart -> Sequence -> ...
         };
         return JsonConvert.SerializeObject(seq, Formatting.Indented, settings);
     }
 
     public static T? FromJson<T>(this string json)
     {
-        var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+        var settings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All,
+            Converters = { new SoundConverter() },
+        };
         return JsonConvert.DeserializeObject<T>(json, settings);
     }
+}
+
+public class SoundConverter : JsonConverter
+{
+    public override bool CanConvert(Type objectType) => objectType == typeof(Sound);
+
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+    {
+        var obj = JObject.Load(reader);
+
+        var typeToken = obj["$type"]?.Value<string>();
+        if (typeToken != null)
+        {
+            var actualType = Type.GetType(typeToken);
+            if (actualType != null && actualType != typeof(Sound))
+            {
+                return serializer.Deserialize(obj.CreateReader(), actualType);
+            }
+        }
+
+        var name = obj["Name"]?.Value<string>() ?? string.Empty;
+        var sound = new Sound(name);
+        serializer.Populate(obj.CreateReader(), sound);
+        return sound;
+    }
+
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+        => throw new NotSupportedException($"{nameof(SoundConverter)} does not support writing.");
 }
 
 /// <summary>
@@ -37,7 +71,11 @@ public class TypedBaseClassesContractResolver : DefaultContractResolver
         {
             foreach (var p in obj.Properties)
             {
-                if (!IsSystem(p.PropertyType) && IsBase(p.PropertyType))
+                if (IsSystem(p.PropertyType))
+                {
+                    continue;
+                }
+                if (IsBase(p.PropertyType) || IsSound(p.PropertyType))
                 {
                     // add "$type" field only for custom types with derived classes:
                     p.TypeNameHandling = TypeNameHandling.All;
@@ -47,7 +85,7 @@ public class TypedBaseClassesContractResolver : DefaultContractResolver
 
         if (contract is JsonContainerContract list)
         {
-            if (!IsSystem(objectType) && IsBase(objectType))
+            if (!IsSystem(objectType) && (IsBase(objectType) || IsListOfSounds(objectType)))
             {
                 // add "$type" field only for custom types with derived classes:
                 list.ItemTypeNameHandling = TypeNameHandling.All;
@@ -69,6 +107,38 @@ public class TypedBaseClassesContractResolver : DefaultContractResolver
         {
             return true;
         }
+        if (type == typeof(Sound) || type.IsSubclassOf(typeof(Sound)))
+        {
+            return true;
+        }
         return Assembly.GetAssembly(type)?.GetTypes().Any(t => t.BaseType == type) ?? false;
+    }
+
+    private bool IsSound(Type? type)
+    {
+        if (type is null)
+        {
+            return false;
+        }
+        return type == typeof(Sound) || type.IsSubclassOf(typeof(Sound));
+    }
+
+    /// <summary>
+    /// Checks if type is derived from List<Sound>
+    /// </summary>
+    private bool IsListOfSounds(Type? type)
+    {
+        var t = type;
+        while (t != null)
+        {
+            if (t.IsGenericType &&
+                t.GetGenericTypeDefinition() == typeof(List<>) &&
+                typeof(Sound).IsAssignableFrom(t.GetGenericArguments()[0]))
+            {
+                return true;
+            }
+            t = t.BaseType;
+        }
+        return false;
     }
 }

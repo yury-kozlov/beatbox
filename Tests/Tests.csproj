@@ -26,4 +26,10 @@
     <Using Include="FluentAssertions" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="json\test-sequence.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
