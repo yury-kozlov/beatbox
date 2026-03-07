@@ -196,13 +196,13 @@ internal class SequenceCodeGenerator
         if (i >= 0)
         {
             var sourcePath = sourceCodePath.Substring(0, i + @"\Src\".Length);
-            return Path.Combine(sourcePath, "Sequences");
+            return Path.Combine(sourcePath, "Sequence", "Sampled");
         }
         i = sourceCodePath.LastIndexOf(@"\Program.cs");
         if (i >= 0)
         {
             var sourcePath = sourceCodePath.Substring(0, i);
-            return Path.Combine(sourcePath, "Src", "Sequences");
+            return Path.Combine(sourcePath, "Src", "Sequence", "Sampled");
         }
         return "";
     }
