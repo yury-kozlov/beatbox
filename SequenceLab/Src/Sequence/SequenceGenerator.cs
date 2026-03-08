@@ -77,20 +77,19 @@ public class SequenceGenerator
         var unmatchedSequence = seq.Where(HasOtherSequenceDuration(leader)).ToList();
         if (unmatchedSequence.HasItems())
         {
+            var maxAllowedTimestamp = leader.Timestamp + Math.Max(leader.Sequence!.Duration, leader.Sequence!.AutoDuration);
             foreach (var sound in unmatchedSequence)
             {
-                var maxAllowedTimestamp = leader.Timestamp + Math.Max(leader.Sequence!.Duration, leader.Sequence!.AutoDuration);
                 if (sound.Timestamp > maxAllowedTimestamp)
                 {
                     seq.Remove(sound);
-                }
-            }
 
-            // delete sequence-start if it's the only remaining sound here
-            var remainingSounds = unmatchedSequence.Intersect(seq).ToList();
-            if (remainingSounds.Count == 1 && remainingSounds[0] is SequenceStart sequenceStart)
-            {
-                seq.Remove(sequenceStart);
+                    if (sound is SequenceEnd sequenceEnd)
+                    {
+                        // add indication that sequence was trimmed (instead of previously deleted SequenceEnd)
+                        seq.Add(new SequenceEndTrimmed(sequenceEnd) { Timestamp = maxAllowedTimestamp });
+                    }
+                }
             }
         }
     }

@@ -181,6 +181,7 @@ public class AppendSequencesTests
             "0200:s",
             // "0360:s", // this one exceeds first sequence duration and is trimmed
             // "0500:sequence-end-snares", // this one exceeds first sequence duration and is trimmed
+            "0200:sequence-trimmed-snares", // replaced sequence-end
         ];
 
         // assert
