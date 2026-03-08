@@ -46,6 +46,7 @@ public class AppendSequencesTests
             "0250:h",
             "0450:h",
             "0450:sequence-end-hihats",
+            "0450:sequence-end-main",
         ];
 
         // assert
@@ -89,6 +90,7 @@ public class AppendSequencesTests
             "0250:s",
             "0300:s",
             "0300:sequence-end-test2",
+            "0300:sequence-end-main",
         ];
 
         // assert
@@ -131,6 +133,7 @@ public class AppendSequencesTests
             "0600:s",
             "0650:s",
             "1000:sequence-end-test2",
+            "1000:sequence-end-main",
         ];
 
         // assert
@@ -182,6 +185,7 @@ public class AppendSequencesTests
             // "0360:s", // this one exceeds first sequence duration and is trimmed
             // "0500:sequence-end-snares", // this one exceeds first sequence duration and is trimmed
             "0200:sequence-trimmed-snares", // replaced sequence-end
+            "0200:sequence-end-main",
         ];
 
         // assert

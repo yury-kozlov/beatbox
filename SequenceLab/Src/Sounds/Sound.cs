@@ -35,6 +35,7 @@ public record Sound
     /// Used for logging purposes.
     /// NOTE: when appending one sequence to another, the original sequence still remains in place here.
     /// All followers will automatically get this name assigned when a leader sound is added to a sequence.
+    /// NOTE: Sequence may be null when deserializing a sound from json.
     /// </summary>
     public SequenceDesign Sequence;
 

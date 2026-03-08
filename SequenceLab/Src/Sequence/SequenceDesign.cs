@@ -7,6 +7,7 @@ public class SequenceDesign
     {
         Name = name;
         Leader = new SequenceStart(name) { Sequence = this };
+        SequenceEnd = new SequenceEnd(this);
     }
 
     /// <summary>
@@ -52,7 +53,7 @@ public class SequenceDesign
         // "real" leader is assigned
         return Leader
             .WithFollower(leader.WithSequenceIfMissing(this))
-            .WithFollower(new SequenceEnd(this));
+            .WithFollower(SequenceEnd);
     }
 
     /// <summary>
@@ -69,7 +70,14 @@ public class SequenceDesign
     /// Duration is also required when appending one sequence to another (otherwise we will not know at which point to start the second sequence).
     /// - May be initialized at design time or based on RepeatStrategy parameters.
     /// </summary>
-    public int Duration;
+    public int Duration
+    {
+        get;
+        set
+        {
+            field = value; SequenceEnd.InitStrategy(); // recalculate sequence end strategy because it depends on duration
+        }
+    }
 
     /// <summary>
     /// Calculcated automatically during generation of sequence timestamps (each sound from SequenceStart until SequenceEnd will increment auto duration).
@@ -82,6 +90,8 @@ public class SequenceDesign
     /// </summary>
     public string Name;
 
+    private SequenceEnd SequenceEnd;
+
     public static SequenceDesign? FromJson(string json) => Serialization.FromJson<SequenceDesign>(json);
 
     /// <summary>
@@ -92,6 +102,10 @@ public class SequenceDesign
     {
         Leader.Followers.Add(next.Leader);
         Duration += next.Duration;
+
+        // move SequenceEnd to tail:
+        Leader.Followers.Remove(SequenceEnd);
+        Leader.WithFollower(SequenceEnd);
 
         return this;
     }

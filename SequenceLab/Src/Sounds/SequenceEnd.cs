@@ -8,17 +8,22 @@ public record SequenceEnd : NoSound
     public SequenceEnd()
     {
         // a default ctor is supposed to be used only for JSON deserialization purposes
-        Strategy = new FollowPreviousSoundStrategy();
+        InitStrategy();
     }
 
     public SequenceEnd(SequenceDesign sequence)
     {
         FriendlyName = $"sequence-end-{sequence.Name}";
+        Sequence = sequence;
+        InitStrategy();
+    }
 
-        if (sequence.Duration > 0)
+    public void InitStrategy()
+    {
+        if (Sequence?.Duration > 0)
         {
             // if sequence has explicit duration: we will use it as a signal to end:
-            Strategy = new PlayOnceStrategy { DelayAfterLeader = sequence.Duration };
+            Strategy = new PlayOnceStrategy { DelayAfterLeader = Sequence.Duration };
             return;
         }
         // if duration of a sequence is unkown: current ending will be appended to the last sound
