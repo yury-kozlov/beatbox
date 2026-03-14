@@ -1,4 +1,4 @@
-﻿using Beater;
+using Beater;
 
 namespace Tests;
 
@@ -8,6 +8,7 @@ public class SequenceSoundSorterTests
     {
         // already sorted:
         yield return new object[] {
+            // input
             new Sequence()
             {
                 new LoopEnd() { Timestamp = 0 },
@@ -15,6 +16,7 @@ public class SequenceSoundSorterTests
                 new Kick() { Timestamp = 0 },
                 new Snare() { Timestamp = 0 },
             },
+            // expected
             new string[] {
                 "0000:end-of-loop",
                 "0000:sequence-start-test",
@@ -25,6 +27,7 @@ public class SequenceSoundSorterTests
 
         // "end-of-loop" should go before "sequence-start":
         yield return new object[] {
+            // input
             new Sequence()
             {
                 new SequenceStart("test") { Timestamp = 0 },
@@ -32,6 +35,7 @@ public class SequenceSoundSorterTests
                 new Kick() { Timestamp = 0 },
                 new Snare() { Timestamp = 0 },
             },
+            // expected
             new string[] {
                 "0000:end-of-loop",
                 "0000:sequence-start-test",
@@ -41,6 +45,7 @@ public class SequenceSoundSorterTests
         };
 
         yield return new object[] {
+            // input
             new Sequence()
             {
                 new Kick() { Timestamp = 0 },
@@ -48,6 +53,7 @@ public class SequenceSoundSorterTests
                 new SequenceStart("test") { Timestamp = 0 },
                 new LoopEnd() { Timestamp = 0 },
             },
+            // expected
             new string[] {
                 "0000:end-of-loop",
                 "0000:sequence-start-test",
@@ -57,6 +63,7 @@ public class SequenceSoundSorterTests
         };
 
         yield return new object[] {
+            // input
             new Sequence()
             {
                 new Snare() { Timestamp = 0 },
@@ -64,6 +71,7 @@ public class SequenceSoundSorterTests
                 new LoopEnd() { Timestamp = 0 },
                 new Kick() { Timestamp = 0 },
             },
+            // expected
             new string[] {
                 "0000:end-of-loop",
                 "0000:sequence-start-test",
@@ -73,6 +81,7 @@ public class SequenceSoundSorterTests
         };
 
         yield return new object[] {
+            // input
             new Sequence()
             {
                 new Snare() { Timestamp = 3 },
@@ -80,6 +89,7 @@ public class SequenceSoundSorterTests
                 new LoopEnd() { Timestamp = 4 },
                 new Kick() { Timestamp = 2 },
             },
+            // expected
             new string[] {
                 "0001:sequence-start-test",
                 "0002:k",
@@ -89,6 +99,7 @@ public class SequenceSoundSorterTests
         };
 
         yield return new object[] {
+            // input
             new Sequence()
             {
                 new Kick() { Timestamp = 0 },
@@ -96,6 +107,7 @@ public class SequenceSoundSorterTests
                 new LoopEnd() { Timestamp = 0 },
                 new SequenceStart("test") { Timestamp = 0 },
             },
+            // expected
             new string[] {
                 "0000:end-of-loop",
                 "0000:sequence-start-test",
@@ -105,6 +117,7 @@ public class SequenceSoundSorterTests
         };
 
         yield return new object[] {
+            // input
             new Sequence()
             {
                 new Kick() { Timestamp = 0 },
@@ -112,6 +125,7 @@ public class SequenceSoundSorterTests
                 new SequenceStart("test") { Timestamp = 0 },
                 new LoopEnd() { Timestamp = 0 },
             },
+            // expected
             new string[] {
                 "0000:end-of-loop",
                 "0000:sequence-start-test",
@@ -126,7 +140,7 @@ public class SequenceSoundSorterTests
     public void SortByTimestamp_ReturnExpected(Sequence sequence, string[] expected)
     {
         // act
-        sequence.SortByTimestamp();
+        SequenceSoundSorter.SortByTimestamp(sequence);
         var actualTimestamps = sequence.GetTimestamps();
 
         // assert
