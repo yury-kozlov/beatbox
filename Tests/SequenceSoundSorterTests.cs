@@ -44,6 +44,7 @@ public class SequenceSoundSorterTests
             },
         };
 
+        // "end-of-loop" and "sequence-start" should go before regular sounds:
         yield return new object[] {
             // input
             new Sequence()
@@ -62,6 +63,7 @@ public class SequenceSoundSorterTests
             },
         };
 
+        // relative order of regular sounds should be preserved:
         yield return new object[] {
             // input
             new Sequence()
@@ -80,6 +82,7 @@ public class SequenceSoundSorterTests
             },
         };
 
+        // should sort by timestamp when all timestamps are different:
         yield return new object[] {
             // input
             new Sequence()
@@ -98,6 +101,7 @@ public class SequenceSoundSorterTests
             },
         };
 
+        // "sequence-start" should go after "end-of-loop":
         yield return new object[] {
             // input
             new Sequence()
@@ -116,6 +120,7 @@ public class SequenceSoundSorterTests
             },
         };
 
+        // "end-of-loop" should go first even when placed last:
         yield return new object[] {
             // input
             new Sequence()
@@ -131,6 +136,51 @@ public class SequenceSoundSorterTests
                 "0000:sequence-start-test",
                 "0000:k",
                 "0000:s",
+            },
+        };
+
+        // "sequence-end" should go after "end-of-loop":
+        yield return new object[] {
+            // input
+            new Sequence()
+            {
+                new SequenceEnd(new SequenceDesign("test")) { Timestamp = 0 },
+                new LoopEnd() { Timestamp = 0 },
+            },
+            // expected
+            new string[] {
+                "0000:end-of-loop",
+                "0000:sequence-end-test",
+            },
+        };
+
+        // "sequence-end" should go after "metronome":
+        yield return new object[] {
+            // input
+            new Sequence()
+            {
+                new SequenceEnd(new SequenceDesign("test")) { Timestamp = 0 },
+                new Metronome() { Timestamp = 0 },
+            },
+            // expected
+            new string[] {
+                "0000:metronome",
+                "0000:sequence-end-test",
+            },
+        };
+
+        // "sequence-end" should go before "sequence-start":
+        yield return new object[] {
+            // input
+            new Sequence()
+            {
+                new SequenceStart("next") { Timestamp = 0 },
+                new SequenceEnd(new SequenceDesign("prev")) { Timestamp = 0 },
+            },
+            // expected
+            new string[] {
+                "0000:sequence-end-prev",
+                "0000:sequence-start-next",
             },
         };
     }
