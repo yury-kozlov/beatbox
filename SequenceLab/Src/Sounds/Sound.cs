@@ -92,10 +92,7 @@ public record Sound
     /// </summary>
     public Sound WithSequenceIfMissing(SequenceDesign sequence)
     {
-        if (Sequence is null)
-        {
-            Sequence = sequence;
-        }
+        Sequence ??= sequence;
 
         foreach (var follower in Followers)
         {
