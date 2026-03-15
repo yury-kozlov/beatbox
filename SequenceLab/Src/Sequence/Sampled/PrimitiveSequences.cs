@@ -17,4 +17,45 @@ public class PrimitiveSequences
             set { _repeatStrategy.Interval = value; Duration = value * 4; }
         }
     }
+
+    public class Trapezoid<TSound> : SequenceDesign where TSound : Sound, new()
+    {
+        public Trapezoid(string name = "trapezoid") : base(name)
+        {
+            Leader = new TSound()
+            {
+                Strategy = new PlayOnceStrategy { },
+                Followers = [
+                    new TSound { Strategy = new FollowPreviousSoundStrategy() },
+                    new TSound { Strategy = new FollowPreviousSoundStrategy() },
+                    new TSound { Strategy = new FollowPreviousSoundStrategy() },
+                ],
+            };
+        }
+
+        public required int XInterval
+        {
+            get;
+            set
+            {
+                field = value;
+                FirstSound?.Followers.FirstOrDefault()?.DelayAfterLeader = value;
+                // Duration = XInterval*2 + YInterval*2
+                Duration = (value * 2) + ((FirstSound?.Followers.LastOrDefault()?.Strategy.DelayAfterLeader ?? 0) * 2);
+            }
+        }
+
+        public required int YInterval
+        {
+            get;
+            set
+            {
+                field = value;
+                FirstSound?.Followers.SecondOrDefault()?.DelayAfterLeader = value;
+                FirstSound?.Followers.LastOrDefault()?.DelayAfterLeader = value;
+                // Duration = XInterval*2 + YInterval*2
+                Duration = (value * 2) + ((FirstSound?.Followers.FirstOrDefault()?.Strategy.DelayAfterLeader ?? 0) * 2);
+            }
+        }
+    }
 }

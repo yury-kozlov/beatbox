@@ -4,7 +4,7 @@ namespace Beater;
 
 public static class Extensions
 {
-    public static bool IsNullOrEmpty([NotNullWhen(false)]this string? value)
+    public static bool IsNullOrEmpty([NotNullWhen(false)] this string? value)
     {
         return string.IsNullOrEmpty(value);
     }
@@ -27,5 +27,10 @@ public static class Extensions
     public static string Join<T>(this IEnumerable<T>? source, char delimiter = ',')
     {
         return string.Join(delimiter, source ?? []);
+    }
+
+    public static T? SecondOrDefault<T>(this IEnumerable<T>? source)
+    {
+        return source is null ? default : source.ElementAtOrDefault(1);
     }
 }

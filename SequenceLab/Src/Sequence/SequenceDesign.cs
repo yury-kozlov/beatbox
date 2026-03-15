@@ -11,10 +11,15 @@ public class SequenceDesign
     }
 
     /// <summary>
-    /// Leader of a sequence design is always an instance of <see cref="nameof(SequenceStart)"/> type.
+    /// Leader of a sequence design is always an instance of <see cref="SequenceStart"/> type.
     /// Actual leader will be the first follower of <see cref="SequenceStart"/>.
     /// </summary>
     public Sound Leader { get; set => field = InitLeader(value); }
+
+    /// <summary>
+    /// First sound simplifies access to the first actual sound of the sequence, because Leader of a sequence is always a SequenceStart sound.
+    /// </summary>
+    public Sound? FirstSound => Leader.Followers.FirstOrDefault();
 
     public AbstractStrategy Strategy
     {
