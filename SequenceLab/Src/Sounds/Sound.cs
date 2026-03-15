@@ -107,6 +107,24 @@ public record Sound
         Followers.Add(follower);
         return this;
     }
+
+    /// <summary>
+    /// Clones current sound.
+    /// NOTE: The name can't be Clone because it will conflict with Record's built-in method.
+    /// NOTE: One of the reasons to use deep clone is because when we use RepeatStrategy for a sequence
+    ///   SequenceStart should be copied together with corresponding SequenceEnd sound (they always go together)
+    ///   and delay of SequenceEnd should be adjusted on each iteration of SequenceStart.
+    ///   Otherwise SequenceEnd will have incorrect timing.
+    /// </summary>
+    public Sound DeepClone()
+    {
+        var clone = this with { Followers = new Sequence() };
+        foreach (var follower in Followers)
+        {
+            clone.Followers.Add(follower.DeepClone());
+        }
+        return clone;
+    }
 }
 
 public static class SoundExtensions

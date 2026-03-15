@@ -17,7 +17,13 @@ internal class Theory
     {
         // take a small sequence containing just few sounds and inject it into the longer sequence as a follower of one of its sounds
     }
-    
+
+    public void HowToPlaySequenceInLoop()
+    {
+        /// using repeat strategy: <see cref="Examples.RepeatSequenceWithStrategy"/>
+        /// using manual loop: <see cref="Examples.RepeatSequenceInLoop"/>
+    }
+
     public void HowAppendSequenceWorks()
     {
         // 1. SequenceEnd sound is added as the last follower of each sequence (to followers of SequenceStart)

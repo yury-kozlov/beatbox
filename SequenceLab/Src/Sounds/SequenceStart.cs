@@ -10,5 +10,7 @@ public record SequenceStart : NoSound
         Strategy = new FollowPreviousSoundStrategy();
     }
 
+    public SequenceEnd GetSequenceEnd() => (SequenceEnd)Followers.Last(s => s is SequenceEnd);
+
     public override string? ToString() => Format(FriendlyName);
 }

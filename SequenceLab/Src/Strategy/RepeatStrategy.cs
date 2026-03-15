@@ -31,7 +31,7 @@ public class RepeatStrategy : AbstractStrategy
         var sequence = new Sequence();
         for (int i = 0; i < Count; i++)
         {
-            leader = originalSound with { /* clone*/ };
+            leader = originalSound.DeepClone();
             if (Numbers.IsXOutOf(SilenceEveryXSoundOutOf, i + 1))
             {
                 leader = leader with { IsSilenced = true };
@@ -39,6 +39,11 @@ public class RepeatStrategy : AbstractStrategy
 
             leader.Timestamp = DelayAfterLeader + CalculateInterval(i);
             leader.Comment = $"#{i + 1}";
+
+            if (leader is SequenceStart sequenceStart)
+            {
+                AdjustSequenceEndDelay(sequenceStart);
+            }
 
             if (leader.Leader?.Strategy is RepeatStrategy leaderLoop
                 && TrimIfExceedsParentLoop && leader.Timestamp > leaderLoop.Interval)
@@ -56,6 +61,14 @@ public class RepeatStrategy : AbstractStrategy
         sequence.Add(GetEndingMessage(leader));
 
         return sequence;
+    }
+
+    private void AdjustSequenceEndDelay(SequenceStart sequenceStart)
+    {
+        // adjust end of sequence delay to only include duration of the current iteration (instead of duration of the whole loop which includes all iterations)
+        var sequenceEnd = sequenceStart.GetSequenceEnd();
+        sequenceEnd.DelayAfterLeader = DelayAfterLeader + Interval; // NOTE: Interval is not multipled here by loop Count
+        sequenceEnd.Comment = sequenceStart.Comment; // copy current iteration number just for debugging
     }
 
     private int CalculateInterval(int i)
