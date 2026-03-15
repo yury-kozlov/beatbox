@@ -2,13 +2,19 @@ namespace Beater;
 
 public static class SequenceSoundSorter
 {
-    public static void SortByTimestamp(Sequence sequence)
+    public static void SortByTimestamp(List<Sound> sequence)
     {
         sequence.Sort((a, b) =>
         {
             var order = a.Timestamp.CompareTo(b.Timestamp);
             if (order == 0)
             {
+                if (a.Iteration != 0 && b.Iteration != 0 && a.Iteration != b.Iteration)
+                {
+                    // if sequence is repeated in loop and some sounds are overlapping, compare them by iteration number
+                    return a.Iteration.CompareTo(b.Iteration);
+                }
+
                 if (a is LoopEnd)
                 {
                     return -1; // put "end-of-loop" sound before any other sound

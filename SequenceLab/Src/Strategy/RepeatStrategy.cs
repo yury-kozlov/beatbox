@@ -38,7 +38,8 @@ public class RepeatStrategy : AbstractStrategy
             }
 
             leader.Timestamp = DelayAfterLeader + CalculateInterval(i);
-            leader.Comment = $"#{i + 1}";
+            leader.Iteration = i + 1;
+            leader.Comment = $"#{leader.Iteration}";
 
             if (leader is SequenceStart sequenceStart)
             {
@@ -68,7 +69,8 @@ public class RepeatStrategy : AbstractStrategy
         // adjust end of sequence delay to only include duration of the current iteration (instead of duration of the whole loop which includes all iterations)
         var sequenceEnd = sequenceStart.GetSequenceEnd();
         sequenceEnd.DelayAfterLeader = DelayAfterLeader + Interval; // NOTE: Interval is not multipled here by loop Count
-        sequenceEnd.Comment = sequenceStart.Comment; // copy current iteration number just for debugging
+        sequenceEnd.Comment = sequenceStart.Comment;
+        sequenceEnd.Iteration = sequenceStart.Iteration;
     }
 
     private int CalculateInterval(int i)

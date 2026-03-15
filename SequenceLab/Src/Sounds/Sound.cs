@@ -19,7 +19,9 @@ public record Sound
     public string? FriendlyName;
 
     public AbstractStrategy Strategy = new PlayOnceStrategy();
+    
     public Sequence Followers = new(); /// TODO: should this be <see cref="SequenceDesign"/> instead? Should each Sound here be a SoundDesign instead?
+    
     public Sound? Leader;
 
     /// <summary>
@@ -29,6 +31,11 @@ public record Sound
     /// </summary>
     public int Timestamp;
     public string? Comment;
+    
+    /// <summary>
+    /// Iteration number of the current sound in loop.
+    /// </summary>
+    public int Iteration;
 
     /// <summary>
     /// Original sequence current sound belongs to.
