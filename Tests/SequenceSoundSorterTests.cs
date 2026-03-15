@@ -169,7 +169,7 @@ public class SequenceSoundSorterTests
             },
         };
 
-        // "sequence-end" should go before "sequence-start":
+        // "sequence-end" should go before "sequence-start" when sequences are different:
         yield return new object[] {
             // input
             new Sequence()
@@ -183,7 +183,73 @@ public class SequenceSoundSorterTests
                 "0000:sequence-start-next",
             },
         };
+
+        // "sequence-end" should go after "sequence-start" in same sequence:
+        yield return new object[] {
+            // input
+            new Sequence()
+            {
+                new SequenceStart("test") { Timestamp = 0 },
+                new SequenceEnd() { Timestamp = 0 },
+                new Kick() { Timestamp = 0 },
+            },
+            // expected
+            new string[] {
+                "0000:sequence-start-test",
+                "0000:k",
+                "0000:sequence-end",
+            },
+        };
+
+        // "sequence-end" should go after regular sounds of same sequence:
+        yield return new object[] {
+            // input
+            new Sequence()
+            {
+                new SequenceEnd(new SequenceDesign("test")) { Timestamp = 0, Sequence = SharedSeq },
+                new Kick() { Timestamp = 0, Sequence = SharedSeq },
+            },
+            // expected
+            new string[] {
+                "0000:k",
+                "0000:sequence-end-test",
+            },
+        };
+
+        // "sequence-end" should go before regular sounds of a different sequence:
+        yield return new object[] {
+            // input
+            new Sequence()
+            {
+                new Kick() { Timestamp = 0, Sequence = SharedSeq },
+                new SequenceEnd(new SequenceDesign("other")) { Timestamp = 0 },
+            },
+            // expected
+            new string[] {
+                "0000:sequence-end-other",
+                "0000:k",
+            },
+        };
+
+        // sounds with different iterations at the same timestamp should be ordered by iteration:
+        yield return new object[] {
+            // input
+            new Sequence()
+            {
+                new Kick() { Timestamp = 0, Iteration = 2 },
+                new SequenceEnd(new SequenceDesign("test")) { Timestamp = 0, Iteration = 1 },
+                new SequenceStart("test") { Timestamp = 0, Iteration = 2 },
+            },
+            // expected
+            new string[] {
+                "0000:sequence-end-test",  // iteration 1
+                "0000:sequence-start-test",// iteration 2
+                "0000:k",                  // iteration 2 (after sequence-start of same iteration)
+            },
+        };
     }
+
+    private static SequenceDesign SharedSeq = new SequenceDesign("shared-sequence");
 
     [Theory]
     [MemberData(nameof(GetTestData))]
