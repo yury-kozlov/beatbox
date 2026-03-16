@@ -256,8 +256,8 @@ public class SequenceSoundSorterTests
     public void SortByTimestamp_ReturnExpected(Sequence sequence, string[] expected)
     {
         // act
-        SequenceSoundSorter.SortByTimestamp(sequence);
-        var actualTimestamps = sequence.GetTimestamps();
+        var sorted = SequenceSoundSorter.SortByTimestamp(sequence);
+        var actualTimestamps = sorted.GetTimestamps();
 
         // assert
         actualTimestamps.Should().ContainInOrder(expected);

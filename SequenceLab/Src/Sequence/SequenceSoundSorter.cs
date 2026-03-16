@@ -2,77 +2,94 @@ namespace Beater;
 
 public static class SequenceSoundSorter
 {
-    public static void SortByTimestamp(List<Sound> sequence)
+    /// <summary>
+    /// Stable sort preserving generation order for sounds that compare as equal.
+    /// Required when mixing simultaneous sequences so that sounds from earlier-generated sub-sequences
+    /// stay before sounds from later-generated sub-sequences at the same timestamp.
+    /// </summary>
+    public static Sequence SortByTimestamp(List<Sound> sequence)
     {
-        sequence.Sort((a, b) =>
-        {
-            var order = a.Timestamp.CompareTo(b.Timestamp);
-            if (order == 0)
+        var sorted = new Sequence(sequence
+            // store aside each sound with the original "index" (indicating the initial order in which sounds were added to their sequences)
+            .Select((sound, index) => (sound, index))
+            .OrderBy(x => x.sound.Timestamp)
+            .ThenBy(x => x, Comparer<(Sound sound, int index)>.Create((x, y) =>
             {
-                if (a.Iteration != 0 && b.Iteration != 0 && a.Iteration != b.Iteration)
-                {
-                    // if sequence is repeated in loop and some sounds are overlapping, compare them by iteration number
-                    return a.Iteration.CompareTo(b.Iteration);
-                }
+                var order = Compare(x.sound, y.sound);
+                return order != 0 ? order : x.index.CompareTo(y.index); // stable: preserve original index on tie
+            }))
+            .Select(x => x.sound));
+        return sorted;
+    }
 
-                if (a is LoopEnd)
+    private static int Compare(Sound a, Sound b)
+    {
+        var order = a.Timestamp.CompareTo(b.Timestamp);
+        if (order == 0)
+        {
+            if (a.Iteration != b.Iteration)
+            {
+                // if sequence is repeated in loop and some sounds are overlapping, compare them by iteration number
+                return a.Iteration.CompareTo(b.Iteration);
+            }
+
+            if (a is LoopEnd)
+            {
+                return -1; // put "end-of-loop" sound before any other sound
+            }
+            if (a is SequenceEnd)
+            {
+                if (b is LoopEnd or Metronome)
                 {
-                    return -1; // put "end-of-loop" sound before any other sound
+                    return 1; // put "sequence-end" after "end-of-loop" and "metronome"
                 }
-                if (a is SequenceEnd)
+                if (b is SequenceStart)
                 {
-                    if (b is LoopEnd or Metronome)
-                    {
-                        return 1; // put "sequence-end" after "end-of-loop" and "metronome"
-                    }
-                    if (b is SequenceStart)
-                    {
-                        // same sequence: "sequence-end" goes after "sequence-start"
-                        // different sequences: "sequence-end" goes before "sequence-start" of next sequence
-                        return a.Sequence == b.Sequence ? 1 : -1;
-                    }
-                    // put "sequence-end" after regular sounds of same sequence
+                    // same sequence: "sequence-end" goes after "sequence-start"
+                    // different sequences: "sequence-end" goes before "sequence-start" of next sequence
                     return a.Sequence == b.Sequence ? 1 : -1;
                 }
-                if (a is SequenceStart)
+                // put "sequence-end" after regular sounds of same sequence
+                return a.Sequence == b.Sequence ? 1 : -1;
+            }
+            if (a is SequenceStart)
+            {
+                if (b is SequenceStart)
                 {
-                    if (b is SequenceStart)
-                    {
-                        return 0; // leave as is
-                    }
-                    if (b is LoopEnd)
-                    {
-                        return 1; // put "sequence-start" after "end-of-loop"
-                    }
-                    if (b is SequenceEnd)
-                    {
-                        // same sequence: "sequence-start" goes before "sequence-end"
-                        // different sequences: "sequence-start" goes after "sequence-end" of previous sequence
-                        return a.Sequence == b.Sequence ? -1 : 1;
-                    }
-                    // put "sequence-start" after regular sounds only if they belong to another sequence
-                    return a.Sequence != b.Sequence ? 1 : -1;
+                    return 0; // leave as is
                 }
-                if (a is Metronome)
+                if (b is LoopEnd)
                 {
-                    if (b is SequenceStart or LoopEnd)
-                    {
-                        return 1; // put "metronome" after "sequence-start"
-                    }
-                    return -1; // put "metronome" before regular sounds
-                }
-                if (b is LoopEnd or SequenceStart or Metronome)
-                {
-                    // put regular sounds after "end-of-loop", "sequence-start", "metronome" only if they belong to the same sequence
-                    return a.Sequence == b.Sequence ? 1 : -1;
+                    return 1; // put "sequence-start" after "end-of-loop"
                 }
                 if (b is SequenceEnd)
                 {
-                    // put regular sounds before "sequence-end" of same sequence
+                    // same sequence: "sequence-start" goes before "sequence-end"
+                    // different sequences: "sequence-start" goes after "sequence-end" of previous sequence
                     return a.Sequence == b.Sequence ? -1 : 1;
                 }
+                // put "sequence-start" before regular sounds only if they belong to the same sequence
+                return a.Sequence == b.Sequence ? -1 : 0;
             }
-            return order;
-        });
+            if (a is Metronome)
+            {
+                if (b is SequenceStart or LoopEnd)
+                {
+                    return 1; // put "metronome" after "sequence-start"
+                }
+                return -1; // put "metronome" before regular sounds
+            }
+            if (b is LoopEnd or SequenceStart or Metronome)
+            {
+                // put regular sounds after "end-of-loop", "sequence-start", "metronome" only if they belong to the same sequence
+                return a.Sequence == b.Sequence ? 1 : -1;
+            }
+            if (b is SequenceEnd)
+            {
+                // put regular sounds before "sequence-end" of same sequence
+                return a.Sequence == b.Sequence ? -1 : 1;
+            }
+        }
+        return order;
     }
 }

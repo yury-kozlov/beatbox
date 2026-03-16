@@ -2,6 +2,12 @@
 
 public class Sequence : List<Sound>
 {
+    public Sequence()
+    { }
+
+    public Sequence(IEnumerable<Sound> source) : base(source)
+    { }
+
     public void SetLeader(Sound leader)
     {
         foreach (var sound in this)
@@ -13,8 +19,6 @@ public class Sequence : List<Sound>
     public Sequence Mix(Sequence followers)
     {
         AddRange(followers);
-        SequenceSoundSorter.SortByTimestamp(this);
-
-        return this;
+        return SequenceSoundSorter.SortByTimestamp(this);
     }
 }

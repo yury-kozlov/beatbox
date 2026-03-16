@@ -11,6 +11,7 @@ internal class Theory
         // - if each sequence uses distinguishable sounds
         // OR
         // - if they use different timings (no overlapping between individual sounds), which is actually the same as using one sequence
+        /// <see cref="Examples.PlaySequencesAtTheSameTime" />
     }
 
     public void HowToCombineTwoSequences()

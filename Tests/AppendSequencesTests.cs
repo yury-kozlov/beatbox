@@ -191,4 +191,51 @@ public class AppendSequencesTests
         // assert
         actualTimestamps.Should().BeEquivalentTo(expected);
     }
+
+    [Fact]
+    public void AppendTwoSequencesSimultaneously_ReturnExpected()
+    {
+        var first = new PrimitiveSequences.Trapezoid<Kick>()
+        {
+            XInterval = 500,
+            YInterval = 700,
+            Strategy = new RepeatStrategy { Count = 1 },
+        };
+
+        var second = new PrimitiveSequences.Square<Snare>()
+        {
+            Interval = 600,
+            Strategy = new RepeatStrategy { Count = 1 },
+        };
+
+        var mix = new SequenceDesign("mix")
+            .Append(first)
+            .Append(second);
+        var mixedSequence = SequenceGenerator.Generate(mix);
+
+        // act
+        var actualTimestamps = mixedSequence.GetTimestamps();
+        var expected = new string[] {
+                "0000:sequence-start-mix",
+                "0000:sequence-start-trapezoid",
+                "0000:k",
+                "0000:sequence-start-square",
+                "0000:s",
+                "0500:k",
+                "0600:s",
+                "1200:k",
+                "1200:s",
+                "1800:s",
+                "1900:k",
+                "2400:end-of-loop",
+                "2400:end-of-loop",
+                "2400:end-of-loop",
+                "2400:sequence-end-square",
+                "2400:sequence-end-trapezoid",
+                "4800:sequence-end-mix",
+            };
+
+        // assert
+        actualTimestamps.Should().ContainInOrder(expected);
+    }
 }
