@@ -31,11 +31,11 @@ public class SequenceDesign
     {
         if (strategy is RepeatStrategy repeatStrategy)
         {
-            var sequenceDuration = Duration;
-            if (repeatStrategy.Interval == 0 && sequenceDuration > 0)
+            if (repeatStrategy.Interval == 0 && Duration > 0)
             {
-                // automatically set sequence loop interval as the original duration of the sequence
-                repeatStrategy.Interval = sequenceDuration;
+                /// NOTE: this is a shortcut path to omit specifying explicit Interval in repeated sequences (e.g. <see cref="PrimitiveSequences.Trapezoid{TSound}"/>)
+                /// in this case sequence loop interval will be automatically set as duration of the original sequence
+                repeatStrategy.Interval = Duration;
             }
             if (repeatStrategy.Count > 0)
             {
@@ -56,6 +56,8 @@ public class SequenceDesign
             return leader;
         }
         // "real" leader is assigned
+        TrySetDuration(leader.Strategy); // if leader is a loop, we can use it's interval to calculate sequence duration
+
         return Leader
             .WithFollower(leader.WithSequenceIfMissing(this))
             .WithFollower(SequenceEnd);
