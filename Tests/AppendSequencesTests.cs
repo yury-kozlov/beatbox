@@ -193,47 +193,50 @@ public class AppendSequencesTests
     }
 
     [Fact]
-    public void AppendTwoSequencesSimultaneously_ReturnExpected()
+    public void AppendTwoSequencesWithRepeatStrategy_ReturnExpected()
     {
-        var first = new PrimitiveSequences.Trapezoid<Kick>()
+        /// this test checks that if a sequence without <see cref="FollowPreviousSoundStrategy"/> is appended to another sequence
+        /// they will be played after each other and not in parallel
+
+        var trapezoid = new PrimitiveSequences.Trapezoid<Kick>()
         {
             XInterval = 500,
             YInterval = 700,
             Strategy = new RepeatStrategy { Count = 1 },
         };
 
-        var second = new PrimitiveSequences.Square<Snare>()
+        var square = new PrimitiveSequences.Square<Snare>()
         {
             Interval = 600,
             Strategy = new RepeatStrategy { Count = 1 },
         };
 
-        var mix = new SequenceDesign("mix")
-            .Append(first)
-            .Append(second);
-        var mixedSequence = SequenceGenerator.Generate(mix);
+        var main = new SequenceDesign("main");
+        main.Append(trapezoid);
+        main.Append(square);
+        var mainSequence = SequenceGenerator.Generate(main);
 
         // act
-        var actualTimestamps = mixedSequence.GetTimestamps();
+        var actualTimestamps = mainSequence.GetTimestamps();
         var expected = new string[] {
-                "0000:sequence-start-mix",
-                "0000:sequence-start-trapezoid",
-                "0000:k",
-                "0000:sequence-start-square",
-                "0000:s",
-                "0500:k",
-                "0600:s",
-                "1200:k",
-                "1200:s",
-                "1800:s",
-                "1900:k",
-                "2400:end-of-loop",
-                "2400:end-of-loop",
-                "2400:end-of-loop",
-                "2400:sequence-end-square",
-                "2400:sequence-end-trapezoid",
-                "4800:sequence-end-mix",
-            };
+            "0000:sequence-start-main",
+            "0000:sequence-start-trapezoid",
+            "0000:k",
+            "0500:k",
+            "1200:k",
+            "1900:k",
+            "2400:end-of-loop",
+            "2400:sequence-end-trapezoid",
+            "2400:sequence-start-square",
+            "2400:s",
+            "3000:s",
+            "3600:s",
+            "4200:s",
+            "4800:end-of-loop",
+            "4800:end-of-loop",
+            "4800:sequence-end-square",
+            "4800:sequence-end-main",
+        };
 
         // assert
         actualTimestamps.Should().ContainInOrder(expected);

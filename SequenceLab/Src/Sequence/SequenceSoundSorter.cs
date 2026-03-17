@@ -27,7 +27,7 @@ public static class SequenceSoundSorter
         var order = a.Timestamp.CompareTo(b.Timestamp);
         if (order == 0)
         {
-            if (a.Iteration != b.Iteration)
+            if (a.Iteration != 0 && b.Iteration != 0 && a.Iteration != b.Iteration)
             {
                 // if sequence is repeated in loop and some sounds are overlapping, compare them by iteration number
                 return a.Iteration.CompareTo(b.Iteration);
@@ -48,6 +48,10 @@ public static class SequenceSoundSorter
                     // same sequence: "sequence-end" goes after "sequence-start"
                     // different sequences: "sequence-end" goes before "sequence-start" of next sequence
                     return a.Sequence == b.Sequence ? 1 : -1;
+                }
+                if (b is SequenceEnd)
+                {
+                    return 0; // let stable sort decide by insertion order (outer sequence end is generated last, so it goes last)
                 }
                 // put "sequence-end" after regular sounds of same sequence
                 return a.Sequence == b.Sequence ? 1 : -1;

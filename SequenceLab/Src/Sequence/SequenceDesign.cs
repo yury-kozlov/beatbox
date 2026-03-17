@@ -97,6 +97,8 @@ public class SequenceDesign
 
     private SequenceEnd SequenceEnd;
 
+    private List<SequenceDesign> Sequences = [];
+
     public static SequenceDesign? FromJson(string json) => Serialization.FromJson<SequenceDesign>(json);
 
     /// <summary>
@@ -105,14 +107,37 @@ public class SequenceDesign
     /// </summary>
     internal SequenceDesign Append(SequenceDesign next)
     {
-        Leader.Followers.Add(next.Leader);
         Duration += next.Duration;
+        Sequences.Add(next);
 
-        // move SequenceEnd to tail:
+        if (Sequences.Count == 1 || next.Leader.Strategy is FollowPreviousSoundStrategy)
+        {
+            // if the added sequence is the first one or it has default strategy
+            // just add it as the next follower (it will be played after all previous sequences)
+            Leader.WithFollower(next.Leader);
+            UpdateSequenceEnd();
+            return this;
+        }
+
+        // append to the end of the previous sequence (to make sure the added sequence is played after it and not in parallel)
+        if (Sequences[^2].SequenceEnd is SequenceEnd previousEnd)
+        {
+            previousEnd.WithFollower(next.Leader);
+            return this;
+        }
+
+        // this is not supposed to happen:
+        Console.WriteLine($"Appended sequence {next.Name} will be played in parallel instead if sequentially because sequence end of the previous sequence was not found");
+        Leader.WithFollower(next.Leader);
+        UpdateSequenceEnd();
+        return this;
+    }
+
+    private void UpdateSequenceEnd()
+    {
+        // make sure SequenceEnd is the last follower:
         Leader.Followers.Remove(SequenceEnd);
         Leader.WithFollower(SequenceEnd);
-
-        return this;
     }
 
     public override string ToString() => Name ?? base.ToString() ?? "";
