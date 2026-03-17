@@ -24,12 +24,17 @@ public class SequenceDesign
     public AbstractStrategy Strategy
     {
         get => Leader.Strategy;
-        set { Leader.Strategy = value; TrySetDuration(value); }
+        set
+        {
+            Leader.Strategy = value;
+            TrySetRepeatInterval();
+            TrySetDuration(value);
+    }
     }
 
-    private void TrySetDuration(AbstractStrategy strategy)
+    private void TrySetRepeatInterval()
     {
-        if (strategy is RepeatStrategy repeatStrategy)
+        if (Leader.Strategy is RepeatStrategy repeatStrategy)
         {
             if (repeatStrategy.Interval == 0 && Duration > 0)
             {
@@ -37,13 +42,20 @@ public class SequenceDesign
                 /// in this case sequence loop interval will be automatically set as duration of the original sequence
                 repeatStrategy.Interval = Duration;
             }
+        }
+    }
+
+    private void TrySetDuration(AbstractStrategy leaderStrategy)
+    {
+        if (leaderStrategy is RepeatStrategy repeatStrategy)
+        {
             if (repeatStrategy.Count > 0)
             {
                 // automatically update sequence duration as full duration of the loop:
                 Duration = repeatStrategy.Interval * repeatStrategy.Count;
             }
+            }
         }
-    }
 
     /// <summary>
     /// Wrap actual leader with "SequenceStart" sound.
@@ -82,7 +94,9 @@ public class SequenceDesign
         get;
         set
         {
-            field = value; SequenceEnd.InitStrategy(); // recalculate sequence end strategy because it depends on duration
+            field = value;
+            SequenceEnd.InitStrategy(); // recalculate sequence end strategy because it depends on duration
+            TrySetRepeatInterval();
         }
     }
 
