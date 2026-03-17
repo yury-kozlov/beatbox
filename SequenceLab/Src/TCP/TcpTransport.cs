@@ -22,6 +22,7 @@ public class TcpTransport
     private readonly TcpClient _client;
     private readonly NetworkStream _channel;
     private static TcpTransport? _instance;
+    private bool _isDisposed;
 
     public SendMode SendMode { get; set; } = SendMode.AllAtOnce;
 
@@ -36,6 +37,7 @@ public class TcpTransport
     {
         Send(Encoding.UTF8.GetBytes("seq stop;")); // stop currently playing sequence
         _client?.Dispose();
+        _isDisposed = true;
     }
 
     public static void Close() => _instance?.Dispose();
@@ -47,7 +49,10 @@ public class TcpTransport
 
     public void Send(byte[] message)
     {
-        _channel.Write(message, 0, message.Length);
+        if (!_isDisposed)
+        {
+            _channel.Write(message, 0, message.Length);
+        }
     }
 
     public async Task SendScheduled(Sequence sequence)
