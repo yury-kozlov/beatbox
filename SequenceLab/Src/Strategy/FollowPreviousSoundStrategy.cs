@@ -34,4 +34,6 @@ public class FollowPreviousSoundStrategy : AbstractStrategy
 
         return new Sequence() { leader };
     }
+
+    internal AbstractStrategy ToPlayOnceStrategy() => new PlayOnceStrategy().CopyBasePropertiesFrom(this);
 }

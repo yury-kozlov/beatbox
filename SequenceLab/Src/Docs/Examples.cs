@@ -76,7 +76,7 @@ class Examples
     public void PlaySequencesAtTheSameTime()
     {
         // in order to play 2 sequences at the same time
-        // just add them to the same parent sequence:
+        // just Combine them to the same parent sequence:
         var kicks = new SequenceDesign("kicks")
         {
             Leader = new Kick { Strategy = new RepeatStrategy { Interval = 500, Count = 4 } },
@@ -91,9 +91,9 @@ class Examples
             },
         };
 
-        var parent = new SequenceDesign("main")
-            .Append(kicks)
-            .Append(snares);
+        var parent = new SequenceDesign("main") { Strategy = new RepeatStrategy { Count = 4 } }
+            .Combine(kicks)
+            .Combine(snares);
 
         // play
         var player = new ConsoleKeyPlayer();

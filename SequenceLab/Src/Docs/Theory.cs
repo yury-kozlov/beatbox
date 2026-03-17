@@ -12,6 +12,7 @@ internal class Theory
         // OR
         // - if they use different timings (no overlapping between individual sounds), which is actually the same as using one sequence
         /// <see cref="Examples.PlaySequencesAtTheSameTime" />
+        // this may be useful when playing different sequences in an experiment to find possible patterns between them
     }
 
     public void HowToCombineTwoSequences()

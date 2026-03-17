@@ -29,7 +29,7 @@ public class SequenceDesign
             Leader.Strategy = value;
             TrySetRepeatInterval();
             TrySetDuration(value);
-    }
+        }
     }
 
     private void TrySetRepeatInterval()
@@ -54,8 +54,8 @@ public class SequenceDesign
                 // automatically update sequence duration as full duration of the loop:
                 Duration = repeatStrategy.Interval * repeatStrategy.Count;
             }
-            }
         }
+    }
 
     /// <summary>
     /// Wrap actual leader with "SequenceStart" sound.
@@ -144,6 +144,32 @@ public class SequenceDesign
 
         // this is not supposed to happen:
         Console.WriteLine($"Appended sequence {next.Name} will be played in parallel instead if sequentially because sequence end of the previous sequence was not found");
+        Leader.WithFollower(next.Leader);
+        UpdateSequenceEnd();
+        return this;
+    }
+
+    /// <summary>
+    /// Combines current sequence with another to allow playing them in parallel (instead of playing one after another).
+    /// NOTE: duration of the current sequence is calculated as maximum between the two.
+    /// </summary>
+    internal SequenceDesign Combine(SequenceDesign next)
+    {
+        if (Sequences.Count == 0)
+        {
+            Append(next);
+            return this;
+        }
+
+        Duration = Math.Max(Duration, next.Duration);
+        Sequences.Add(next);
+
+        if (next.Leader.Strategy is FollowPreviousSoundStrategy followStrategy)
+        {
+            // if the added sequence has default strategy, change it to allow play in parallel
+            next.Leader.Strategy = followStrategy.ToPlayOnceStrategy();
+        }
+
         Leader.WithFollower(next.Leader);
         UpdateSequenceEnd();
         return this;

@@ -44,3 +44,17 @@ public abstract class AbstractStrategy
 
     public abstract Sequence ApplyStrategy(Sound leader);
 }
+
+public static class StrategyExtensions
+{
+    public static TTarget CopyBasePropertiesFrom<TSource, TTarget>(this TTarget target, TSource source)
+        where TSource : AbstractStrategy where TTarget : AbstractStrategy
+    {
+        target.DelayAfterLeader = source.DelayAfterLeader;
+        target.PlayEveryX = source.PlayEveryX;
+        target.PlayEveryXOutOf = source.PlayEveryXOutOf;
+        target.SilenceEveryXOutOf = source.SilenceEveryXOutOf;
+
+        return target;
+    }
+}
