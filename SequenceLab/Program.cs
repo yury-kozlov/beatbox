@@ -4,6 +4,8 @@ public static partial class Program
 {
     public static void Main(params string[] args)
     {
+        GracefulShutdown.Subscribe(TcpTransport.Close);
+
         try
         {
             var player = new ConsoleKeyPlayer();

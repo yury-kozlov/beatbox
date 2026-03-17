@@ -21,6 +21,7 @@ public class TcpTransport
 {
     private readonly TcpClient _client;
     private readonly NetworkStream _channel;
+    private static TcpTransport? _instance;
 
     public SendMode SendMode { get; set; } = SendMode.AllAtOnce;
 
@@ -28,6 +29,7 @@ public class TcpTransport
     {
         _client = new TcpClient("localhost", 3311);
         _channel = _client.GetStream();
+        _instance = this;
     }
 
     public void Dispose()
@@ -35,6 +37,8 @@ public class TcpTransport
         Send(Encoding.UTF8.GetBytes("seq stop;")); // stop currently playing sequence
         _client?.Dispose();
     }
+
+    public static void Close() => _instance?.Dispose();
 
     public void Send(TransportMessage message)
     {
