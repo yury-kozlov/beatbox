@@ -65,15 +65,29 @@ public class SequenceGenerator
         {
             // shift timestamp relatively to the leader (so that each sound will have an absolute position from the beginning of the whole sequence):
             nestedFollower.Timestamp += leader.Timestamp;
-            if (nestedFollower.Iteration == 0 && leader.Iteration != 0)
-            {
-                nestedFollower.Iteration = leader.Iteration;
-            }
+            SetIterationPath(leader, nestedFollower);
         }
 
         RemoveSoundsExceedingSequenceDuration(leader, allFollowers);
 
         return allFollowers;
+    }
+
+    private static void SetIterationPath(Sound leader, Sound follower)
+    {
+        if (leader.Iteration.IsNullOrEmpty())
+        {
+            // nothing to prepend to the follower
+            return;
+        }
+
+        if (follower.Iteration.IsNullOrEmpty())
+        {
+            follower.Iteration = leader.Iteration;
+            return;
+        }
+
+        follower.Iteration = $"{leader.Iteration}.{follower.Iteration}";
     }
 
     private static void RemoveSoundsExceedingSequenceDuration(Sound leader, Sequence seq)

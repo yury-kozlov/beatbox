@@ -38,7 +38,7 @@ public class RepeatStrategy : AbstractStrategy
             }
 
             leader.Timestamp = DelayAfterLeader + CalculateInterval(i);
-            leader.Iteration = i + 1;
+            leader.Iteration = $"{i + 1}";
             leader.Comment = $"#{leader.Iteration}";
 
             if (leader is SequenceStart sequenceStart)
@@ -70,7 +70,7 @@ public class RepeatStrategy : AbstractStrategy
         var sequenceEnd = sequenceStart.GetSequenceEnd();
         sequenceEnd.DelayAfterLeader = DelayAfterLeader + Interval; // NOTE: Interval is not multipled here by loop Count
         sequenceEnd.Comment = sequenceStart.Comment;
-        sequenceEnd.Iteration = sequenceStart.Iteration;
+        // NOTE: Iteration is not set here — it will be assigned during propagation in GenerateFollowersSequence
     }
 
     private int CalculateInterval(int i)

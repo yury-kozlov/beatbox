@@ -31,11 +31,14 @@ public record Sound
     /// </summary>
     public int Timestamp;
     public string? Comment;
-    
+
     /// <summary>
-    /// Iteration number of the current sound in loop.
+    /// Hierarchical iteration path (starting from 1) of the current sound in nested loops, e.g. "1", "2.3", "1.2.1", etc.
+    /// Specified in the following format: "{OuterLoopIteration}.{...}.{InnerLoopIteration}".
+    /// NOTE: if current sound is not part of any loop, Iteration will be null.
+    /// This field is used for sorting sequence sounds.
     /// </summary>
-    public int Iteration;
+    public string? Iteration;
 
     /// <summary>
     /// Original sequence current sound belongs to.

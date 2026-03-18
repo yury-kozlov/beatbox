@@ -236,15 +236,83 @@ public class SequenceSoundSorterTests
             // input
             new Sequence()
             {
-                new Kick() { Timestamp = 0, Iteration = 2 },
-                new SequenceEnd(new SequenceDesign("test")) { Timestamp = 0, Iteration = 1 },
-                new SequenceStart("test") { Timestamp = 0, Iteration = 2 },
+                new Kick() { Timestamp = 0, Iteration = "2" },
+                new SequenceEnd(new SequenceDesign("test")) { Timestamp = 0, Iteration = "1" },
+                new SequenceStart("test") { Timestamp = 0, Iteration = "2" },
             },
             // expected
             new string[] {
                 "0000:sequence-end-test",  // iteration 1
                 "0000:sequence-start-test",// iteration 2
                 "0000:k",                  // iteration 2 (after sequence-start of same iteration)
+            },
+        };
+
+        // inner sound (iteration "2.1") should follow its SequenceStart (iteration "2"), not precede it:
+        yield return new object[] {
+            // input
+            new Sequence()
+            {
+                new Kick() { Timestamp = 0, Iteration = "2.1" },
+                new SequenceStart("loop") { Timestamp = 0, Iteration = "2" },
+            },
+            // expected
+            new string[] {
+                "0000:sequence-start-loop", // "2" < "2.1" — outer start precedes its own followers
+                "0000:k",                   // "2.1"
+            },
+        };
+
+        // full outer-iteration: inner loop end → sequence end → next sequence start → first inner sound:
+        yield return new object[] {
+            // input (deliberately shuffled)
+            new Sequence()
+            {
+                new Kick() { Timestamp = 0, Iteration = "2.1" },
+                new SequenceStart("loop") { Timestamp = 0, Iteration = "2" },
+                new SequenceEnd(new SequenceDesign("loop")) { Timestamp = 0, Iteration = "1" },
+                new LoopEnd() { Timestamp = 0, Iteration = "1" },
+            },
+            // expected
+            new string[] {
+                "0000:end-of-loop",          // "1" — inner loop closes
+                "0000:sequence-end-loop",    // "1" — outer iteration 1 ends (after end-of-loop)
+                "0000:sequence-start-loop",  // "2" — outer iteration 2 begins
+                "0000:k",                    // "2.1" — first sound of outer iteration 2
+            },
+        };
+
+        // last sound of previous outer iteration vs first sound of next outer iteration:
+        yield return new object[] {
+            // input
+            new Sequence()
+            {
+                new Kick() { Timestamp = 0, Iteration = "2.1" },
+                new Sound("ts") { Timestamp = 0, Iteration = "1.3" },
+                new SequenceStart("loop") { Timestamp = 0, Iteration = "2" },
+            },
+            // expected
+            new string[] {
+                "0000:ts",                   // "1.3" — tail of outer iteration 1 (1 < 2)
+                "0000:sequence-start-loop",  // "2"   — outer iteration 2 starts
+                "0000:k",                    // "2.1" — first sound of outer iteration 2
+            },
+        };
+
+        // three-level nesting: outer start → middle repeat → innermost sound, all at same timestamp:
+        yield return new object[] {
+            // input
+            new Sequence()
+            {
+                new Kick() { Timestamp = 0, Iteration = "2.1.1" },
+                new Sound("metro") { Timestamp = 0, Iteration = "2.1" },
+                new SequenceStart("loop") { Timestamp = 0, Iteration = "2" },
+            },
+            // expected
+            new string[] {
+                "0000:sequence-start-loop", // "2"     — outermost
+                "0000:metro",               // "2.1"   — one level in
+                "0000:k",                   // "2.1.1" — innermost
             },
         };
     }

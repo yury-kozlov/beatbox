@@ -22,15 +22,36 @@ public static class SequenceSoundSorter
         return sorted;
     }
 
+    /// <summary>
+    /// Compares two hierarchical iteration paths segment by segment as integers.
+    /// A shorter prefix sorts before a longer one with the same prefix (e.g. "2" before "2.1"),
+    /// so a SequenceStart ("2") always precedes its own followers ("2.1", "2.2").
+    /// </summary>
+    private static int CompareIterations(string a, string b)
+    {
+        var aParts = a.Split('.');
+        var bParts = b.Split('.');
+        for (int i = 0; i < Math.Min(aParts.Length, bParts.Length); i++)
+        {
+            var cmp = int.Parse(aParts[i]).CompareTo(int.Parse(bParts[i]));
+            if (cmp != 0)
+            {
+                return cmp;
+            }
+        }
+        return aParts.Length.CompareTo(bParts.Length);
+    }
+
     private static int Compare(Sound a, Sound b)
     {
         var order = a.Timestamp.CompareTo(b.Timestamp);
         if (order == 0)
         {
-            if (a.Iteration != 0 && b.Iteration != 0 && a.Iteration != b.Iteration)
+            if (a.Iteration.HasValue() && b.Iteration.HasValue() && a.Iteration != b.Iteration)
             {
-                // if sequence is repeated in loop and some sounds are overlapping, compare them by iteration number
-                return a.Iteration.CompareTo(b.Iteration);
+                // if sequence is repeated in loop and some sounds are overlapping, compare them by iteration path.
+                // hierarchical path (e.g. "2.1") sorts after its parent level ("2"), placing followers after their SequenceStart:
+                return CompareIterations(a.Iteration, b.Iteration);
             }
 
             if (a is LoopEnd)

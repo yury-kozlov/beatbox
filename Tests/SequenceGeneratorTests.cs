@@ -500,4 +500,39 @@ public class SequenceGeneratorTests
         actualTimestamps.Should().ContainInOrder(expected);
         sequence.AutoDuration.Should().Be(4000);
     }
+
+
+    [Fact]
+    public void NestedLoop_WithRepeatStrategy_ReturnExpected()
+    {
+        // arrange
+        var sequence = new SequenceDesign("loop")
+        {
+            Strategy = new RepeatStrategy { Count = 2 },
+            Leader = new Kick { Strategy = new RepeatStrategy { Interval = 100, Count = 3 } },
+        };
+
+        string[] expected = [
+            "0000:sequence-start-loop",
+            "0000:k",
+            "0100:k",
+            "0200:k",
+            "0300:end-of-loop",
+            "0300:sequence-end-loop",
+            "0300:sequence-start-loop",
+            "0300:k",
+            "0400:k",
+            "0500:k",
+            "0600:end-of-loop",
+            "0600:end-of-loop",
+            "0600:sequence-end-loop",
+        ];
+
+        // act
+        var actual = SequenceGenerator.Generate(sequence);
+        var actualTimestamps = actual.GetTimestamps();
+
+        // assert
+        actualTimestamps.Should().ContainInOrder(expected);
+    }
 }
