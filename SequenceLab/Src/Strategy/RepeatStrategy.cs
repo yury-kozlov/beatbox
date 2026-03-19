@@ -28,38 +28,39 @@ public class RepeatStrategy : AbstractStrategy
     public override Sequence ApplyStrategy(Sound leader)
     {
         var originalSound = leader;
+        var repeatedSound = leader;
         var sequence = new Sequence();
         for (int i = 0; i < Count; i++)
         {
-            leader = originalSound.DeepClone();
+            repeatedSound = originalSound.DeepClone();
             if (Numbers.IsXOutOf(SilenceEveryXSoundOutOf, i + 1))
             {
-                leader = leader with { IsSilenced = true };
+                repeatedSound.IsSilenced = true;
             }
 
-            leader.Timestamp = DelayAfterLeader + CalculateInterval(i);
-            leader.Iteration = $"{i + 1}";
-            leader.Comment = $"#{leader.Iteration}";
+            repeatedSound.Timestamp = DelayAfterLeader + CalculateInterval(i);
+            repeatedSound.Iteration = $"{i + 1}";
+            repeatedSound.Comment = $"#{repeatedSound.Iteration}";
 
-            if (leader is SequenceStart sequenceStart)
+            if (repeatedSound is SequenceStart sequenceStart)
             {
                 AdjustSequenceEndDelay(sequenceStart);
             }
 
-            if (leader.Leader?.Strategy is RepeatStrategy leaderLoop
-                && TrimIfExceedsParentLoop && leader.Timestamp > leaderLoop.Interval)
+            if (repeatedSound.Leader?.Strategy is RepeatStrategy leaderLoop
+                && TrimIfExceedsParentLoop && repeatedSound.Timestamp > leaderLoop.Interval)
             {
                 // sound is positioned outside parent's loop, ignore it
-                Console.WriteLine($"Trimming sound '{leader.Name}' at {leader.Timestamp}ms as it exceeds parent loop interval of {leaderLoop.Interval}ms");
+                Console.WriteLine($"Trimming sound '{repeatedSound.Name}' at {repeatedSound.Timestamp}ms as it exceeds parent loop interval of {leaderLoop.Interval}ms");
                 continue;
             }
 
-            sequence.Add(leader);
+            sequence.Add(repeatedSound);
         }
 
         // close sequence with empty sound (acting as a spacer) so that any sound appended as a follower
         // to the current sequence later will continue only after current sequence ends
-        sequence.Add(GetEndingMessage(leader));
+        sequence.Add(GetEndingMessage(repeatedSound));
 
         return sequence;
     }
@@ -90,7 +91,7 @@ public class RepeatStrategy : AbstractStrategy
         return _previousIterval += Interval + (i - 1) * LinearIncrement;
     }
 
-    private Sound GetEndingMessage(Sound lastSound)
+    private Sound GetEndingMessage(Sound repeatedSound)
     {
         var calledTimesText = CheckedTimes == CalledTimes ? $"call #{CheckedTimes}" : $"call #{CalledTimes}, check #{CheckedTimes}";
 
@@ -99,7 +100,7 @@ public class RepeatStrategy : AbstractStrategy
         var trimmedText = "";
 
         // check if current loop falls out of leader's loop (e.g. due to incorrect delay of one of the followers which increases total time):
-        if (lastSound.Leader?.Strategy is RepeatStrategy leaderLoop && timestamp > leaderLoop.Interval)
+        if (repeatedSound.Leader?.Strategy is RepeatStrategy leaderLoop && timestamp > leaderLoop.Interval)
         {
             // current loop ends outside parent's loop interval
             if (TrimIfExceedsParentLoop)
@@ -110,11 +111,11 @@ public class RepeatStrategy : AbstractStrategy
             }
         }
 
-        return new LoopEnd()
+        return new LoopEnd(repeatedSound)
         {
             Timestamp = timestamp,
-            Sequence = lastSound.Sequence,
-            Comment = $"{(lastSound is Metronome ? "metronome" : lastSound.Name)} repeat x{Count} ends, {calledTimesText}{trimmedText}",
+            Sequence = repeatedSound.Sequence,
+            Comment = $"{(repeatedSound is Metronome ? "metronome" : repeatedSound.Name)} repeat x{Count} ends, {calledTimesText}{trimmedText}",
         };
     }
 
