@@ -20,9 +20,15 @@ public class SequenceDesign
         get;
         set
         {
-            // if it's initial call from ctor the value is already SequenceStart, otherwise just follow it:
-            field = value is SequenceStart ? value : FollowSequenceStart(value);
+            if (value is SequenceStart)
+            {
+                // if it's initial call from ctor the value is already SequenceStart, no need to enforce it:
+                field = value;
+                return;
         }
+            field = EnforceSequenceStartLeader(value);
+            TrySetDuration(value.Strategy); // if leader is a loop, we can use it's interval to calculate total sequence duration
+    }
     }
 
     /// <summary>
@@ -41,39 +47,45 @@ public class SequenceDesign
         }
     }
 
+    /// <summary>
+    /// Initializes interval of sequence loop when sequence strategy was changed or duration of the sequence was changed.
+    /// NOTE: this is a shortcut path to omit specifying explicit Interval in repeated sequences (e.g. <see cref="PrimitiveSequences.Trapezoid{TSound}"/>)
+    /// when duration of the underlying sequence is known and we just need to calculate total repetition time:
+    /// in this case sequence loop interval will be automatically set as duration of the original sequence
+    /// </summary>
     private void TrySetRepeatInterval()
     {
         if (Strategy is RepeatStrategy sequenceLoop)
         {
-            if (sequenceLoop.Interval == 0 && Duration > 0)
+            if (Duration > 0)
             {
-                /// NOTE: this is a shortcut path to omit specifying explicit Interval in repeated sequences (e.g. <see cref="PrimitiveSequences.Trapezoid{TSound}"/>)
-                /// when duration of the underlying sequence is known and we just need to calculate total repetition time:
-                /// in this case sequence loop interval will be automatically set as duration of the original sequence
-                sequenceLoop.Interval = Duration;
-            }
-        }
-    }
-
-    private void TrySetDuration(AbstractStrategy leaderStrategy)
-    {
-        if (leaderStrategy is RepeatStrategy repeatStrategy)
-        {
-            if (repeatStrategy.Count > 0)
-            {
-                // automatically update total sequence duration as full duration of the loop:
-                Duration = repeatStrategy.Interval * repeatStrategy.Count;
+                // NOTE: sequence Duration includes all iterations of a loop
+                sequenceLoop.Interval = sequenceLoop.Count > 0 ? Duration / sequenceLoop.Count : Duration;
             }
         }
     }
 
     /// <summary>
-    /// Wrap actual leader with "SequenceStart" sound.
+    /// Updates duration (as a result of strategy change, or leader initialization).
     /// </summary>
-    private Sound FollowSequenceStart(Sound leader)
+    private void TrySetDuration(AbstractStrategy leaderStrategy)
     {
-        TrySetDuration(leader.Strategy); // if leader is a loop, we can use it's interval to calculate total sequence duration
+        if (leaderStrategy is RepeatStrategy repeatStrategy)
+        {
+            if (repeatStrategy.Count > 0 && repeatStrategy.Interval > 0)
+            {
+                // automatically update total sequence duration as full duration of the loop:
+                var sequenceLoops = (Strategy as RepeatStrategy)?.Count ?? 1;
+                Duration = repeatStrategy.Interval * repeatStrategy.Count * sequenceLoops;
+            }
+        }
+    }
 
+    /// <summary>
+    /// Force actual leader to be a follower of "SequenceStart" sound.
+    /// </summary>
+    private Sound EnforceSequenceStartLeader(Sound leader)
+    {
         return Leader
             .WithFollower(leader.WithSequenceIfMissing(this))
             .WithFollower(SequenceEnd);
