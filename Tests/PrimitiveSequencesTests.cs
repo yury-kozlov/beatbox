@@ -67,7 +67,7 @@ public class PrimitiveSequencesTests
             "7700:k",
             "8400:k",
             "9100:k",
-            "9600:end-of-loop",
+            "9600:end-of-sequence-loop",
             "9600:sequence-end-trapezoid",
         ];
 

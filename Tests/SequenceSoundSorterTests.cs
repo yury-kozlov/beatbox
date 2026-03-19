@@ -315,6 +315,37 @@ public class SequenceSoundSorterTests
                 "0000:k",                   // "2.1.1" — innermost
             },
         };
+
+        // "end-of-loop" should go before "end-of-sequence-loop":
+        yield return new object[] {
+            // input (sequence loop placed first)
+            new Sequence()
+            {
+                new LoopEnd(new SequenceStart("seq")) { Timestamp = 0 },
+                new LoopEnd() { Timestamp = 0 },
+            },
+            // expected
+            new string[] {
+                "0000:end-of-loop",
+                "0000:end-of-sequence-loop",
+            },
+        };
+
+        // "end-of-loop" should go before "end-of-sequence-loop" even when iteration path of sequence loop sorts earlier:
+        yield return new object[] {
+            // input — sequence loop has iteration "1" (parent path), regular loop has "1.1" (child path);
+            // without special handling the iteration-based comparison would incorrectly put sequence loop first
+            new Sequence()
+            {
+                new LoopEnd(new SequenceStart("seq")) { Timestamp = 0, Iteration = "1" },
+                new LoopEnd() { Timestamp = 0, Iteration = "1.1" },
+            },
+            // expected — type wins over iteration: regular loop end before sequence loop end
+            new string[] {
+                "0000:end-of-loop",           // "1.1" — inner regular loop
+                "0000:end-of-sequence-loop",  // "1"   — outer sequence loop
+            },
+        };
     }
 
     private static SequenceDesign SharedSeq = new SequenceDesign("shared-sequence");

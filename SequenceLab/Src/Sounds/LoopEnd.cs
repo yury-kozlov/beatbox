@@ -6,10 +6,13 @@
 /// </summary>
 public record LoopEnd : NoSound
 {
-    public LoopEnd()
+    public LoopEnd(Sound? repeatedSound = null)
     {
-        FriendlyName = "end-of-loop";
+        IsSequenceLoop = repeatedSound is SequenceStart;
+        FriendlyName = IsSequenceLoop ? "end-of-sequence-loop" : "end-of-loop";
     }
+
+    public bool IsSequenceLoop { get; }
 
     public override string? ToString() => $"{Format(FriendlyName)}: {Comment}";
 }

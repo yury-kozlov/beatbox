@@ -47,6 +47,11 @@ public static class SequenceSoundSorter
         var order = a.Timestamp.CompareTo(b.Timestamp);
         if (order == 0)
         {
+            if (a is LoopEnd aLoopEnd && b is LoopEnd bLoopEnd && aLoopEnd.IsSequenceLoop != bLoopEnd.IsSequenceLoop)
+            {
+                return aLoopEnd.IsSequenceLoop ? 1 : -1; // sequence loop end goes after regular loop end
+            }
+
             if (a.Iteration.HasValue() && b.Iteration.HasValue() && a.Iteration != b.Iteration)
             {
                 // if sequence is repeated in loop and some sounds are overlapping, compare them by iteration path.

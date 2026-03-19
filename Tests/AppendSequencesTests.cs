@@ -225,7 +225,7 @@ public class AppendSequencesTests
             "0500:k",
             "1200:k",
             "1900:k",
-            "2400:end-of-loop",
+            "2400:end-of-sequence-loop",
             "2400:sequence-end-trapezoid",
             "2400:sequence-start-square",
             "2400:s",
@@ -233,7 +233,7 @@ public class AppendSequencesTests
             "3600:s",
             "4200:s",
             "4800:end-of-loop",
-            "4800:end-of-loop",
+            "4800:end-of-sequence-loop",
             "4800:sequence-end-square",
             "4800:sequence-end-main",
         };

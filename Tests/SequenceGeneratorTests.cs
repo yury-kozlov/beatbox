@@ -523,7 +523,7 @@ public class SequenceGeneratorTests
             "0400:k",
             "0500:k",
             "0600:end-of-loop",
-            "0600:end-of-loop",
+            "0600:end-of-sequence-loop",
             "0600:sequence-end-test",
         ];
 

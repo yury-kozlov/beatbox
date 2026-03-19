@@ -496,7 +496,7 @@ public class SequenceSamplesTests
             "7300:s",
             "7500:k",
             "8000:end-of-loop",
-            "8000:end-of-loop",
+            "8000:end-of-sequence-loop",
             "8000:sequence-end-" + sequence.Name,
         ];
 
