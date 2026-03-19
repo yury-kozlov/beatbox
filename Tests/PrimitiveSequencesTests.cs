@@ -28,7 +28,7 @@ public class PrimitiveSequencesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().BeExactSequence(expected);
         sequence.AutoDuration.Should().Be(2400);
     }
 
@@ -76,11 +76,11 @@ public class PrimitiveSequencesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().BeExactSequence(expected);
         sequence.Duration.Should().Be(9600);
 
         // verify overlapping sounds at iteration transitions are in correct order:
-        actualTimestamps[5].Should().Be("2400:sequence-end-trapezoid");
+        actualTimestamps![5].Should().Be("2400:sequence-end-trapezoid");
         actualTimestamps[6].Should().Be("2400:sequence-start-trapezoid");
         actualTimestamps[7].Should().Be("2400:k");
     }

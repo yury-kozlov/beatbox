@@ -69,18 +69,13 @@ public static class SequenceSoundSorter
                 {
                     return 1; // put "sequence-end" after "end-of-loop" and "metronome"
                 }
-                if (b is SequenceStart)
-                {
-                    // same sequence: "sequence-end" goes after "sequence-start"
-                    // different sequences: "sequence-end" goes before "sequence-start" of next sequence
-                    return a.Sequence == b.Sequence ? 1 : -1;
-                }
                 if (b is SequenceEnd)
                 {
                     return 0; // let stable sort decide by insertion order (outer sequence end is generated last, so it goes last)
                 }
-                // put "sequence-end" after regular sounds of same sequence
-                return a.Sequence == b.Sequence ? 1 : -1;
+                // put "sequence-end" after "sequence-start" and regular sounds of same sequence
+                // different sequences: rely on insertion order — outer container end is generated last
+                return a.Sequence == b.Sequence ? 1 : 0;
             }
             if (a is SequenceStart)
             {
@@ -95,8 +90,8 @@ public static class SequenceSoundSorter
                 if (b is SequenceEnd)
                 {
                     // same sequence: "sequence-start" goes before "sequence-end"
-                    // different sequences: "sequence-start" goes after "sequence-end" of previous sequence
-                    return a.Sequence == b.Sequence ? -1 : 1;
+                    // different sequences: rely on insertion order
+                    return a.Sequence == b.Sequence ? -1 : 0;
                 }
                 // put "sequence-start" before regular sounds only if they belong to the same sequence
                 return a.Sequence == b.Sequence ? -1 : 0;
@@ -117,7 +112,8 @@ public static class SequenceSoundSorter
             if (b is SequenceEnd)
             {
                 // put regular sounds before "sequence-end" of same sequence
-                return a.Sequence == b.Sequence ? -1 : 1;
+                // different sequences: rely on insertion order
+                return a.Sequence == b.Sequence ? -1 : 0;
             }
         }
         return order;

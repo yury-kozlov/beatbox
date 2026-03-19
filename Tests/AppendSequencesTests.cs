@@ -50,7 +50,7 @@ public class AppendSequencesTests
         ];
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().BeExactSequence(expected);
         kicks.AutoDuration.Should().Be(100);
         snares.AutoDuration.Should().Be(150);
         hihats.AutoDuration.Should().Be(200);
@@ -94,7 +94,7 @@ public class AppendSequencesTests
         ];
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().BeExactSequence(expected);
         seq1.AutoDuration.Should().Be(150);
         seq2.AutoDuration.Should().Be(150);
     }
@@ -137,7 +137,7 @@ public class AppendSequencesTests
         ];
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().BeExactSequence(expected);
     }
 
     [Fact]
@@ -189,7 +189,7 @@ public class AppendSequencesTests
         ];
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().BeExactSequence(expected);
     }
 
     [Fact]
@@ -239,6 +239,6 @@ public class AppendSequencesTests
         };
 
         // assert
-        actualTimestamps.Should().ContainInOrder(expected);
+        actualTimestamps.Should().BeExactSequence(expected);
     }
 }

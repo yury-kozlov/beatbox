@@ -26,7 +26,7 @@ public class CombineSequencesTests
             "0100:sequence-end-kicks",
             "0100:sequence-end-main",
         ];
-        actual.GetTimestamps().Should().BeEquivalentTo(expected);
+        actual.GetTimestamps().Should().BeExactSequence(expected);
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public class CombineSequencesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert — both sequence-starts appear at ts=0
-        actualTimestamps.Should().BeEquivalentTo([
+        actualTimestamps.Should().BeExactSequence([
             "0000:sequence-start-main",
             "0000:sequence-start-kicks",
             "0000:k",
@@ -163,7 +163,7 @@ public class CombineSequencesTests
 
         // assert
         main.Duration.Should().Be(8000);
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().BeExactSequence(expected);
     }
 
     [Fact]
@@ -220,7 +220,7 @@ public class CombineSequencesTests
 
         // assert
         main.Duration.Should().Be(4000);
-        actualTimestamps.Should().BeEquivalentTo(expected);
+        actualTimestamps.Should().BeExactSequence(expected);
     }
 
     [Fact]
@@ -241,7 +241,7 @@ public class CombineSequencesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().BeEquivalentTo([
+        actualTimestamps.Should().BeExactSequence([
             "0000:sequence-start-main",
             "0000:sequence-start-kicks",
             "0000:k",
@@ -294,7 +294,7 @@ public class CombineSequencesTests
         var actualTimestamps = actual.GetTimestamps();
 
         // assert — both sequences play at ts=0 with their own repeat intervals preserved
-        actualTimestamps.Should().BeEquivalentTo([
+        actualTimestamps.Should().BeExactSequence([
             "0000:sequence-start-main",
             "0000:sequence-start-kicks",
             "0000:k",

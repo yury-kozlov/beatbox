@@ -169,13 +169,13 @@ public class SequenceSoundSorterTests
             },
         };
 
-        // "sequence-end" should go before "sequence-start" when sequences are different:
+        // "sequence-end" should go before "sequence-start" when sequences are different (generation order):
         yield return new object[] {
-            // input
+            // input — prev-end generated before next-start, as in real sequences (sequential append)
             new Sequence()
             {
-                new SequenceStart("next") { Timestamp = 0 },
                 new SequenceEnd(new SequenceDesign("prev")) { Timestamp = 0 },
+                new SequenceStart("next") { Timestamp = 0 },
             },
             // expected
             new string[] {
@@ -216,13 +216,13 @@ public class SequenceSoundSorterTests
             },
         };
 
-        // "sequence-end" should go before regular sounds of a different sequence:
+        // "sequence-end" should go before regular sounds of a different sequence (generation order):
         yield return new object[] {
-            // input
+            // input — sequence-end generated before the sound from the other sequence, as in real sequences
             new Sequence()
             {
-                new Kick() { Timestamp = 0, Sequence = SharedSeq },
                 new SequenceEnd(new SequenceDesign("other")) { Timestamp = 0 },
+                new Kick() { Timestamp = 0, Sequence = SharedSeq },
             },
             // expected
             new string[] {
@@ -359,6 +359,6 @@ public class SequenceSoundSorterTests
         var actualTimestamps = sorted.GetTimestamps();
 
         // assert
-        actualTimestamps.Should().ContainInOrder(expected);
+        actualTimestamps.Should().BeExactSequence(expected);
     }
 }
