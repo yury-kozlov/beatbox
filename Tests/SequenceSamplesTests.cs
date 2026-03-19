@@ -456,6 +456,60 @@ public class SequenceSamplesTests
     }
 
     [Fact]
+    public void Minimal_TechnoBeat3_ReturnExpected()
+    {
+        // arrange
+        var sequence = Minimal.TechnoBeat3();
+        string[] expected = [
+            "0000:sequence-start-" + sequence.Name,
+            "0000:k",
+            "0500:k",
+            "0500:s",
+            "1000:k",
+            "1300:s",
+            "1500:k",
+            "2000:end-of-loop",
+            "2000:sequence-end-TechnoBeat3",
+            "2000:sequence-start-TechnoBeat3",
+            "2000:k",
+            "2500:k",
+            "2500:s",
+            "3000:k",
+            "3300:s",
+            "3500:k",
+            "4000:end-of-loop",
+            "4000:sequence-end-TechnoBeat3",
+            "4000:sequence-start-TechnoBeat3",
+            "4000:k",
+            "4500:k",
+            "4500:s",
+            "5000:k",
+            "5300:s",
+            "5500:k",
+            "6000:end-of-loop",
+            "6000:sequence-end-TechnoBeat3",
+            "6000:sequence-start-TechnoBeat3",
+            "6000:k",
+            "6500:k",
+            "6500:s",
+            "7000:k",
+            "7300:s",
+            "7500:k",
+            "8000:end-of-loop",
+            "8000:end-of-loop",
+            "8000:sequence-end-" + sequence.Name,
+        ];
+
+        // act
+        var actual = SequenceGenerator.Generate(sequence);
+        var actualTimestamps = actual.GetTimestamps();
+
+        // assert
+        actualTimestamps.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        sequence.Duration.Should().Be(8000);
+    }
+
+    [Fact]
     public void Minimal_BrokenBeat1_ReturnExpected()
     {
         // arrange

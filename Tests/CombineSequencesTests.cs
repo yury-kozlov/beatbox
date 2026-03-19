@@ -61,12 +61,118 @@ public class CombineSequencesTests
     }
 
     [Fact]
+    public void Combine_TwoSequencesWithRepeat_PlayInParallel()
+    {
+        // arrange
+        var kicks = new SequenceDesign("kicks")
+        {
+            Leader = new Kick { Strategy = new RepeatStrategy { Interval = 500, Count = 4 } },
+        };
+
+        var snares = new SequenceDesign("snares")
+        {
+            Leader = new Metronome
+            {
+                Strategy = new RepeatStrategy { Interval = 400, Count = 4 },
+                Followers = [new Snare { Strategy = new PlayOnceStrategy { PlayEveryX = 2, DelayAfterLeader = 100 } }],
+            },
+        };
+
+        var main = new SequenceDesign("main") { Strategy = new RepeatStrategy { Count = 4 } };
+        main.Combine(kicks);
+        main.Combine(snares);
+
+        // act
+        var actual = SequenceGenerator.Generate(main);
+        var actualTimestamps = actual.GetTimestamps();
+        string[] expected = [
+            "0000:sequence-start-main",
+            "0000:sequence-start-kicks",
+            "0000:sequence-start-snares",
+            "0000:k",
+            "0000:metronome",
+            "0400:metronome",
+            "0500:k",
+            "0500:s",
+            "0800:metronome",
+            "1000:k",
+            "1200:metronome",
+            "1300:s",
+            "1500:k",
+            "1600:end-of-loop",
+            "1600:sequence-end-snares",
+            "2000:end-of-loop",
+            "2000:sequence-end-kicks",
+            "2000:sequence-end-main",
+            "2000:sequence-start-main",
+            "2000:sequence-start-kicks",
+            "2000:sequence-start-snares",
+            "2000:metronome",
+            "2000:k",
+            "2400:metronome",
+            "2500:k",
+            "2500:s",
+            "2800:metronome",
+            "3000:k",
+            "3200:metronome",
+            "3300:s",
+            "3500:k",
+            "3600:end-of-loop",
+            "3600:sequence-end-snares",
+            "4000:end-of-loop",
+            "4000:sequence-end-kicks",
+            "4000:sequence-end-main",
+            "4000:sequence-start-main",
+            "4000:sequence-start-kicks",
+            "4000:sequence-start-snares",
+            "4000:metronome",
+            "4000:k",
+            "4400:metronome",
+            "4500:k",
+            "4500:s",
+            "4800:metronome",
+            "5000:k",
+            "5200:metronome",
+            "5300:s",
+            "5500:k",
+            "5600:end-of-loop",
+            "5600:sequence-end-snares",
+            "6000:end-of-loop",
+            "6000:sequence-end-kicks",
+            "6000:sequence-end-main",
+            "6000:sequence-start-main",
+            "6000:sequence-start-kicks",
+            "6000:sequence-start-snares",
+            "6000:k",
+            "6000:metronome",
+            "6400:metronome",
+            "6500:k",
+            "6500:s",
+            "6800:metronome",
+            "7000:k",
+            "7200:metronome",
+            "7300:s",
+            "7500:k",
+            "7600:end-of-loop",
+            "7600:sequence-end-snares",
+            "8000:end-of-loop",
+            "8000:end-of-loop",
+            "8000:sequence-end-kicks",
+            "8000:sequence-end-main",
+        ];
+
+        // assert
+        main.Duration.Should().Be(8000);
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
     public void Combine_ThreeSequences_AllPlayInParallel()
     {
         // arrange
         var kicks = new SequenceDesign("kicks") { Leader = new Kick { Followers = [new Kick() { DelayAfterLeader = 100 }] } };
         var snares = new SequenceDesign("snares") { Leader = new Snare { Followers = [new Snare() { DelayAfterLeader = 150 }] } };
-        var hihats = new SequenceDesign("hihats") { Leader = new Sound("h") { Followers = [new Sound("h") { DelayAfterLeader = 200 }] }};
+        var hihats = new SequenceDesign("hihats") { Leader = new Sound("h") { Followers = [new Sound("h") { DelayAfterLeader = 200 }] } };
 
         var main = new SequenceDesign("main");
         main.Combine(kicks);

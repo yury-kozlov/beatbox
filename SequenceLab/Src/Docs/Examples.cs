@@ -73,6 +73,10 @@ class Examples
         player.PlayRepeated(kicks).Wait();
     }
 
+    /// <summary>
+    /// Shows how to play 2 sequences in parallel.
+    /// NOTE: a single sequence implementation can be found here: <see cref="Minimal.TechnoBeat3"/>
+    /// </summary>
     public void PlaySequencesAtTheSameTime()
     {
         // in order to play 2 sequences at the same time
@@ -91,12 +95,12 @@ class Examples
             },
         };
 
-        var parent = new SequenceDesign("main") { Strategy = new RepeatStrategy { Count = 4 } }
-            .Combine(kicks)
-            .Combine(snares);
+        var main = new SequenceDesign("main") { Strategy = new RepeatStrategy { Count = 4 } };
+        main.Combine(kicks);
+        main.Combine(snares);
 
         // play
         var player = new ConsoleKeyPlayer();
-        player.PlayRepeated(parent).Wait();
+        player.PlayRepeated(main).Wait();
     }
 }

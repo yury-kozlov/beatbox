@@ -39,6 +39,25 @@ public class Minimal
         };
     }
 
+    /// <summary>
+    /// This is a single-sequence implementation of <see cref="Examples.PlaySequencesAtTheSameTime"/>
+    /// </summary>
+    internal static SequenceDesign TechnoBeat3()
+    {
+        return new SequenceDesign(nameof(TechnoBeat3))
+        {
+            Strategy = new RepeatStrategy { Count = 4 },
+            Leader = new Kick
+            {
+                Strategy = new RepeatStrategy { Interval = 500, Count = 4 },
+                Followers = [
+                    new Snare { Strategy = new PlayOnceStrategy { PlayEveryXOutOf = "2/4" } },
+                    new Snare { Strategy = new PlayOnceStrategy { PlayEveryXOutOf = "3/4", DelayAfterLeader = 300 } },
+                ],
+            },
+        };
+    }
+
     internal static SequenceDesign BrokenBeat1()
     {
         return new SequenceDesign(nameof(BrokenBeat1))

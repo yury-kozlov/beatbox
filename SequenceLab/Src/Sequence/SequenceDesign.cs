@@ -25,10 +25,10 @@ public class SequenceDesign
                 // if it's initial call from ctor the value is already SequenceStart, no need to enforce it:
                 field = value;
                 return;
-        }
+            }
             field = EnforceSequenceStartLeader(value);
-            TrySetDuration(value.Strategy); // if leader is a loop, we can use it's interval to calculate total sequence duration
-    }
+            UpdateLoopDuration(value.Strategy); // if leader is a loop, we can use it's interval to calculate total sequence duration
+        }
     }
 
     /// <summary>
@@ -42,8 +42,8 @@ public class SequenceDesign
         set
         {
             Leader.Strategy = value;
-            TrySetRepeatInterval();
-            TrySetDuration(value);
+            UpdateLoopInterval();
+            UpdateLoopDuration(value);
         }
     }
 
@@ -53,7 +53,7 @@ public class SequenceDesign
     /// when duration of the underlying sequence is known and we just need to calculate total repetition time:
     /// in this case sequence loop interval will be automatically set as duration of the original sequence
     /// </summary>
-    private void TrySetRepeatInterval()
+    private void UpdateLoopInterval()
     {
         if (Strategy is RepeatStrategy sequenceLoop)
         {
@@ -67,14 +67,15 @@ public class SequenceDesign
 
     /// <summary>
     /// Updates duration (as a result of strategy change, or leader initialization).
+    /// NOTE: change in sequence duration also triggers re-calculation of loop interval.
     /// </summary>
-    private void TrySetDuration(AbstractStrategy leaderStrategy)
+    private void UpdateLoopDuration(AbstractStrategy leaderStrategy)
     {
         if (leaderStrategy is RepeatStrategy repeatStrategy)
         {
             if (repeatStrategy.Count > 0 && repeatStrategy.Interval > 0)
             {
-                // automatically update total sequence duration as full duration of the loop:
+                // if sequence is repeated, it's duration should be multipled by number of iterations:
                 var sequenceLoops = (Strategy as RepeatStrategy)?.Count ?? 1;
                 Duration = repeatStrategy.Interval * repeatStrategy.Count * sequenceLoops;
             }
@@ -112,7 +113,7 @@ public class SequenceDesign
         {
             field = value;
             SequenceEnd.InitStrategy(); // recalculate sequence end strategy because it depends on duration
-            TrySetRepeatInterval();
+            UpdateLoopInterval();
         }
     }
 
@@ -140,6 +141,8 @@ public class SequenceDesign
     internal SequenceDesign Append(SequenceDesign next)
     {
         Duration += next.Duration;
+        UpdateLoopDuration(Strategy);
+
         Sequences.Add(next);
 
         if (Sequences.Count == 1 || next.Leader.Strategy is FollowPreviousSoundStrategy)
