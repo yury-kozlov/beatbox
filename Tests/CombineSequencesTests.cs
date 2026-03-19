@@ -167,6 +167,63 @@ public class CombineSequencesTests
     }
 
     [Fact]
+    public void Combine_TwoSequencesWithRepeat_SecondSequenceIsLonger_PlayInParallel()
+    {
+        // arrange
+        var kicks = new SequenceDesign("kicks")
+        {
+            Strategy = new RepeatStrategy { Count = 2 },
+            Leader = new Kick { Strategy = new RepeatStrategy { Interval = 100, Count = 3 } },
+        };
+
+        var snares = new SequenceDesign("snares")
+        {
+            Strategy = new RepeatStrategy { Count = 2 },
+            Leader = new Snare { Strategy = new RepeatStrategy { Interval = 1000, Count = 2} },
+        };
+
+        var main = new SequenceDesign("main");
+        main.Combine(kicks);
+        main.Combine(snares);
+
+        // act
+        var actual = SequenceGenerator.Generate(main);
+        var actualTimestamps = actual.GetTimestamps();
+        string[] expected = [
+            "0000:sequence-start-main",
+            "0000:sequence-start-kicks",
+            "0000:sequence-start-snares",
+            "0000:k",
+            "0000:s",
+            "0100:k",
+            "0200:k",
+            "0300:end-of-loop",
+            "0300:sequence-end-kicks",
+            "0300:sequence-start-kicks",
+            "0300:k",
+            "0400:k",
+            "0500:k",
+            "0600:end-of-loop",
+            "0600:end-of-loop",
+            "0600:sequence-end-kicks",
+            "1000:s",
+            "2000:end-of-loop",
+            "2000:sequence-end-snares",
+            "2000:sequence-start-snares",
+            "2000:s",
+            "3000:s",
+            "4000:end-of-loop",
+            "4000:end-of-loop",
+            "4000:sequence-end-snares",
+            "4000:sequence-end-main",
+        ];
+
+        // assert
+        main.Duration.Should().Be(4000);
+        actualTimestamps.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
     public void Combine_ThreeSequences_AllPlayInParallel()
     {
         // arrange
