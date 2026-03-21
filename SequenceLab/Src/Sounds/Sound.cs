@@ -18,10 +18,17 @@ public record Sound
     public string? Name;
     public string? FriendlyName;
 
-    public AbstractStrategy Strategy = new PlayOnceStrategy();
-    
+    public AbstractStrategy Strategy
+    {
+        get; set
+        {
+            field = value;
+            OnStrategyChange();
+        }
+    } = new PlayOnceStrategy();
+
     public Sequence Followers = new(); /// TODO: should this be <see cref="SequenceDesign"/> instead? Should each Sound here be a SoundDesign instead?
-    
+
     public Sound? Leader;
 
     /// <summary>
@@ -59,9 +66,19 @@ public record Sound
 
     /// <summary>
     /// Assigns delay to the underlying strategy.
-    /// NOTE: if sound strategy property is initialized inside the same block after delay is set, the current delay value will be ignored.
     /// </summary>
-    public int DelayAfterLeader { set { Strategy.DelayAfterLeader = value; } }
+    public int? DelayAfterLeader
+    {
+        get; set
+        {
+            var isChanged = field != value;
+            field = value;
+            if (isChanged)
+            {
+                InitStrategyDelay();
+            }
+        }
+    }
 
     /// <summary>
     /// Previous sounds that were generated before the current sound (for the same leader).
@@ -134,6 +151,23 @@ public record Sound
             clone.Followers.Add(follower.DeepClone());
         }
         return clone;
+    }
+
+    internal void InitStrategyDelay()
+    {
+        if (DelayAfterLeader.HasValue)
+        {
+            Strategy.DelayAfterLeader = DelayAfterLeader.Value;
+        }
+    }
+
+    internal void OnStrategyChange()
+    {
+        if (Strategy.DelayAfterLeader == 0)
+        {
+            // change delay of the new strategy only if strategy delay is empty
+            InitStrategyDelay();
+        }
     }
 }
 

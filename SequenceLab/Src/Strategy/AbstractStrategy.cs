@@ -43,6 +43,8 @@ public abstract class AbstractStrategy
     public string? SilenceEveryXOutOf;
 
     public abstract Sequence ApplyStrategy(Sound leader);
+
+    public override string? ToString() => DelayAfterLeader > 0 ? $"{DelayAfterLeader:0000}:{base.ToString()}" : base.ToString();
 }
 
 public static class StrategyExtensions
