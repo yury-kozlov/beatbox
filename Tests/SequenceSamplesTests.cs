@@ -1,4 +1,5 @@
 ﻿using Beater;
+using System.Collections;
 
 namespace Tests;
 
@@ -587,6 +588,66 @@ public class SequenceSamplesTests
         // assert
         actualTimestamps.Should().BeExactSequence(expected);
         sequence.AutoDuration.Should().Be(8000);
+    }
+
+
+    [Fact]
+    public void Noe_Solange_Home_DJCounselling_ReturnExpected()
+    {
+        // arrange
+        var sequence = Noe_Solange_Home_DJCounselling.GetSequence();
+
+        string[] expected = [
+            "0000:sequence-start-" + sequence.Name,
+            "0000:k",
+            "0235:ts1",
+            "0475:k",
+            "0710:ts1",
+            "0830:k",
+            "1185:ts1",
+            "1660:ts1",
+            "1900:sequence-end-Noe_Solange_Home_DJCounselling",
+            "1900:sequence-start-Noe_Solange_Home_DJCounselling",
+            "1900:k",
+            "2135:end-of-loop",
+            "2135:ts1",
+            "2375:k",
+            "2610:ts1",
+            "2730:k",
+            "3085:ts1",
+            "3560:ts1",
+            "3800:sequence-end-Noe_Solange_Home_DJCounselling",
+            "3800:sequence-start-Noe_Solange_Home_DJCounselling",
+            "3800:k",
+            "4035:end-of-loop",
+            "4035:ts1",
+            "4275:k",
+            "4510:ts1",
+            "4630:k",
+            "4985:ts1",
+            "5460:ts1",
+            "5700:sequence-end-Noe_Solange_Home_DJCounselling",
+            "5700:sequence-start-Noe_Solange_Home_DJCounselling",
+            "5700:k",
+            "5935:end-of-loop",
+            "5935:ts1",
+            "6175:k",
+            "6410:ts1",
+            "6530:k",
+            "6885:ts1",
+            "7360:ts1",
+            "7600:end-of-sequence-loop",
+            "7600:sequence-end-" + sequence.Name,
+            "7835:end-of-loop",
+        ];
+
+        // act
+        var actual = SequenceGenerator.Generate(sequence);
+        var actualTimestamps = actual.GetTimestamps();
+
+        // assert
+        actualTimestamps.Should().BeExactSequence(expected);
+        sequence.Duration.Should().Be(7600);
     }
 
     [Fact]
