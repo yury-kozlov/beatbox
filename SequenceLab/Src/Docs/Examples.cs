@@ -81,6 +81,10 @@ class Examples
     {
         // in order to play 2 sequences at the same time
         // just Combine them to the same parent sequence:
+        
+        /// another option is to use property <see cref="AbstractStrategy.FireAndForget"/> for simplicity (without defining a separate sequence)
+        /// this property indicates that a sound and its direct followers will be played in parallel (not sequentially)
+
         var kicks = new SequenceDesign("kicks")
         {
             Leader = new Kick { Strategy = new RepeatStrategy { Interval = 500, Count = 4 } },

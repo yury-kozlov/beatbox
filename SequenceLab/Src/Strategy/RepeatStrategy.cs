@@ -71,7 +71,7 @@ public class RepeatStrategy : AbstractStrategy
         var sequenceEnd = sequenceStart.GetSequenceEnd();
         sequenceEnd.DelayAfterLeader = DelayAfterLeader + Interval; // NOTE: Interval is not multipled here by loop Count
         sequenceEnd.Comment = sequenceStart.Comment;
-        // NOTE: Iteration is not set here — it will be assigned during propagation in GenerateFollowersSequence
+        /// NOTE: Iteration is not set here — it will be assigned during propagation in <see cref="SequenceGenerator.GenerateFollowersSequence"/>
     }
 
     private int CalculateInterval(int i)
@@ -116,6 +116,7 @@ public class RepeatStrategy : AbstractStrategy
             Timestamp = timestamp,
             Sequence = repeatedSound.Sequence,
             Comment = $"{(repeatedSound is Metronome ? "metronome" : repeatedSound.Name)} repeat x{Count} ends, {calledTimesText}{trimmedText}",
+            FireAndForget = repeatedSound.Strategy.FireAndForget,
         };
     }
 

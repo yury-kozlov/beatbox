@@ -18,6 +18,7 @@ internal class Theory
     public void HowToCombineTwoSequences()
     {
         // take a small sequence containing just few sounds and inject it into the longer sequence as a follower of one of its sounds
+        /// another option is to use <see cref="SequenceDesign.Append"/> or <see cref="SequenceDesign.Combine"/>
     }
 
     public void HowToPlaySequenceInLoop()

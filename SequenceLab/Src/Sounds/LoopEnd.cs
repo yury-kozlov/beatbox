@@ -14,5 +14,7 @@ public record LoopEnd : NoSound
 
     public bool IsSequenceLoop { get; }
 
+    public bool FireAndForget { get => Strategy.FireAndForget; set => Strategy.FireAndForget = value; }
+
     public override string? ToString() => $"{Format(FriendlyName)}: {Comment}";
 }

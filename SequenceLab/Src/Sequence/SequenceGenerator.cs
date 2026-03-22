@@ -55,6 +55,11 @@ public class SequenceGenerator
         foreach (var follower in leader.Followers)
         {
             follower.PreviousSounds = allFollowers;
+            if (leader.Strategy.FireAndForget)
+            {
+                // propagate this flag to direct followeres
+                follower.Strategy.FireAndForget = leader.Strategy.FireAndForget;
+            }
 
             // NOTE: separate followers are played independently to allow overlapping sequences (mixed together)
             var nestedFollowers = GenerateSequence(follower);

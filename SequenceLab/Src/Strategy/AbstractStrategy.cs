@@ -42,6 +42,12 @@ public abstract class AbstractStrategy
     /// </summary>
     public string? SilenceEveryXOutOf;
 
+    /// <summary>
+    /// Makes current sound (and its direct followers) play in parallel to the rest of the sequence,
+    /// so that other sounds placed after it at design-time will not wait at runtime but play according to their schedule.
+    /// </summary>
+    public bool FireAndForget { get; set; }
+
     public abstract Sequence ApplyStrategy(Sound leader);
 
     public override string? ToString() => DelayAfterLeader > 0 ? $"{DelayAfterLeader:0000}:{base.ToString()}" : base.ToString();

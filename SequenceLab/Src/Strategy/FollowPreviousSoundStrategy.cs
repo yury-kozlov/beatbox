@@ -9,7 +9,7 @@ public class FollowPreviousSoundStrategy : AbstractStrategy
     public override Sequence ApplyStrategy(Sound leader)
     {
         var delay = DelayAfterLeader;
-        var previousSound = leader.PreviousSounds?.LastOrDefault();
+        var previousSound = GetPreviousSound(leader);
         if (previousSound is not null)
         {
             // make delay relative to the previous sound (instead of being relative to the leader)
@@ -33,6 +33,13 @@ public class FollowPreviousSoundStrategy : AbstractStrategy
         }
 
         return new Sequence() { leader };
+    }
+
+    private static Sound? GetPreviousSound(Sound currentSound)
+    {
+        // a sound with FireAndForget strategy can't be followed unless it's direct leader of the current sound
+        bool canBeFollowed(Sound s) => !s.Strategy.FireAndForget || s == currentSound.Leader;
+        return currentSound.PreviousSounds?.LastOrDefault(canBeFollowed);
     }
 
     internal AbstractStrategy ToPlayOnceStrategy() => new PlayOnceStrategy().CopyBasePropertiesFrom(this);
