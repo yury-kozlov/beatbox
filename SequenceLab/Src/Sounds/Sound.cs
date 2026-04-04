@@ -135,6 +135,12 @@ public record Sound
         return this;
     }
 
+    public Sound MoveFollowerToTheEnd(Sound follower)
+    {
+        Followers.Remove(follower);
+        return WithFollower(follower);
+    }
+
     /// <summary>
     /// Clones current sound.
     /// NOTE: The name can't be Clone because it will conflict with Record's built-in method.

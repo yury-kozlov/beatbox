@@ -3,11 +3,14 @@ namespace Beater;
 
 public class SequenceDesign
 {
+    private SequenceDesignInitializer _initializer;
+
     public SequenceDesign(string name)
     {
         Name = name;
-        Leader = new SequenceStart(name) { Sequence = this };
         SequenceEnd = new SequenceEnd(this);
+        _initializer = new SequenceDesignInitializer(this);
+        Leader = new SequenceStart(name) { Sequence = this };
     }
 
     /// <summary>
@@ -18,18 +21,8 @@ public class SequenceDesign
     public Sound Leader
     {
         get;
-        set
-        {
-            if (value is SequenceStart)
-            {
-                // if it's initial call from ctor the value is already SequenceStart, no need to enforce it:
-                field = value;
-                return;
+        set => field = _initializer.SetLeader(value);
             }
-            field = EnforceSequenceStartLeader(value);
-            UpdateLoopDuration(value.Strategy); // if leader is a loop, we can use it's interval to calculate total sequence duration
-        }
-    }
 
     /// <summary>
     /// First sound simplifies access to the first actual sound of the sequence, because Leader of a sequence is always a SequenceStart sound.
@@ -39,64 +32,14 @@ public class SequenceDesign
     public AbstractStrategy Strategy
     {
         get => Leader.Strategy;
-        set
-        {
-            Leader.Strategy = value;
-            UpdateLoopInterval();
-            UpdateLoopDuration(value);
-        }
-    }
-
-    /// <summary>
-    /// Initializes interval of sequence loop when sequence strategy was changed or duration of the sequence was changed.
-    /// NOTE: this is a shortcut path to omit specifying explicit Interval in repeated sequences (e.g. <see cref="PrimitiveSequences.Trapezoid{TSound}"/>)
-    /// when duration of the underlying sequence is known and we just need to calculate total repetition time:
-    /// in this case sequence loop interval will be automatically set as duration of the original sequence
-    /// </summary>
-    private void UpdateLoopInterval()
-    {
-        if (Strategy is RepeatStrategy sequenceLoop)
-        {
-            if (Duration > 0)
-            {
-                // NOTE: sequence Duration includes all iterations of a loop
-                sequenceLoop.Interval = sequenceLoop.Count > 0 ? Duration / sequenceLoop.Count : Duration;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Updates duration (as a result of strategy change, or leader initialization).
-    /// NOTE: change in sequence duration also triggers re-calculation of loop interval.
-    /// </summary>
-    private void UpdateLoopDuration(AbstractStrategy leaderStrategy)
-    {
-        if (leaderStrategy is RepeatStrategy repeatStrategy)
-        {
-            if (repeatStrategy.Count > 0 && repeatStrategy.Interval > 0)
-            {
-                // if sequence is repeated, it's duration should be multipled by number of iterations:
-                var sequenceLoops = (Strategy as RepeatStrategy)?.Count ?? 1;
-                Duration = repeatStrategy.Interval * repeatStrategy.Count * sequenceLoops;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Force actual leader to be a follower of "SequenceStart" sound.
-    /// </summary>
-    private Sound EnforceSequenceStartLeader(Sound leader)
-    {
-        return Leader
-            .WithFollower(leader.WithSequenceIfMissing(this))
-            .WithFollower(SequenceEnd);
+        set => _initializer.SetStrategy(value);
     }
 
     /// <summary>
     /// Assigns delay to the underlying strategy shifting the whole sequence.
     /// NOTE: if sound strategy property is initialized inside the same block after delay is set, the current delay value will be ignored.
     /// </summary>
-    public int DelayAfterLeader { set { Strategy.DelayAfterLeader = value; } }
+    public int DelayAfterLeader { set => _initializer.SetDelayAfterLeader(value); }
 
     /// <summary>
     /// In milliseconds (represents full loop of a sequence including ending space and all iterations).
@@ -112,8 +55,7 @@ public class SequenceDesign
         set
         {
             field = value;
-            SequenceEnd.InitStrategy(); // recalculate sequence end strategy because it depends on duration
-            UpdateLoopInterval();
+            _initializer.OnDurationSet();
         }
     }
 
@@ -128,7 +70,12 @@ public class SequenceDesign
     /// </summary>
     public string Name;
 
-    private SequenceEnd SequenceEnd;
+    /// <summary>
+    /// WARNING: do not use this during sequence generation — each sound is cloned with an updated timestamp,
+    /// so in repeated sequences this instance will not correspond to the current iteration's SequenceEnd.
+    /// Use <see cref="SequenceStart.GetSequenceEnd"/> instead to locate the correct instance dynamically.
+    /// </summary>
+    public SequenceEnd SequenceEnd { get; private set; }
 
     private List<SequenceDesign> Sequences = [];
 
@@ -141,7 +88,8 @@ public class SequenceDesign
     internal SequenceDesign Append(SequenceDesign next)
     {
         Duration += next.Duration;
-        UpdateLoopDuration(Strategy);
+
+        _initializer.UpdateLoopDuration(Strategy);
 
         Sequences.Add(next);
 
@@ -150,7 +98,7 @@ public class SequenceDesign
             // if the added sequence is the first one or it has default strategy
             // just add it as the next follower (it will be played after all previous sequences)
             Leader.WithFollower(next.Leader);
-            UpdateSequenceEnd();
+            Leader.MoveFollowerToTheEnd(SequenceEnd);
             return this;
         }
 
@@ -164,7 +112,7 @@ public class SequenceDesign
         // this is not supposed to happen:
         Console.WriteLine($"Appended sequence {next.Name} will be played in parallel instead if sequentially because sequence end of the previous sequence was not found");
         Leader.WithFollower(next.Leader);
-        UpdateSequenceEnd();
+        Leader.MoveFollowerToTheEnd(SequenceEnd);
         return this;
     }
 
@@ -190,15 +138,8 @@ public class SequenceDesign
         }
 
         Leader.WithFollower(next.Leader);
-        UpdateSequenceEnd();
+        Leader.MoveFollowerToTheEnd(SequenceEnd);
         return this;
-    }
-
-    private void UpdateSequenceEnd()
-    {
-        // make sure SequenceEnd is the last follower:
-        Leader.Followers.Remove(SequenceEnd);
-        Leader.WithFollower(SequenceEnd);
     }
 
     public override string ToString() => Name ?? base.ToString() ?? "";

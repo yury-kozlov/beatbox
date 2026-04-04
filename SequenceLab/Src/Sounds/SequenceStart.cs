@@ -11,9 +11,9 @@ public record SequenceStart : NoSound
     }
 
     /// <summary>
-    /// NOTE: We don't store SequenceEnd as part of SequenceDesign 
-    /// (but rather search for it dynamically by sequence-start) because when generating actual sequence
-    /// each sound is cloned with updated timestamp. In repeated sequences it will be impossible to always work 
+    /// Returns SequenceEnd by searching dynamically rather than using <see cref="SequenceDesign.SequenceEnd"/> directly,
+    /// because during sequence generation each sound is cloned with an updated timestamp —
+    /// In repeated sequences it will be impossible to always work 
     /// on the same instance of a SequenceEnd sound shared between different iterations.
     /// </summary>
     public SequenceEnd GetSequenceEnd() => (SequenceEnd)Followers.Last(s => s is SequenceEnd);
