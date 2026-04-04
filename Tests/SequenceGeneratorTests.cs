@@ -2,7 +2,7 @@ using Beater;
 
 namespace Tests;
 
-public class SequenceGeneratorTests
+public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
 {
     [Fact]
     public void PlayOnceStrategy_ReturnExpected()

@@ -2,7 +2,7 @@ using Beater;
 
 namespace Tests;
 
-public class PrimitiveSequencesTests
+public class PrimitiveSequencesTests(ITestOutputHelper output) : TestBase(output)
 {
     [Fact]
     public void Trapezoid_SingleIteration_ReturnExpected()

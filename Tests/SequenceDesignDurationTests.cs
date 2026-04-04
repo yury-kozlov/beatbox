@@ -2,7 +2,7 @@ using Beater;
 
 namespace Tests;
 
-public class SequenceDesignDurationTests
+public class SequenceDesignDurationTests(ITestOutputHelper output) : TestBase(output)
 {
     [Fact]
     public void Duration_StrategyFirst_ThenLeader_BothRepeat_IsCalculatedCorrectly()

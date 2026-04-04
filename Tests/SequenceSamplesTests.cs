@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Tests;
 
-public class SequenceSamplesTests
+public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
 {
     [Fact]
     public void James_Shinra_Gritty_ReturnExpected()

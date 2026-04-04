@@ -2,7 +2,7 @@ using Beater;
 
 namespace Tests;
 
-public class CombineSequencesTests
+public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
 {
     [Fact]
     public void Combine_FirstSequenceOnly_BehavesLikeAppend()

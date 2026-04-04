@@ -2,7 +2,7 @@ using Beater;
 
 namespace Tests;
 
-public class AppendSequencesTests
+public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
 {
     [Fact]
     public void AppendSequences_3Sequences_WithoutExplicitDuration_ReturnJoined()

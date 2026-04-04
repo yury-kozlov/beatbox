@@ -2,7 +2,7 @@ using Beater;
 
 namespace Tests;
 
-public class SequenceSoundSorterTests
+public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(output)
 {
     public static IEnumerable<object[]> GetTestData()
     {

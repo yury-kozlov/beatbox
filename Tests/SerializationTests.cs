@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-public class SerializationTests
+public class SerializationTests(ITestOutputHelper output) : TestBase(output)
 {
     [Fact]
     public void SerializeAndDeserialize_ReturnExpected()

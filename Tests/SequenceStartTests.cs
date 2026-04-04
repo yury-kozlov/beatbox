@@ -2,7 +2,7 @@ using Beater;
 
 namespace Tests;
 
-public class SequenceStartTests
+public class SequenceStartTests(ITestOutputHelper output) : TestBase(output)
 {
     [Fact]
     public void GetSequenceEnd_WithExplicitDuration_ReturnsSequenceEndWithCorrectDelay()
