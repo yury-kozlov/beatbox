@@ -1,3 +1,8 @@
+// Console.SetOut is global state — running test classes in parallel causes race conditions
+// where one class's OutputHelperWriter is overwritten by another, then xUnit throws
+// "There is no currently active test." when code calls Console.WriteLine after the owning test finishes.
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
+
 namespace Tests;
 
 /// <summary>
