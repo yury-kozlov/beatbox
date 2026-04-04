@@ -15,6 +15,17 @@ public static class TestExtensions
     /// </summary>
     public static void BeExactSequence(this StringCollectionAssertions should, IEnumerable<string> expected)
     {
-        should.BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        try
+        {
+            should.BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        }
+        catch (Exception ex)
+        {
+            // print out actual timestamps for easier debugging:
+            var actual = "\"" + string.Join("\",\r\n\"", should.Subject) + "\"";
+            Console.WriteLine($"{Environment.NewLine}Actual:{Environment.NewLine}{actual}");
+
+            throw;
+        }
     }
 }
