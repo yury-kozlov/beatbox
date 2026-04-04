@@ -23,6 +23,8 @@ public class RepeatStrategy : AbstractStrategy
     /// </summary>
     public string? SilenceEveryXSoundOutOf;
 
+    public bool IsInitialized => Count > 0 && Interval > 0;
+
     private int _previousIterval;
 
     public override Sequence ApplyStrategy(Sound leader)
