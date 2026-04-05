@@ -66,14 +66,18 @@ public class SequenceGenerator
             allFollowers.AddRange(nestedFollowers);
         }
 
-        foreach (var nestedFollower in allFollowers)
+        foreach (var follower in allFollowers)
         {
             // shift timestamp relatively to the leader (so that each sound will have an absolute position from the beginning of the whole sequence):
-            nestedFollower.Timestamp += leader.Timestamp;
-            SetIterationPath(leader, nestedFollower);
+            follower.Timestamp += leader.Timestamp;
+            SetIterationPath(leader, follower);
         }
 
-        RemoveSoundsExceedingSequenceDuration(leader, allFollowers);
+        if (leader.Strategy is RepeatStrategy)
+        {
+            // we can't allow sounds to fall out of the loop
+            RemoveSoundsExceedingLoop(leader, allFollowers);
+        }
 
         return allFollowers;
     }
@@ -95,16 +99,17 @@ public class SequenceGenerator
         follower.Iteration = $"{leader.Iteration}.{follower.Iteration}";
     }
 
-    private static void RemoveSoundsExceedingSequenceDuration(Sound leader, Sequence seq)
+    /// <summary>
+    /// Any sounds exceeding total duration of repeated sequence are removed here.
+    /// </summary>
+    private static void RemoveSoundsExceedingLoop(Sound leader, Sequence seq)
     {
-        var unmatchedSequence = seq.Where(HasOtherSequenceDuration(leader)).ToList();
-        if (unmatchedSequence.HasItems())
+        var repeatStrategy = (RepeatStrategy)leader.Strategy;
+        var maxAllowedTimestamp = leader.Timestamp + repeatStrategy.Interval;
+        var outliers = seq.Where(s => s.Timestamp > maxAllowedTimestamp).ToList();
+        foreach (var sound in outliers)
         {
-            var maxAllowedTimestamp = leader.Timestamp + Math.Max(leader.Sequence!.Duration, leader.Sequence!.AutoDuration);
-            foreach (var sound in unmatchedSequence)
-            {
-                if (sound.Timestamp > maxAllowedTimestamp)
-                {
+            Console.WriteLine($"Trimming sound '{sound.Name}' at {sound.Timestamp}ms as it exceeds parent loop interval of {repeatStrategy.Interval}ms started at {leader.Timestamp}");
                     seq.Remove(sound);
 
                     if (sound is SequenceEnd sequenceEnd)
@@ -112,20 +117,13 @@ public class SequenceGenerator
                         // add indication that sequence was trimmed (instead of previously deleted SequenceEnd)
                         seq.Add(new SequenceEndTrimmed(sequenceEnd) { Timestamp = maxAllowedTimestamp });
                     }
+            else if (sound is LoopEnd loopEnd)
+            {
+                // add indication that the loop was trimmed (instead of previously deleted LoopEnd)
+                seq.Add(new LoopEndTrimmed(loopEnd) { Timestamp = maxAllowedTimestamp });
                 }
             }
         }
-    }
-
-    /// <summary>
-    /// A delegate for checking if sound's sequence has a different duration than its leader's sequence.
-    /// </summary>
-    private static Func<Sound, bool> HasOtherSequenceDuration(Sound leader) => sound =>
-    {
-        var leaderSequenceDuration = Math.Max(leader.Sequence.Duration, leader.Sequence.AutoDuration);
-        var followerSequenceDuration = Math.Max(sound.Sequence.Duration, sound.Sequence.AutoDuration);
-        return leaderSequenceDuration > 0 && followerSequenceDuration > 0 && leaderSequenceDuration != followerSequenceDuration;
-    };
 
     private static bool IsSilenced(Sound sound)
     {

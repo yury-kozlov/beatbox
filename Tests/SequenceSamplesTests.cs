@@ -606,39 +606,39 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "0830:k",
             "1185:ts1",
             "1660:ts1",
+            "1900:end-of-loop-trimmed", // ts1 loop end timestamp adjusted to the current iteration (1900 instead of 2135)
             "1900:sequence-end-Noe_Solange_Home_DJCounselling",
             "1900:sequence-start-Noe_Solange_Home_DJCounselling",
             "1900:k",
-            "2135:end-of-loop",
             "2135:ts1",
             "2375:k",
             "2610:ts1",
             "2730:k",
             "3085:ts1",
             "3560:ts1",
+            "3800:end-of-loop-trimmed", // adjusted to the current iteration (3800 instead of 4035)
             "3800:sequence-end-Noe_Solange_Home_DJCounselling",
             "3800:sequence-start-Noe_Solange_Home_DJCounselling",
             "3800:k",
-            "4035:end-of-loop",
             "4035:ts1",
             "4275:k",
             "4510:ts1",
             "4630:k",
             "4985:ts1",
             "5460:ts1",
+            "5700:end-of-loop-trimmed", // adjusted to the current iteration (5700 instead of 5935)
             "5700:sequence-end-Noe_Solange_Home_DJCounselling",
             "5700:sequence-start-Noe_Solange_Home_DJCounselling",
             "5700:k",
-            "5935:end-of-loop",
             "5935:ts1",
             "6175:k",
             "6410:ts1",
             "6530:k",
             "6885:ts1",
             "7360:ts1",
+            "7600:end-of-loop-trimmed", // adjusted to the current iteration (7600 instead of 7835)
             "7600:end-of-sequence-loop",
             "7600:sequence-end-" + sequence.Name,
-            "7835:end-of-loop",
         ];
 
         // act
@@ -654,43 +654,21 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
     public void Minimal_SlowBeat1_ReturnExpected()
     {
         // arrange
-        var sequence = Minimal.SlowBeat1WithRepeats();
+        var sequence = Minimal.SlowBeat1WithoutRepeats();
         string[] expected = [
             "0000:sequence-start-" + sequence.Name,
-            "0000:metronome",
             "0000:k",
             "0330:k",
-            "0660:end-of-loop",
             "0660:s",
             "1610:k",
             "1940:s",
-            "2550:metronome",
             "2550:k",
             "2880:k",
-            "3210:end-of-loop",
             "3210:s",
             "3710:k",
             "4160:k",
             "4490:s",
-            "4610:end-of-loop",
-            "5100:metronome",
-            "5100:k",
-            "5430:k",
-            "5760:end-of-loop",
-            "5760:s",
-            "6710:k",
-            "7040:s",
-            "7650:metronome",
-            "7650:k",
-            "7980:k",
-            "8310:end-of-loop",
-            "8310:s",
-            "8810:k",
-            "9260:k",
-            "9590:s",
-            "9710:end-of-loop",
-            "10200:end-of-loop",
-            "10200:sequence-end-" + sequence.Name,
+            "5100:sequence-end-" + sequence.Name,
         ];
 
         // act
@@ -699,6 +677,6 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
 
         // assert
         actualTimestamps.Should().BeExactSequence(expected);
-        sequence.AutoDuration.Should().Be(10200);
+        sequence.AutoDuration.Should().Be(5100);
     }
 }

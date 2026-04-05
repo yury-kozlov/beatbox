@@ -32,6 +32,8 @@ public abstract class AbstractStrategy
     /// The sound will be played every X-th time within repeated range, for example:
     ///  3/4 - each 3rd time will be played out of every 4.
     /// NOTE: this counter is related to the strategy, not to the sound itself.
+    /// The counter is checked every time the sound is generated in a sequence, the value is propagated on each iteration 
+    /// (so in case of nested loops, number of checks may reach the total number of loops multiplied by number of iterations in each loop).
     /// </summary>
     public string? PlayEveryXOutOf;
 

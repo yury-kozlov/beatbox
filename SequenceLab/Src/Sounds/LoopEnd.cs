@@ -12,7 +12,7 @@ public record LoopEnd : NoSound
         FriendlyName = IsSequenceLoop ? "end-of-sequence-loop" : "end-of-loop";
     }
 
-    public bool IsSequenceLoop { get; }
+    public bool IsSequenceLoop { get; protected set; }
 
     public bool FireAndForget { get => Strategy.FireAndForget; set => Strategy.FireAndForget = value; }
 

@@ -1,4 +1,4 @@
-﻿
+
 namespace Beater;
 
 public class SequenceDesign
@@ -22,7 +22,7 @@ public class SequenceDesign
     {
         get;
         set => field = _initializer.SetLeader(value);
-            }
+    }
 
     /// <summary>
     /// First sound simplifies access to the first actual sound of the sequence, because Leader of a sequence is always a SequenceStart sound.
@@ -42,9 +42,9 @@ public class SequenceDesign
     public int DelayAfterLeader { set => _initializer.SetDelayAfterLeader(value); }
 
     /// <summary>
-    /// In milliseconds (represents full loop of a sequence including ending space and all iterations).
+    /// Full loop of a sequence (in milliseconds) including ending space and all iterations.
     /// Duration of sequence should be known ahead for each predefined sequence if it's going to be played in loop
-    /// (otherwise we will not be able to place next iteration at correct timing). This is especially important for sequences 
+    /// (otherwise we will not be able to place next iteration at correct timing). This is especially important for sequences
     /// without loops since we will not be able to automatically calculate duration of such sequences based on their strategy.
     /// Duration is also required when appending one sequence to another (otherwise we will not know at which point to start the second sequence).
     /// - May be initialized at design time or based on RepeatStrategy parameters.
@@ -77,19 +77,24 @@ public class SequenceDesign
     /// </summary>
     public SequenceEnd SequenceEnd { get; private set; }
 
+    public bool IsEmpty => Sequences.Count == 0;
+
     private List<SequenceDesign> Sequences = [];
 
     public static SequenceDesign? FromJson(string json) => Serialization.FromJson<SequenceDesign>(json);
 
     /// <summary>
-    /// Appends new sequence to the end of the current one.
-    /// NOTE: duration of the current sequence is increased after adding the new one.
+    /// Appends new sequence to the end of the current one (to the followers of SequenceEnd of the last added sequence).
+    /// NOTE:
+    ///  - Duration of the current sequence is increased after adding the new one.
+    ///    Appending doesn't mean the new sequence will be limited to the duration of the base,
+    ///    but on the opposite: base duration will be increased to accomodate the new sequence.
+    ///  - If base sequence is repeated and we append to it - it means we will append to each iteration of this sequence
+    ///    also increasing total duration of the sequence
     /// </summary>
     internal SequenceDesign Append(SequenceDesign next)
     {
-        Duration += next.Duration;
-
-        _initializer.UpdateLoopDuration(Strategy);
+        _initializer.UpdateDurationOnAppend(Strategy, next.Duration);
 
         Sequences.Add(next);
 
@@ -122,7 +127,7 @@ public class SequenceDesign
     /// </summary>
     internal SequenceDesign Combine(SequenceDesign next)
     {
-        if (Sequences.Count == 0)
+        if (IsEmpty)
         {
             Append(next);
             return this;

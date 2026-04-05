@@ -70,20 +70,14 @@ public class Minimal
                     {
                         Strategy = new RepeatStrategy { Count = 2, Interval = 250 },
                         Followers = [
-                            new Snare {
-                                Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 2 },
-                                Followers = [
-                                    new Kick
-                                    {
-                                        Strategy = new RepeatStrategy { DelayAfterLeader = 585, Count = 2, Interval = 125 },
-                                        Followers = [
-                                            new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 2 } }
-                                        ]
-                                    }
-                                ]
-                            }
+                            new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 2 } }
                         ]
                     },
+                    new Kick
+                    {
+                        Strategy = new RepeatStrategy { DelayAfterLeader = 1085, Count = 2, Interval = 125 },
+                    },
+                    new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 1460 } },
                     new Sound("ts1") { Strategy = new RepeatStrategy { DelayAfterLeader = 85, Interval = 500, Count = 4 },
                         Followers = [
                             new Sound("ts2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 125, PlayEveryXOutOf = "2/4" } },
@@ -91,40 +85,6 @@ public class Minimal
                     },
                 ]
             },
-        };
-    }
-
-    internal static SequenceDesign SlowBeat1WithRepeats()
-    {
-        return new SequenceDesign(nameof(SlowBeat1WithRepeats))
-        {
-            Leader = new Metronome()
-            {
-                Strategy = new RepeatStrategy { Count = 4, Interval = 2550 },
-                Followers = [
-                    new Kick
-                    {
-                        Strategy = new RepeatStrategy { Count = 2, Interval = 330 },
-                        Followers = [
-                            new Snare {
-                                Strategy = new PlayOnceStrategy { DelayAfterLeader = 330, PlayEveryX = 2 },
-                                Followers = [
-                                    new Kick
-                                    {
-                                        Strategy = new PlayOnceStrategy { DelayAfterLeader = 950, PlayEveryXOutOf="1/2" },
-                                        Followers = [ new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330 }}],
-                                    },
-                                    new Kick
-                                    {
-                                        Strategy = new RepeatStrategy { DelayAfterLeader = 500, PlayEveryXOutOf="2/2", Count = 2, Interval = 450 },
-                                        Followers = [ new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 330,  PlayEveryX = 2 } }],
-                                    }
-                                ]
-                            },
-                       ]
-                    },
-                ]
-            }
         };
     }
 

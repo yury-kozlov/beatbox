@@ -66,6 +66,21 @@ public class SequenceDesignInitializer
         }
     }
 
+    public void UpdateDurationOnAppend(AbstractStrategy strategy, int nextDuration)
+    {
+        if (_design.IsEmpty && strategy is RepeatStrategy repeatStrategy && repeatStrategy.IsInitialized)
+        {
+            // if base sequence is empty but it has predefined loop intervals, we need to expand the loop interval to accomodate the appended sequence
+            repeatStrategy.Interval = Math.Max(repeatStrategy.Interval, nextDuration);
+            _design.Duration = repeatStrategy.Interval * repeatStrategy.Count;
+            return;
+        }
+        
+        // accumulate total duration
+        _design.Duration += nextDuration;
+        UpdateLoopDuration(strategy);
+    }
+
     public void SetDelayAfterLeader(int value)
     {
         _design.Strategy.DelayAfterLeader = value;

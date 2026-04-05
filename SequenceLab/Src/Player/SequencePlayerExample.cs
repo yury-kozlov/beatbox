@@ -31,7 +31,7 @@ internal class SequencePlayerExample : IDisposable
         var seq2 = SequenceGenerator.Generate(Minimal.BrokenBeat1());
         await _transport.PlayRepeated(seq2);
 
-        var seq3 = SequenceGenerator.Generate(Minimal.SlowBeat1WithRepeats());
+        var seq3 = SequenceGenerator.Generate(Minimal.SlowBeat1WithoutRepeats());
         await _transport.PlayRepeated(seq3);
 
         Console.WriteLine("");

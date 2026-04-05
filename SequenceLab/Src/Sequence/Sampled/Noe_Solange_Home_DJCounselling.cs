@@ -36,7 +36,6 @@ public class Noe_Solange_Home_DJCounselling
             Leader = new Kick()
             {
                 Followers = [
-
                     new Snare1 { DelayAfterLeader = 235, Strategy = new RepeatStrategy { FireAndForget = true, Interval = 475, Count = 4 } },
                     new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 475 } },
                     new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 355 } },

@@ -145,7 +145,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
     {
         // this test assumes that if some sequence has explicit duration,
         // then any new sound added to it either as an individual sound or as part of another sequence
-        // should not exceed total duration of the first sequence.
+        // should not exceed total duration of any of it parent's repeat loops.
 
         // arrange
         var seq1 = new SequenceDesign("kicks")
@@ -168,7 +168,14 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
         seq1.Leader.Followers.Add(seq2.Leader);
 
         // act
-        var sequence = new SequenceDesign("main");
+        var sequence = new SequenceDesign("main")
+        {
+            Strategy = new RepeatStrategy
+            {
+                Count = 1,
+                Interval = 100, // interval will be increased to 200 after appending, so the loop will be long enough to fit both sequences without trimming
+            }
+        };
         sequence.Append(seq1);
         var actual = SequenceGenerator.Generate(sequence);
         var actualTimestamps = actual.GetTimestamps();
@@ -179,13 +186,14 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0000:k",
             "0100:k",
             "0150:k",
+            "0200:end-of-sequence-loop",
             "0200:sequence-end-kicks",
             "0200:sequence-start-snares",
             "0200:s",
             // "0360:s", // this one exceeds first sequence duration and is trimmed
             // "0500:sequence-end-snares", // this one exceeds first sequence duration and is trimmed
-            "0200:sequence-trimmed-snares", // replaced sequence-end
             "0200:sequence-end-main",
+            "0200:sequence-trimmed-snares", // replaced sequence-end
         ];
 
         // assert
@@ -193,7 +201,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
     }
 
     [Fact]
-    public void AppendTwoSequencesWithRepeatStrategy_ReturnExpected()
+    public void AppendTwoSequences_PlayOneAfterEachOther()
     {
         /// this test checks that if a sequence without <see cref="FollowPreviousSoundStrategy"/> is appended to another sequence
         /// they will be played after each other and not in parallel
@@ -202,7 +210,6 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
         {
             XInterval = 500,
             YInterval = 700,
-            Strategy = new RepeatStrategy { Count = 1 },
         };
 
         var square = new PrimitiveSequences.Square<Snare>()
@@ -225,8 +232,8 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0500:k",
             "1200:k",
             "1900:k",
-            "2400:end-of-sequence-loop",
             "2400:sequence-end-trapezoid",
+
             "2400:sequence-start-square",
             "2400:s",
             "3000:s",
