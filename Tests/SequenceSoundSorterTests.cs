@@ -369,13 +369,13 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         {
             var main = new SequenceDesign("main");
             yield return new object[] {
-                // input
+                // input — LoopEnd first (low insertion index), regular sounds next, SequenceEnd last (highest index, as in real generation)
                 new Sequence()
                 {
-                    new SequenceEnd(main) { Timestamp = 0, Sequence = main },
                     new LoopEnd(new SequenceStart("main")) { Timestamp = 0, Sequence = main },
                     new Kick() { Timestamp = 0 },
                     new Snare() { Timestamp = 0 },
+                    new SequenceEnd(main) { Timestamp = 0, Sequence = main },
                 },
                 // expected
                 new string[] {
