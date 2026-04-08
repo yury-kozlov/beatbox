@@ -94,7 +94,7 @@ public class SequenceDesign
     /// </summary>
     internal SequenceDesign Append(SequenceDesign next)
     {
-        _initializer.UpdateDurationOnAppend(Strategy, next.Duration);
+        _initializer.AppendDuration(next.Duration);
 
         Sequences.Add(next);
 

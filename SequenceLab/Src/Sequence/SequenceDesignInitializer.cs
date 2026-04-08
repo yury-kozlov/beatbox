@@ -1,3 +1,4 @@
+
 namespace Beater;
 
 public class SequenceDesignInitializer
@@ -9,23 +10,38 @@ public class SequenceDesignInitializer
         _design = design;
     }
 
-    public Sound SetLeader(Sound value)
+    public Sound SetLeader(Sound leader)
     {
-        if (value is SequenceStart)
+        if (leader is SequenceStart)
         {
             // if it's initial call from ctor the value is already SequenceStart, no need to enforce it:
-            return value;
+            return leader;
         }
-        var leader = EnforceSequenceStartLeader(value);
-        UpdateLoopDuration(value.Strategy); // if leader is a loop, we can use it's interval to calculate total sequence duration
-        return leader;
+        var newLeader = EnforceSequenceStartLeader(leader);
+        UpdateLoopDuration(leader.Strategy); // if leader is a loop, we can use it's interval to calculate total sequence duration
+        return newLeader;
     }
 
-    public void SetStrategy(AbstractStrategy value)
+    public void SetStrategy(AbstractStrategy strategy)
     {
-        _design.Leader.Strategy = value;
+        var initialDuration = _design.Duration;
+        _design.Leader.Strategy = strategy;
         UpdateLoopInterval();
-        UpdateLoopDuration(value);
+
+        if (initialDuration > 0 && strategy is RepeatStrategy outer && outer.Count > 0)
+        {
+            // Inner loop duration already established; scale by outer loop count
+            _design.Duration = initialDuration * outer.Count;
+        }
+        else if (initialDuration == 0 && strategy is RepeatStrategy self && self.IsInitialized)
+        {
+            // No inner loop; set duration directly from strategy's own Interval * Count
+            _design.Duration = self.Interval * self.Count;
+        }
+        else
+        {
+            UpdateLoopDuration(strategy);
+        }
     }
 
     public void OnDurationSet()
@@ -56,7 +72,7 @@ public class SequenceDesignInitializer
     /// Updates duration (as a result of strategy change, or leader initialization).
     /// NOTE: change in sequence duration also triggers re-calculation of loop interval.
     /// </summary>
-    public void UpdateLoopDuration(AbstractStrategy leaderStrategy)
+    private void UpdateLoopDuration(AbstractStrategy leaderStrategy)
     {
         if (leaderStrategy is RepeatStrategy repeatStrategy && repeatStrategy.IsInitialized)
         {
@@ -66,19 +82,19 @@ public class SequenceDesignInitializer
         }
     }
 
-    public void UpdateDurationOnAppend(AbstractStrategy strategy, int nextDuration)
+    public void AppendDuration(int appendedDuration)
     {
-        if (_design.IsEmpty && strategy is RepeatStrategy repeatStrategy && repeatStrategy.IsInitialized)
+        if (_design.IsEmpty && _design.Strategy is RepeatStrategy repeatStrategy && repeatStrategy.IsInitialized)
         {
             // if base sequence is empty but it has predefined loop intervals, we need to expand the loop interval to accomodate the appended sequence
-            repeatStrategy.Interval = Math.Max(repeatStrategy.Interval, nextDuration);
+            repeatStrategy.Interval = Math.Max(repeatStrategy.Interval, appendedDuration);
             _design.Duration = repeatStrategy.Interval * repeatStrategy.Count;
             return;
         }
         
         // accumulate total duration
-        _design.Duration += nextDuration;
-        UpdateLoopDuration(strategy);
+        _design.Duration += appendedDuration;
+        UpdateLoopDuration(_design.Strategy);
     }
 
     public void SetDelayAfterLeader(int value)
