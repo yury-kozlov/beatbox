@@ -2,7 +2,7 @@ using Beater;
 
 namespace Tests;
 
-public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase(output)
+public class SequenceDesignTests(ITestOutputHelper output) : TestBase(output)
 {
     // -------------------------------------------------------------------------
     // SetLeader — EnforceSequenceStartLeader
@@ -11,41 +11,22 @@ public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase
     [Fact]
     public void SetLeader_AlwaysWrapsActualLeaderInSequenceStart()
     {
-        // The Leader property of SequenceDesign is always a SequenceStart,
-        // even when a plain sound is assigned.
+        // arrange / act
         var sequence = new SequenceDesign("test")
         {
             Leader = new Kick()
         };
 
-        sequence.Leader.Should().BeOfType<SequenceStart>();
-    }
-
-    [Fact]
-    public void SetLeader_ActualSoundBecomesFirstFollowerOfSequenceStart()
-    {
-        var sequence = new SequenceDesign("test")
-        {
-            Leader = new Kick()
-        };
-
-        sequence.FirstSound.Should().BeOfType<Kick>();
-    }
-
-    [Fact]
-    public void SetLeader_SequenceEndIsLastFollowerOfSequenceStart()
-    {
-        var sequence = new SequenceDesign("test")
-        {
-            Leader = new Kick()
-        };
-
-        sequence.Leader.Followers.Last().Should().BeOfType<SequenceEnd>();
+        // assert
+        sequence.Leader.Should().BeOfType<SequenceStart>(); // Leader of SequenceDesign is always a SequenceStart, even when a plain sound is assigned
+        sequence.FirstSound.Should().BeOfType<Kick>(); // actual sound becomes first follower of SequenceStart
+        sequence.Leader.Followers.Last().Should().BeOfType<SequenceEnd>(); // Sequence end is last follower of SequenceStart
     }
 
     [Fact]
     public void SetLeader_SequenceEndIsLastFollower_AfterMultipleFollowers()
     {
+        // arrange / act
         var sequence = new SequenceDesign("test")
         {
             Leader = new Kick()
@@ -58,33 +39,34 @@ public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase
             }
         };
 
+        // assert
         sequence.Leader.Followers.Last().Should().BeOfType<SequenceEnd>();
     }
 
     [Fact]
     public void SetLeader_AssignsSequenceToLeaderAndFollowers()
     {
-        // WithSequenceIfMissing should propagate sequence reference down to followers.
+        // arrange
         var kick = new Kick
         {
             Followers = [new Snare()]
         };
 
+        // act — WithSequenceIfMissing should propagate sequence reference down to followers
         var sequence = new SequenceDesign("test")
         {
             Leader = kick
         };
 
-        // The actual leader sound (first follower of SequenceStart) should have Sequence assigned.
+        // assert
         sequence.FirstSound!.Sequence.Should().Be(sequence);
-
-        // And so should its follower.
         sequence.FirstSound!.Followers[0].Sequence.Should().Be(sequence);
     }
 
     [Fact]
     public void SetLeader_GeneratesCorrectTimestamps_LeaderWithFollowers()
     {
+        // arrange
         var sequence = new SequenceDesign("test")
         {
             Leader = new Kick
@@ -104,8 +86,10 @@ public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase
             "0200:sequence-end-test",
         ];
 
+        // act
         var actualTimestamps = SequenceGenerator.Generate(sequence).GetTimestamps();
 
+        // assert
         actualTimestamps.Should().BeExactSequence(expected);
     }
 
@@ -116,42 +100,49 @@ public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase
     [Fact]
     public void SetStrategy_RepeatStrategy_SetsStrategyOnLeader()
     {
+        // arrange
         var strategy = new RepeatStrategy { Count = 3, Interval = 100 };
+
+        // act
         var sequence = new SequenceDesign("test")
         {
             Leader = new Kick { Strategy = new RepeatStrategy { Count = 3, Interval = 100 } },
             Strategy = strategy,
         };
 
+        // assert
         sequence.Strategy.Should().Be(strategy);
     }
 
     [Fact]
     public void SetStrategy_RepeatStrategy_UpdatesLoopInterval_WhenDurationIsKnown()
     {
-        // Duration is 600 (3 * 100 * 2). After assigning outer RepeatStrategy with Count=2,
-        // UpdateLoopInterval should set Interval = Duration / Count = 600 / 2 = 300.
-        var outerStrategy = new RepeatStrategy { Count = 2 };
+        // arrange
+        var repeatStrategy = new RepeatStrategy { Count = 2 };
+
+        // act — Duration is 600 (3 * 100 * 2). After assigning sequence RepeatStrategy with Count=2,
+        // UpdateLoopInterval sets Interval = Duration / Count = 600 / 2 = 300.
         var sequence = new SequenceDesign("test")
         {
             Leader = new Kick { Strategy = new RepeatStrategy { Count = 3, Interval = 100 } },
-            Strategy = outerStrategy,
+            Strategy = repeatStrategy,
         };
 
-        // Duration = 100 * 3 * 2 = 600; Interval = 600 / 2 = 300
-        outerStrategy.Interval.Should().Be(300);
+        // assert
+        repeatStrategy.Interval.Should().Be(300);
         sequence.Duration.Should().Be(600);
     }
 
     [Fact]
     public void SetStrategy_RepeatStrategy_WithNoLeaderRepeatStrategy_DoesNotChangeDuration()
     {
+        // arrange / act
         var sequence = new SequenceDesign("test")
         {
             Strategy = new RepeatStrategy { Count = 2 },
         };
 
-        // No inner loop: cannot auto-calculate interval, Duration stays 0
+        // assert — no inner loop: cannot auto-calculate interval, Duration stays 0
         sequence.Duration.Should().Be(0);
     }
 
@@ -162,13 +153,14 @@ public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase
     [Fact]
     public void OnDurationSet_SequenceEnd_UsesPlayOnceStrategy_WhenDurationIsPositive()
     {
+        // arrange / act
         var sequence = new SequenceDesign("test")
         {
             Duration = 500,
             Leader = new Kick()
         };
 
-        // SequenceEnd.InitStrategy should have produced a PlayOnceStrategy with DelayAfterLeader = 500
+        // assert — SequenceEnd.InitStrategy should have produced a PlayOnceStrategy with DelayAfterLeader = 500
         sequence.SequenceEnd.Strategy.Should().BeOfType<PlayOnceStrategy>();
         sequence.SequenceEnd.Strategy.DelayAfterLeader.Should().Be(500);
     }
@@ -176,37 +168,40 @@ public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase
     [Fact]
     public void OnDurationSet_SequenceEnd_UsesFollowPreviousSoundStrategy_WhenDurationIsZero()
     {
+        // arrange / act
         var sequence = new SequenceDesign("test")
         {
             Duration = 0,
             Leader = new Kick()
         };
 
+        // assert
         sequence.SequenceEnd.Strategy.Should().BeOfType<FollowPreviousSoundStrategy>();
     }
 
     [Fact]
-    public void OnDurationSet_UpdatesLoopInterval_WhenOuterRepeatStrategyExists()
+    public void OnDurationSet_UpdatesLoopInterval_WhenSequenceRepeatStrategyExists()
     {
-        var outerStrategy = new RepeatStrategy { Count = 2 };
+        // arrange
+        var repeatStrategy = new RepeatStrategy { Count = 2 };
         var sequence = new SequenceDesign("test")
         {
-            Strategy = outerStrategy,
+            Strategy = repeatStrategy,
         };
+        sequence.Duration.Should().Be(0); // Duration is 0 at this point
+        repeatStrategy.Interval.Should().Be(0); // Interval should remain 0
 
-        // Duration is 0 at this point; interval should remain 0
-        outerStrategy.Interval.Should().Be(0);
-
-        // Now set duration explicitly, triggering OnDurationSet → UpdateLoopInterval
+        // act — set duration explicitly, triggering duration and interval update
         sequence.Duration = 800;
 
-        // Interval = 800 / 2 = 400
-        outerStrategy.Interval.Should().Be(400);
+        // assert
+        repeatStrategy.Interval.Should().Be(400); // Interval should be derived from Duration = 800 / 2 = 400
     }
 
     [Fact]
     public void OnDurationSet_SequenceEnd_PlacedAtDuration_WhenGeneratingTimestamps()
     {
+        // arrange
         var sequence = new SequenceDesign("test")
         {
             Duration = 500,
@@ -220,8 +215,10 @@ public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase
             "0500:sequence-end-test",
         ];
 
+        // act
         var actualTimestamps = SequenceGenerator.Generate(sequence).GetTimestamps();
 
+        // assert
         actualTimestamps.Should().BeExactSequence(expected);
     }
 
@@ -232,41 +229,48 @@ public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase
     [Fact]
     public void UpdateLoopInterval_SetsIntervalToDurationDividedByCount_WhenRepeatStrategyAndDurationSet()
     {
-        var outerStrategy = new RepeatStrategy { Count = 4 };
+        // arrange
+        var repeatStrategy = new RepeatStrategy { Count = 4 };
+
+        // act
         var sequence = new SequenceDesign("test")
         {
-            Strategy = outerStrategy,
+            Strategy = repeatStrategy,
             Duration = 2000,
         };
 
-        // Interval = 2000 / 4 = 500
-        outerStrategy.Interval.Should().Be(500);
+        // assert
+        repeatStrategy.Interval.Should().Be(500); // Interval should be derived from Duration = 2000 / 4 = 500
     }
 
     [Fact]
     public void UpdateLoopInterval_SetsIntervalToDuration_WhenRepeatStrategyCountIsZero()
     {
-        // Count = 0: division guard uses Duration directly
-        var outerStrategy = new RepeatStrategy { Count = 0 };
+        // arrange — Count = 0: division guard uses Duration directly
+        var repeatStrategy = new RepeatStrategy { Count = 0 };
+
+        // act
         var sequence = new SequenceDesign("test")
         {
-            Strategy = outerStrategy,
+            Strategy = repeatStrategy,
             Duration = 1000,
         };
 
-        outerStrategy.Interval.Should().Be(1000);
+        // assert
+        repeatStrategy.Interval.Should().Be(1000);
     }
 
     [Fact]
     public void UpdateLoopInterval_DoesNotSetInterval_WhenStrategyIsNotRepeat()
     {
+        // arrange / act
         var sequence = new SequenceDesign("test")
         {
             Leader = new Kick(),
             Duration = 1000,
         };
 
-        // PlayOnceStrategy has no Interval — just confirm no exception and Duration stays set
+        // assert — PlayOnceStrategy has no Interval; confirm no exception and Duration stays set
         sequence.Duration.Should().Be(1000);
     }
 
@@ -277,48 +281,53 @@ public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase
     [Fact]
     public void UpdateLoopDuration_SetsDuration_WhenLeaderHasInitializedRepeatStrategy()
     {
+        // arrange / act
         var sequence = new SequenceDesign("test")
         {
             Leader = new Kick { Strategy = new RepeatStrategy { Count = 4, Interval = 250 } },
         };
 
-        // Duration = 250 * 4 * 1 (no outer loop) = 1000
-        sequence.Duration.Should().Be(1000);
+        // assert
+        sequence.Duration.Should().Be(1000); // derive total sequence duration from leader's repeat strategy: 250 * 4 = 1000
     }
 
     [Fact]
-    public void UpdateLoopDuration_MultipliesByOuterLoopCount_WhenBothStrategiesAreRepeat()
+    public void UpdateLoopDuration_MultipliesBySequenceLoopCount_WhenBothStrategiesAreRepeat()
     {
+        // arrange / act
         var sequence = new SequenceDesign("test")
         {
             Strategy = new RepeatStrategy { Count = 3 },
             Leader = new Kick { Strategy = new RepeatStrategy { Count = 2, Interval = 200 } },
         };
 
-        // Duration = 200 * 2 * 3 = 1200
-        sequence.Duration.Should().Be(1200);
+        // assert
+        sequence.Duration.Should().Be(1200); // derive total sequence duration from leader's repeat strategy and sequence loop: 200 * 2 * 3 = 1200
     }
 
     [Fact]
     public void UpdateLoopDuration_DoesNotChangeDuration_WhenLeaderHasNoRepeatStrategy()
     {
+        // arrange / act
         var sequence = new SequenceDesign("test")
         {
             Leader = new Kick(),
         };
 
+        // assert
         sequence.Duration.Should().Be(0);
     }
 
     [Fact]
     public void UpdateLoopDuration_DoesNotChangeDuration_WhenRepeatStrategyIsNotInitialized()
     {
-        // RepeatStrategy with Count=0 or Interval=0 is not initialized
+        // arrange / act — RepeatStrategy with Count=0 or Interval=0 is not initialized
         var sequence = new SequenceDesign("test")
         {
             Leader = new Kick { Strategy = new RepeatStrategy { Count = 0, Interval = 0 } },
         };
 
+        // assert
         sequence.Duration.Should().Be(0);
     }
 
@@ -329,76 +338,71 @@ public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase
     [Fact]
     public void UpdateDurationOnAppend_AccumulatesDuration_WhenBaseSequenceIsNotEmpty()
     {
-        // Base sequence starts empty; first append goes through the expansion path.
-        // Second append accumulates.
+        // arrange — base sequence starts empty; first append goes through the expansion path, second accumulates
         var seq1 = new SequenceDesign("seq1") { Duration = 300 };
         var seq2 = new SequenceDesign("seq2") { Duration = 400 };
-
         var main = new SequenceDesign("main");
+
+        // act
         main.Append(seq1);
         main.Append(seq2);
 
-        // Total duration = 300 + 400 = 700
-        main.Duration.Should().Be(700);
+        // assert
+        main.Duration.Should().Be(700); // total duration = 300 + 400 = 700
     }
 
     [Fact]
     public void UpdateDurationOnAppend_ExpandsRepeatInterval_WhenBaseIsEmpty_AndAppendedIsLarger()
     {
-        // Base sequence is empty but has a RepeatStrategy with Count=2 and Interval=100.
-        // Appended sequence has Duration=300 which is larger than Interval=100.
-        // Interval should be expanded to 300; Duration = 300 * 2 = 600.
+        // arrange — base sequence is empty but has a RepeatStrategy with Count=2 and Interval=100;
+        // appended sequence has Duration=300 which is larger than Interval=100
         var strategy = new RepeatStrategy { Count = 2, Interval = 100 };
-        var main = new SequenceDesign("main")
-        {
-            Strategy = strategy,
-        };
-
+        var main = new SequenceDesign("main") { Strategy = strategy };
         var appended = new SequenceDesign("appended") { Duration = 300 };
+
+        // act
         main.Append(appended);
 
-        strategy.Interval.Should().Be(300);
-        main.Duration.Should().Be(600);
+        // assert
+        strategy.Interval.Should().Be(300); // Interval should be expanded from 100 to 300 to accomodate the appended sequence
+        main.Duration.Should().Be(600); // total sequence duration should be expanded to 300 * 2 = 600
     }
 
     [Fact]
     public void UpdateDurationOnAppend_KeepsRepeatInterval_WhenBaseIsEmpty_AndAppendedIsSmallerThanInterval()
     {
-        // When only an outer RepeatStrategy is set (no inner leader loop), Interval stays as-is.
-        // Duration = Interval * Count = 100 * 2 = 200.
+        // arrange
         var strategy = new RepeatStrategy { Count = 2, Interval = 100 };
-        var main = new SequenceDesign("main")
-        {
-            Strategy = strategy,
-        };
-
-        // After setting strategy: Interval=100, Duration=200
-        strategy.Interval.Should().Be(100);
+        var main = new SequenceDesign("main") { Strategy = strategy };
+        strategy.Interval.Should().Be(100); // Interval=100, Duration=200 after setting strategy
+        main.Duration.Should().Be(200);
 
         var appended = new SequenceDesign("appended") { Duration = 50 };
+
+        // act
         main.Append(appended);
 
-        // Appended duration (50) < current interval (100): Math.Max(100,50)=100, Duration stays 200
-        strategy.Interval.Should().Be(100);
-        main.Duration.Should().Be(200);
+        // assert
+        strategy.Interval.Should().Be(100); // Interval should remain 100 (no change, since appended duration 50 is smaller than current interval 100)
+        main.Duration.Should().Be(200); // Duration stays 200 because Interval is unchanged
     }
 
     [Fact]
     public void UpdateDurationOnAppend_AccumulateDuration_ThenUpdateLoopDuration_WhenStrategyIsRepeat()
     {
-        // After accumulation UpdateLoopDuration is called:
-        // if sequence strategy is NOT RepeatStrategy, we just accumulate. Here it's PlayOnce.
+        // arrange — sequence strategy is PlayOnce (default), so durations simply accumulate
         var seq1 = new SequenceDesign("seq1") { Duration = 200 };
         var seq2 = new SequenceDesign("seq2") { Duration = 300 };
         var seq3 = new SequenceDesign("seq3") { Duration = 100 };
-
         var main = new SequenceDesign("main");
+
+        // act
         main.Append(seq1);
         main.Append(seq2);
         main.Append(seq3);
 
-        // 200 + 300 + 100 = 600
-        main.Duration.Should().Be(600);
+        // assert
+        main.Duration.Should().Be(600); // 200 + 300 + 100 = 600
     }
 
     // -------------------------------------------------------------------------
@@ -408,30 +412,32 @@ public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase
     [Fact]
     public void SetDelayAfterLeader_SetsDelayOnLeaderStrategy()
     {
+        // arrange / act
         var sequence = new SequenceDesign("test")
         {
             Leader = new Kick(),
             DelayAfterLeader = 250,
         };
 
+        // assert
         sequence.Strategy.DelayAfterLeader.Should().Be(250);
     }
 
     [Fact]
     public void SetDelayAfterLeader_ShiftsEntireSequenceInTimestamps()
     {
+        // arrange
         var sequence = new SequenceDesign("test")
         {
             Leader = new Kick(),
             DelayAfterLeader = 300,
         };
 
-        // The SequenceStart itself follows a previous sound so it won't appear shifted;
-        // but the first actual sound (Kick) will be delayed by 300ms relative to SequenceStart.
-        // In the generated output the Kick appears at timestamp 300.
+        // act
         var actualTimestamps = SequenceGenerator.Generate(sequence).GetTimestamps();
 
-        actualTimestamps.Should().Contain("0300:k");
+        // assert
+        actualTimestamps.Should().Contain("0300:k"); // Kick delayed by 300ms relative to SequenceStart
     }
 
     // -------------------------------------------------------------------------
@@ -441,6 +447,7 @@ public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase
     [Fact]
     public void NestedLoop_Strategy_And_Leader_Produce_CorrectTimestamps()
     {
+        // arrange
         var sequence = new SequenceDesign("test")
         {
             Strategy = new RepeatStrategy { Count = 2 },
@@ -464,17 +471,18 @@ public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase
             "0600:sequence-end-test",
         ];
 
+        // act
         var actualTimestamps = SequenceGenerator.Generate(sequence).GetTimestamps();
 
+        // assert
         actualTimestamps.Should().BeExactSequence(expected);
-        sequence.Duration.Should().Be(600);
+        sequence.Duration.Should().Be(600); // 300 + 300
     }
 
     [Fact]
     public void SetLeader_InitializationOrder_LeaderFirst_ThenStrategy_SameDuration()
     {
-        // Verify that setting leader before strategy yields the same duration
-        // as strategy before leader (regression guard for order-dependence).
+        // arrange / act — regression guard for order-dependence: leader before strategy vs strategy before leader
         var leaderFirst = new SequenceDesign("a")
         {
             Leader = new Kick { Strategy = new RepeatStrategy { Interval = 100, Count = 3 } },
@@ -487,6 +495,7 @@ public class SequenceDesignInitializerTests(ITestOutputHelper output) : TestBase
             Leader = new Kick { Strategy = new RepeatStrategy { Interval = 100, Count = 3 } },
         };
 
+        // assert
         leaderFirst.Duration.Should().Be(strategyFirst.Duration).And.Be(600);
     }
 }
