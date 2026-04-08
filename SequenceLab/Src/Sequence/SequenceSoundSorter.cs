@@ -59,19 +59,65 @@ public static class SequenceSoundSorter
                 return CompareIterations(a.Iteration, b.Iteration);
             }
 
-            if (a is LoopEnd)
+            if (a is SequenceEndTrimmed && b is SequenceEnd)
             {
-                return -1; // put "end-of-loop" sound before any other sound
+                return -1; // trimmed marker goes before sequence-end
+            }
+            if (a is LoopEnd aLoopEndMain)
+            {
+                if (aLoopEndMain.IsSequenceLoop)
+                {
+                    if (b is LoopEnd)
+                    {
+                        // let stable sort decide between loop ends
+                        return 0;
+                    }
+                    if (b is SequenceEnd bSeqEnd)
+                    {
+                        if (aLoopEndMain.Sequence == bSeqEnd.Sequence)
+                        {
+                            return -1; // same-sequence loop goes before its own seq-end
+                        }
+                        if (aLoopEndMain.Sequence?.Sequences.Contains(bSeqEnd.Sequence) == true)
+                        {
+                            return 1; // outer loop goes after inner seq-end
+                        }
+                        return 0; // unrelated: stable sort
+                    }
+                    return 1; // sequence loop end goes after seq-start, regular sounds, trimmed, metronome
+                }
+                return -1; // regular loop-end goes before any other sound
             }
             if (a is SequenceEnd)
             {
-                if (b is LoopEnd or Metronome)
+                if (b is LoopEnd bLoopEndSE)
                 {
-                    return 1; // put "sequence-end" after "end-of-loop" and "metronome"
+                    if (!bLoopEndSE.IsSequenceLoop)
+                    {
+                        // seq-end after regular loop-end
+                        return 1;
+                    }
+                    if (a.Sequence == bLoopEndSE.Sequence)
+                    {
+                        return 1; // same-sequence seq-end after its own loop
+                    }
+                    if (bLoopEndSE.Sequence?.Sequences.Contains(a.Sequence) == true)
+                    {
+                        return -1; // inner seq-end before outer loop
+                    }
+                    return 0; // unrelated: stable sort
+                }
+                if (b is Metronome)
+                {
+                    return 1;
                 }
                 if (b is SequenceEnd)
                 {
                     return 0; // let stable sort decide by insertion order (outer sequence end is generated last, so it goes last)
+                }
+                if (b is SequenceEndTrimmed)
+                {
+                    return 1; // sequence-end goes after trimmed marker
                 }
                 // put "sequence-end" after "sequence-start" and regular sounds of same sequence
                 // different sequences: rely on insertion order — outer container end is generated last
@@ -83,9 +129,13 @@ public static class SequenceSoundSorter
                 {
                     return 0; // leave as is
                 }
-                if (b is LoopEnd)
+                if (b is LoopEnd bLoopEndSS)
                 {
-                    return 1; // put "sequence-start" after "end-of-loop"
+                    if (bLoopEndSS.IsSequenceLoop)
+                    {
+                        return -1; // seq-start goes before outer sequence loop end
+                    }
+                    return 1; // seq-start goes after regular loop-end
                 }
                 if (b is SequenceEnd)
                 {
@@ -98,15 +148,32 @@ public static class SequenceSoundSorter
             }
             if (a is Metronome)
             {
-                if (b is SequenceStart or LoopEnd)
+                if (b is LoopEnd bLoopEndM)
                 {
-                    return 1; // put "metronome" after "sequence-start"
+                    if (bLoopEndM.IsSequenceLoop)
+                    {
+                        return -1; // metronome before outer sequence loop end
+                    }
+                    return 1; // metronome after regular loop-end
+                }
+                if (b is SequenceStart)
+                {
+                    return 1;
                 }
                 return -1; // put "metronome" before regular sounds
             }
-            if (b is LoopEnd or SequenceStart or Metronome)
+            if (b is LoopEnd bLoopEndRegular)
             {
-                // put regular sounds after "end-of-loop", "sequence-start", "metronome" only if they belong to the same sequence
+                if (bLoopEndRegular.IsSequenceLoop)
+                {
+                    return -1; // regular sounds before outer sequence loop end
+                }
+                // put regular sounds after regular loop-end only if they belong to the same sequence
+                return a.Sequence == b.Sequence ? 1 : -1;
+            }
+            if (b is SequenceStart or Metronome)
+            {
+                // put regular sounds after "sequence-start", "metronome" only if they belong to the same sequence
                 return a.Sequence == b.Sequence ? 1 : -1;
             }
             if (b is SequenceEnd)

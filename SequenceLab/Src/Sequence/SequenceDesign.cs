@@ -79,7 +79,7 @@ public class SequenceDesign
 
     public bool IsEmpty => Sequences.Count == 0;
 
-    private List<SequenceDesign> Sequences = [];
+    public List<SequenceDesign> Sequences = [];
 
     public static SequenceDesign? FromJson(string json) => Serialization.FromJson<SequenceDesign>(json);
 

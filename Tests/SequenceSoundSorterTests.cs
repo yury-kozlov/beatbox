@@ -346,6 +346,109 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
                 "0000:end-of-sequence-loop",  // "1"   — outer sequence loop
             },
         };
+
+        // "end-of-sequence-loop" should go right before "sequence-end" of the same sequence:
+        {
+            var main = new SequenceDesign("main");
+            yield return new object[] {
+                // input (reversed)
+                new Sequence()
+                {
+                    new SequenceEnd(main) { Timestamp = 0, Sequence = main },
+                    new LoopEnd(new SequenceStart("main")) { Timestamp = 0, Sequence = main },
+                },
+                // expected
+                new string[] {
+                    "0000:end-of-sequence-loop",
+                    "0000:sequence-end-main",
+                },
+            };
+        }
+
+        // "end-of-sequence-loop" should go after regular sounds but before "sequence-end":
+        {
+            var main = new SequenceDesign("main");
+            yield return new object[] {
+                // input
+                new Sequence()
+                {
+                    new SequenceEnd(main) { Timestamp = 0, Sequence = main },
+                    new LoopEnd(new SequenceStart("main")) { Timestamp = 0, Sequence = main },
+                    new Kick() { Timestamp = 0 },
+                    new Snare() { Timestamp = 0 },
+                },
+                // expected
+                new string[] {
+                    "0000:k",
+                    "0000:s",
+                    "0000:end-of-sequence-loop",
+                    "0000:sequence-end-main",
+                },
+            };
+        }
+
+        // "end-of-sequence-loop" should go after "sequence-start" but before "sequence-end":
+        {
+            var main = new SequenceDesign("main");
+            yield return new object[] {
+                // input (reversed)
+                new Sequence()
+                {
+                    new SequenceEnd(main) { Timestamp = 0, Sequence = main },
+                    new LoopEnd(new SequenceStart("main")) { Timestamp = 0, Sequence = main },
+                    new SequenceStart("inner") { Timestamp = 0 },
+                },
+                // expected
+                new string[] {
+                    "0000:sequence-start-inner",
+                    "0000:end-of-sequence-loop",
+                    "0000:sequence-end-main",
+                },
+            };
+        }
+
+        // "sequence-trimmed" should go before "end-of-sequence-loop" which goes before "sequence-end":
+        {
+            var main = new SequenceDesign("main");
+            var snares = new SequenceDesign("snares");
+            yield return new object[] {
+                // input (reversed)
+                new Sequence()
+                {
+                    new SequenceEnd(main) { Timestamp = 0, Sequence = main },
+                    new LoopEnd(new SequenceStart("main")) { Timestamp = 0, Sequence = main },
+                    new SequenceEndTrimmed(new SequenceEnd(snares)) { Timestamp = 0 },
+                },
+                // expected
+                new string[] {
+                    "0000:sequence-trimmed-snares",
+                    "0000:end-of-sequence-loop",
+                    "0000:sequence-end-main",
+                },
+            };
+        }
+
+        // inner "sequence-end" should go before outer "end-of-sequence-loop" which goes before outer "sequence-end":
+        {
+            var outerSeq = new SequenceDesign("main");
+            var innerSeq = new SequenceDesign("kicks");
+            outerSeq.Sequences.Add(innerSeq);
+            yield return new object[] {
+                // input (reversed, LoopEnd placed first to test it moves after inner seq-end)
+                new Sequence()
+                {
+                    new LoopEnd(new SequenceStart("main")) { Timestamp = 0, Sequence = outerSeq },
+                    new SequenceEnd(innerSeq) { Timestamp = 0, Sequence = innerSeq },
+                    new SequenceEnd(outerSeq) { Timestamp = 0, Sequence = outerSeq },
+                },
+                // expected — inner closes first, then outer loop, then outer sequence
+                new string[] {
+                    "0000:sequence-end-kicks",
+                    "0000:end-of-sequence-loop",
+                    "0000:sequence-end-main",
+                },
+            };
+        }
     }
 
     private static SequenceDesign SharedSeq = new SequenceDesign("shared-sequence");

@@ -156,9 +156,9 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "7600:end-of-loop",
             "7600:sequence-end-snares",
             "8000:end-of-loop",
-            "8000:end-of-sequence-loop",
             "8000:sequence-end-kicks",
-            "8000:sequence-end-main",
+            "8000:end-of-sequence-loop",
+            "8000:sequence-end-main"
         ];
 
         // assert

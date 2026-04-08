@@ -186,14 +186,14 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0000:k",
             "0100:k",
             "0150:k",
-            "0200:end-of-sequence-loop",
             "0200:sequence-end-kicks",
             "0200:sequence-start-snares",
             "0200:s",
             // "0360:s", // this one exceeds first sequence duration and is trimmed
             // "0500:sequence-end-snares", // this one exceeds first sequence duration and is trimmed
-            "0200:sequence-end-main",
             "0200:sequence-trimmed-snares", // replaced sequence-end
+            "0200:end-of-sequence-loop",    // outer loop closing "main" sequence
+            "0200:sequence-end-main",
         ];
 
         // assert
