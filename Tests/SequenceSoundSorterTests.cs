@@ -464,4 +464,5 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // assert
         actualTimestamps.Should().BeExactSequence(expected);
     }
+
 }
