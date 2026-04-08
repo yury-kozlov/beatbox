@@ -3,14 +3,12 @@ namespace Beater;
 
 public class SequenceDesign
 {
-    private SequenceDesignInitializer _initializer;
+    private readonly SequenceDesignState _state;
 
     public SequenceDesign(string name)
     {
         Name = name;
-        SequenceEnd = new SequenceEnd(this);
-        _initializer = new SequenceDesignInitializer(this);
-        Leader = new SequenceStart(name) { Sequence = this };
+        _state = new SequenceDesignState(this, name);
     }
 
     /// <summary>
@@ -20,8 +18,8 @@ public class SequenceDesign
     /// </summary>
     public Sound Leader
     {
-        get;
-        set => field = _initializer.SetLeader(value);
+        get => _state.Leader;
+        set => _state.SetLeader(value);
     }
 
     /// <summary>
@@ -32,14 +30,14 @@ public class SequenceDesign
     public AbstractStrategy Strategy
     {
         get => Leader.Strategy;
-        set => _initializer.SetStrategy(value);
+        set => _state.SetStrategy(value);
     }
 
     /// <summary>
     /// Assigns delay to the underlying strategy shifting the whole sequence.
     /// NOTE: if sound strategy property is initialized inside the same block after delay is set, the current delay value will be ignored.
     /// </summary>
-    public int DelayAfterLeader { set => _initializer.SetDelayAfterLeader(value); }
+    public int DelayAfterLeader { set => _state.Leader.Strategy.DelayAfterLeader = value; }
 
     /// <summary>
     /// Full loop of a sequence (in milliseconds) including ending space and all iterations.
@@ -51,16 +49,12 @@ public class SequenceDesign
     /// </summary>
     public int Duration
     {
-        get;
-        set
-        {
-            field = value;
-            _initializer.OnDurationSet();
-        }
+        get => _state?.Duration ?? 0; // _state may be null during SequenceEnd construction in the ctor
+        set => _state.SetDuration(value);
     }
 
     /// <summary>
-    /// Calculcated automatically during generation of sequence timestamps (each sound from SequenceStart until SequenceEnd will increment auto duration).
+    /// Calculated automatically during generation of sequence timestamps (each sound from SequenceStart until SequenceEnd will increment auto duration).
     /// </summary>
     public int AutoDuration;
 
@@ -75,11 +69,9 @@ public class SequenceDesign
     /// so in repeated sequences this instance will not correspond to the current iteration's SequenceEnd.
     /// Use <see cref="SequenceStart.GetSequenceEnd"/> instead to locate the correct instance dynamically.
     /// </summary>
-    public SequenceEnd SequenceEnd { get; private set; }
+    public SequenceEnd SequenceEnd => _state.SequenceEnd;
 
-    public bool IsEmpty => Sequences.Count == 0;
-
-    public List<SequenceDesign> Sequences = [];
+    public List<SequenceDesign> Sequences => _state.Sequences;
 
     public static SequenceDesign? FromJson(string json) => Serialization.FromJson<SequenceDesign>(json);
 
@@ -94,7 +86,7 @@ public class SequenceDesign
     /// </summary>
     internal SequenceDesign Append(SequenceDesign next)
     {
-        _initializer.AppendDuration(next.Duration);
+        _state.AppendDuration(next.Duration);
 
         Sequences.Add(next);
 
@@ -127,7 +119,7 @@ public class SequenceDesign
     /// </summary>
     internal SequenceDesign Combine(SequenceDesign next)
     {
-        if (IsEmpty)
+        if (_state.IsEmpty)
         {
             Append(next);
             return this;
