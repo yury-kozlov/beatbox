@@ -190,9 +190,9 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0200:sequence-start-snares",
             "0200:s",
             // "0360:s", // this one exceeds first sequence duration and is trimmed
-            // "0500:sequence-end-snares", // this one exceeds first sequence duration and is trimmed
-            "0200:sequence-trimmed-snares", // replaced sequence-end
-            "0200:end-of-sequence-loop",    // outer loop closing "main" sequence
+            // "0500:sequence-end-snares",    // this one exceeds first sequence duration and is trimmed
+            "0200:sequence-trimmed-snares",   // replaced sequence-end
+            "0200:end-of-sequence-loop-main", // outer loop closing "main" sequence
             "0200:sequence-end-main",
         ];
 
@@ -240,7 +240,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
             "3600:s",
             "4200:s",
             "4800:end-of-loop",
-            "4800:end-of-sequence-loop",
+            "4800:end-of-sequence-loop-square",
             "4800:sequence-end-square",
             "4800:sequence-end-main",
         };

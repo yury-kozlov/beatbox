@@ -624,7 +624,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "0400:k",
             "0500:k",
             "0600:end-of-loop",
-            "0600:end-of-sequence-loop",
+            "0600:end-of-sequence-loop-test",
             "0600:sequence-end-test",
         ];
 

@@ -157,7 +157,7 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "7600:sequence-end-snares",
             "8000:end-of-loop",
             "8000:sequence-end-kicks",
-            "8000:end-of-sequence-loop",
+            "8000:end-of-sequence-loop-main",
             "8000:sequence-end-main"
         ];
 
@@ -204,7 +204,7 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0400:k",
             "0500:k",
             "0600:end-of-loop",
-            "0600:end-of-sequence-loop",
+            "0600:end-of-sequence-loop-kicks",
             "0600:sequence-end-kicks",
             "1000:s",
             "2000:end-of-loop",
@@ -213,7 +213,7 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "2000:s",
             "3000:s",
             "4000:end-of-loop",
-            "4000:end-of-sequence-loop",
+            "4000:end-of-sequence-loop-snares",
             "4000:sequence-end-snares",
             "4000:sequence-end-main",
         ];

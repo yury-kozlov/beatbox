@@ -497,7 +497,7 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "7300:s",
             "7500:k",
             "8000:end-of-loop",
-            "8000:end-of-sequence-loop",
+            "8000:end-of-sequence-loop-" + sequence.Name,
             "8000:sequence-end-" + sequence.Name,
         ];
 
@@ -637,7 +637,7 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "6885:ts1",
             "7360:ts1",
             "7600:end-of-loop-trimmed", // adjusted to the current iteration (7600 instead of 7835)
-            "7600:end-of-sequence-loop",
+            "7600:end-of-sequence-loop-" + sequence.Name,
             "7600:sequence-end-" + sequence.Name,
         ];
 

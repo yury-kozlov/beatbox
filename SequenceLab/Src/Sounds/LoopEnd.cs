@@ -9,7 +9,7 @@ public record LoopEnd : NoSound
     public LoopEnd(Sound? repeatedSound = null)
     {
         IsSequenceLoop = repeatedSound is SequenceStart;
-        FriendlyName = IsSequenceLoop ? "end-of-sequence-loop" : "end-of-loop";
+        FriendlyName = GetFriendlyName(repeatedSound);
     }
 
     public bool IsSequenceLoop { get; protected set; }
@@ -17,4 +17,13 @@ public record LoopEnd : NoSound
     public bool FireAndForget { get => Strategy.FireAndForget; set => Strategy.FireAndForget = value; }
 
     public override string? ToString() => $"{Format(FriendlyName)}: {Comment}";
+
+    private string GetFriendlyName(Sound? repeatedSound)
+    {
+        if (IsSequenceLoop)
+        {
+            return repeatedSound?.Sequence is null ? "end-of-sequence-loop" : $"end-of-sequence-loop-{repeatedSound.Sequence.Name}";
+        }
+        return "end-of-loop";
+    }
 }
