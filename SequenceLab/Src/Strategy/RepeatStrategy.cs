@@ -53,7 +53,8 @@ public class RepeatStrategy : AbstractStrategy
                 && TrimIfExceedsParentLoop && repeatedSound.Timestamp > leaderLoop.Interval)
             {
                 // sound is positioned outside parent's loop, ignore it
-                Console.WriteLine($"Trimming sound '{repeatedSound.Name}' at {repeatedSound.Timestamp}ms as it exceeds parent loop interval of {leaderLoop.Interval}ms");
+                // example: Kick repeats every 200ms inside a parent loop of 500ms → the Kick iteration at 600ms is never added to the leaders sequence
+                Console.WriteLine($"RepeatStrategy: Trimming sound '{repeatedSound.Name}' at {repeatedSound.Timestamp}ms as it exceeds parent loop interval of {leaderLoop.Interval}ms");
                 continue;
             }
 

@@ -636,4 +636,81 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
         actualTimestamps.Should().BeExactSequence(expected);
         sequence.Duration.Should().Be(600);
     }
+
+    [Fact]
+    public void RepeatStrategy_FollowerExceedsLoopInterval_FollowerIsTrimmed()
+    {
+        // Snare is a follower of Kick with a delay (400ms) greater than Kick's loop interval (300ms).
+        // SequenceGenerator.RemoveSoundsExceedingLoop removes it from each iteration's followers
+        // because it would move past the end of the loop and overlap the next iteration.
+        var sequence = new SequenceDesign("test")
+        {
+            Leader = new Kick
+            {
+                Strategy = new RepeatStrategy { Count = 2, Interval = 300 },
+                Followers = [new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 400 } }]
+            }
+        };
+
+        string[] expected = [
+            "0000:sequence-start-test",
+            "0000:k",
+            // "0400:s", // trimmed — 400ms exceeds Kick's loop interval of 300ms starting at 0ms
+            "0300:k",
+            // "0700:s", // trimmed — 700ms exceeds Kick's loop interval of 300ms starting at 300ms
+            "0600:end-of-loop",
+            "0600:sequence-end-test",
+        ];
+
+        // act
+        var actual = SequenceGenerator.Generate(sequence);
+        var actualTimestamps = actual.GetTimestamps();
+
+        // assert
+        actualTimestamps.Should().BeExactSequence(expected);
+    }
+
+    [Fact]
+    public void NestedRepeat_IterationExceedsParentLoopInterval_IterationIsTrimmed()
+    {
+        // Snare repeats 5 times every 300ms as a follower of Kick.
+        // Kick itself repeats 2 times every 1000ms, so each Kick iteration is a 1000ms slot.
+        // Snare's 5th iteration would land at 1200ms — outside the 1000ms Kick slot — so
+        // RepeatStrategy trims it before adding it to the sequence (lines 52-59 in RepeatStrategy.cs).
+        var sequence = new SequenceDesign("test")
+        {
+            Leader = new Kick
+            {
+                Strategy = new RepeatStrategy { Count = 2, Interval = 1000 },
+                Followers = [new Snare { Strategy = new RepeatStrategy { Count = 5, Interval = 300 } }]
+            }
+        };
+
+        string[] expected = [
+            "0000:sequence-start-test",
+            "0000:k",
+            "0000:s",
+            "0300:s",
+            "0600:s",
+            "0900:s",
+            // "1200:s", // trimmed — 1200ms exceeds Kick's loop interval of 1000ms starting at 0ms
+            "1000:end-of-loop", // Snare loop end, trimmed from 1500ms to fit Kick's 1000ms slot
+            "1000:k",
+            "1000:s",
+            "1300:s",
+            "1600:s",
+            "1900:s",
+            // "2200:s", // trimmed — 2200ms exceeds Kick's loop interval of 1000ms starting at 1000ms
+            "2000:end-of-loop", // Kick loop end
+            "2000:end-of-loop", // Snare loop end for Kick#2, trimmed from 2500ms to 2000ms
+            "2000:sequence-end-test",
+        ];
+
+        // act
+        var actual = SequenceGenerator.Generate(sequence);
+        var actualTimestamps = actual.GetTimestamps();
+
+        // assert
+        actualTimestamps.Should().BeExactSequence(expected);
+    }
 }
