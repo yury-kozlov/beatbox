@@ -86,6 +86,12 @@ public class SequenceDesign
     /// </summary>
     internal SequenceDesign Append(SequenceDesign next)
     {
+        if (this == next)
+        {
+            Console.WriteLine($"Unable to append sequence to itself: {Name}");
+            return this;
+        }
+
         _state.AppendDuration(next.Duration);
 
         Sequences.Add(next);
@@ -119,6 +125,12 @@ public class SequenceDesign
     /// </summary>
     internal SequenceDesign Combine(SequenceDesign next)
     {
+        if (this == next)
+        {
+            Console.WriteLine($"Unable to Combine sequence with itself: {Name}");
+            return this;
+        }
+
         if (_state.IsEmpty)
         {
             Append(next);
