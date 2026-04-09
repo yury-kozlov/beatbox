@@ -10,6 +10,15 @@ public static class TestExtensions
         return source?.Select(sound => $"{sound.Timestamp:0000}:{(sound.FriendlyName ?? sound.Name)?.Trim()}").ToList();
     }
 
+    public static string Print(this Sequence? source)
+    {
+        var timestamps = source?.GetTimestamps() ?? new();
+        var text = string.Join(",\r\n", timestamps);
+        Console.WriteLine(text);
+
+        return text;
+    }
+
     /// <summary>
     /// Asserts that the actual timestamp list matches <paramref name="expected"/> exactly, including order.
     /// </summary>

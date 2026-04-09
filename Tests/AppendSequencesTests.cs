@@ -206,17 +206,8 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
         /// this test checks that if a sequence without <see cref="FollowPreviousSoundStrategy"/> is appended to another sequence
         /// they will be played after each other and not in parallel
 
-        var trapezoid = new PrimitiveSequences.Trapezoid<Kick>()
-        {
-            XInterval = 500,
-            YInterval = 700,
-        };
-
-        var square = new PrimitiveSequences.Square<Snare>()
-        {
-            Interval = 600,
-            Strategy = new RepeatStrategy { Count = 1 },
-        };
+        var trapezoid = new PrimitiveSequences.Trapezoid<Kick>() { XInterval = 500, YInterval = 700 };
+        var square = new PrimitiveSequences.Square<Snare>() { Interval = 600, Strategy = new RepeatStrategy { Count = 1 } };
 
         var main = new SequenceDesign("main");
         main.Append(trapezoid);
@@ -247,5 +238,37 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
 
         // assert
         actualTimestamps.Should().BeExactSequence(expected);
+    }
+
+    [Fact]
+    public void AppendTwoLoopSequences_PlayOneAfterAnother()
+    {
+        // arrange
+        var snares = new SequenceDesign("snares") { Leader = new Snare { Strategy = new RepeatStrategy { Interval = 100, Count = 2 } } };
+        var kicks = new SequenceDesign("kicks") { Leader = new Kick { Strategy = new RepeatStrategy { Interval = 200, Count = 2 } } };
+
+        // act
+        var main = new SequenceDesign("main").Append(snares).Append(kicks);
+        var mainSequence = SequenceGenerator.Generate(main);
+
+        // assert
+        var expected = new string[] {
+            "0000:sequence-start-main",
+            "0000:sequence-start-snares",
+            "0000:s",
+            "0100:s",
+            "0200:end-of-loop",
+            "0200:sequence-end-snares",
+            "0200:sequence-start-kicks",
+            "0200:k",
+            "0400:k",
+            "0600:end-of-loop",
+            "0600:sequence-end-kicks",
+            "0600:sequence-end-main",
+        };
+        
+        var actualTimestamps = mainSequence.GetTimestamps();
+        actualTimestamps.Should().BeExactSequence(expected);
+        main.Duration.Should().Be(600);
     }
 }

@@ -83,6 +83,7 @@ public class SequenceDesign
     ///    but on the opposite: base duration will be increased to accomodate the new sequence.
     ///  - If base sequence is repeated and we append to it - it means we will append to each iteration of this sequence
     ///    also increasing total duration of the sequence
+    ///  - If base sequence contains a loop of sounds the appended sequence will be added after this loop, so that they will be played one after another.
     /// </summary>
     internal SequenceDesign Append(SequenceDesign next)
     {
