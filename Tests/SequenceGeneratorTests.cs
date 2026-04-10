@@ -94,7 +94,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "0000:s",
             "0600:s",
             "1000:end-of-loop",
-            "1000:end-of-loop",
+            "1000:end-of-loop-trimmed",
             "1000:sequence-end-test",
         ];
 
@@ -694,7 +694,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "0600:s",
             "0900:s",
             // "1200:s", // trimmed — 1200ms exceeds Kick's loop interval of 1000ms starting at 0ms
-            "1000:end-of-loop", // Snare loop end, trimmed from 1500ms to fit Kick's 1000ms slot
+            "1000:end-of-loop-trimmed", // Snare loop end, trimmed from 1500ms to fit Kick's 1000ms slot
             "1000:k",
             "1000:s",
             "1300:s",
@@ -702,7 +702,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "1900:s",
             // "2200:s", // trimmed — 2200ms exceeds Kick's loop interval of 1000ms starting at 1000ms
             "2000:end-of-loop", // Kick loop end
-            "2000:end-of-loop", // Snare loop end for Kick#2, trimmed from 2500ms to 2000ms
+            "2000:end-of-loop-trimmed", // Snare loop end for Kick#2, trimmed from 2500ms to 2000ms
             "2000:sequence-end-test",
         ];
 

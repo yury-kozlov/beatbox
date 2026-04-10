@@ -12,6 +12,7 @@ public record LoopEndTrimmed : LoopEnd
         Strategy = loopEnd.Strategy;
         IsSequenceLoop = loopEnd.IsSequenceLoop;
         FriendlyName = $"{loopEnd.FriendlyName}-trimmed";
+        FireAndForget = loopEnd.FireAndForget;
     }
 
     public override string? ToString() => Format(FriendlyName);
