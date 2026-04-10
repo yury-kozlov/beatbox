@@ -109,21 +109,21 @@ public class SequenceGenerator
         var outliers = seq.Where(s => s.Timestamp > maxAllowedTimestamp).ToList();
         foreach (var sound in outliers)
         {
-            Console.WriteLine($"Trimming sound '{sound.Name}' at {sound.Timestamp}ms as it exceeds parent loop interval of {repeatStrategy.Interval}ms started at {leader.Timestamp}");
-                    seq.Remove(sound);
+            Console.WriteLine($"Trimming sound '{sound.ToString()}' as it exceeds parent loop interval of {repeatStrategy.Interval}ms started at {leader.Timestamp}");
+            seq.Remove(sound);
 
-                    if (sound is SequenceEnd sequenceEnd)
-                    {
-                        // add indication that sequence was trimmed (instead of previously deleted SequenceEnd)
-                        seq.Add(new SequenceEndTrimmed(sequenceEnd) { Timestamp = maxAllowedTimestamp });
-                    }
+            if (sound is SequenceEnd sequenceEnd)
+            {
+                // add indication that sequence was trimmed (instead of previously deleted SequenceEnd)
+                seq.Add(new SequenceEndTrimmed(sequenceEnd) { Timestamp = maxAllowedTimestamp });
+            }
             else if (sound is LoopEnd loopEnd)
             {
                 // add indication that the loop was trimmed (instead of previously deleted LoopEnd)
                 seq.Add(new LoopEndTrimmed(loopEnd) { Timestamp = maxAllowedTimestamp });
-                }
             }
         }
+    }
 
     private static bool IsSilenced(Sound sound)
     {

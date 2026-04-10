@@ -7,6 +7,7 @@ public record LoopEndTrimmed : LoopEnd
 {
     public LoopEndTrimmed(LoopEnd loopEnd)
     {
+        Comment = $"{loopEnd.Timestamp} {loopEnd.Comment}";
         Sequence = loopEnd.Sequence;
         Strategy = loopEnd.Strategy;
         IsSequenceLoop = loopEnd.IsSequenceLoop;

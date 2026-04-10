@@ -54,7 +54,7 @@ public class RepeatStrategy : AbstractStrategy
             {
                 // sound is positioned outside parent's loop, ignore it
                 // example: Kick repeats every 200ms inside a parent loop of 500ms → the Kick iteration at 600ms is never added to the leaders sequence
-                Console.WriteLine($"RepeatStrategy: Trimming sound '{repeatedSound.Name}' at {repeatedSound.Timestamp}ms as it exceeds parent loop interval of {leaderLoop.Interval}ms");
+                Console.WriteLine($"RepeatStrategy: Trimming sound '{repeatedSound.ToString()} as it exceeds parent loop interval of {leaderLoop.Interval}ms");
                 continue;
             }
 
