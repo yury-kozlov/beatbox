@@ -63,6 +63,17 @@ public class SoundConverter : JsonConverter
 /// </summary>
 public class TypedBaseClassesContractResolver : DefaultContractResolver
 {
+    protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+    {
+        JsonProperty property = base.CreateProperty(member, memberSerialization);
+        if (member is PropertyInfo propertyInfo && !propertyInfo.CanWrite)
+        {
+            // ignore calculated properties during serialization
+            property.Ignored = true;
+        }
+        return property;
+    }
+
     protected override JsonContract CreateContract(Type objectType)
     {
         JsonContract contract = base.CreateContract(objectType);

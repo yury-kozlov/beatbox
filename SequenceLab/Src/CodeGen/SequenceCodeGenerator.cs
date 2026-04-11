@@ -6,6 +6,8 @@ namespace Beater;
 
 internal class SequenceCodeGenerator
 {
+    private static Dictionary<Type, object?> _defaultInstances = new();
+
     private static string GetIndetation(int level)
     {
         return new string(' ', level * 4);
@@ -144,12 +146,18 @@ internal class SequenceCodeGenerator
     {
         var type = obj.GetType();
 
+        object? defaultInstance = GetOrCreateDefaultInstance(type);
+
         var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
         foreach (var prop in properties)
         {
+            if (!prop.CanWrite || prop.SetMethod == null)
+            {
+                continue; // skip calculated (read-only) properties
+            }
+
             var propValue = prop.GetValue(obj);
-            var propType = prop.PropertyType;
-            var defaultValue = propType.IsValueType ? Activator.CreateInstance(propType) : null;
+            var defaultValue = prop.GetValue(defaultInstance);
 
             yield return (prop.Name, propValue, defaultValue);
         }
@@ -159,10 +167,19 @@ internal class SequenceCodeGenerator
         {
             var fieldValue = field.GetValue(obj);
             var fieldType = field.FieldType;
-            var defaultValue = fieldType.IsValueType ? Activator.CreateInstance(fieldType) : null;
-
+            var defaultValue = field.GetValue(defaultInstance);
             yield return (field.Name, fieldValue, defaultValue);
         }
+    }
+
+    private static object? GetOrCreateDefaultInstance(Type type)
+    {
+        if (!_defaultInstances.TryGetValue(type, out var defaultInstance))
+        {
+            defaultInstance = type.GetConstructor(Type.EmptyTypes) != null ? Activator.CreateInstance(type) : null;
+            _defaultInstances[type] = defaultInstance;
+        }
+        return defaultInstance;
     }
 
     private static string GetPropInitializers(object? obj)
