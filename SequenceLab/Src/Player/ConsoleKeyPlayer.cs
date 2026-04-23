@@ -27,7 +27,7 @@ public class ConsoleKeyPlayer : IDisposable
     public string? KeysString;
 
     private readonly TcpTransport _transport;
-    private static Dictionary<ConsoleKey, TransportMessage> _soundsMap = new()
+    private static Dictionary<ConsoleKey, TransportMessage> _transportMessageMap = new()
     {
         { ConsoleKey.K, Samples.K },
         { ConsoleKey.S, Samples.S },
@@ -42,6 +42,7 @@ public class ConsoleKeyPlayer : IDisposable
         { ConsoleKey.D9, Samples.TS9 },
         { EndOfSequence, new() }
     };
+
     private static TransportMessage _defaultSound = Samples.K;
     private string? _jsonFilePath;
 
@@ -54,8 +55,8 @@ public class ConsoleKeyPlayer : IDisposable
             {
                 return;
             }
-            var audioMessage = GetSound(e.Key);
-            _transport.Send(audioMessage.ToPlayMessage());
+            var soundName = GetSoundName(e.Key);
+            _transport.Send(TransportMessage.ToPlayMessage(soundName));
         };
         Console.CancelKeyPress += OnShutdown;
     }
@@ -123,7 +124,7 @@ public class ConsoleKeyPlayer : IDisposable
             }
 
             var keyName = k.Key.ToString();
-            var color = Logger.AssignedColor(GetSound(k.Key).SoundName!);
+            var color = Logger.AssignedColor(GetSoundName(k.Key));
             Logger.WriteColored($"[{keyName}]", color);
             str.Append(keyName);
 
@@ -141,14 +142,13 @@ public class ConsoleKeyPlayer : IDisposable
     /// </summary>
     public SequenceDesign GenerateInteractively()
     {
-        var iterationsCount = 4;
-
-        // this will be the main loop (acting like a metronome, without any sound):
-        var loop = new Metronome() { Strategy = new RepeatStrategy { Count = iterationsCount, Interval = TotalTime } };
-        var seq = new SequenceDesign(SequenceCodeGenerator.NewSequenceName()) { Leader = loop };
+        var seq = new SequenceDesign(SequenceCodeGenerator.NewSequenceName())
+        {
+            Strategy = new RepeatStrategy { Count = 4, Interval = TotalTime }
+        };
 
         KeyPressed? previousKey = null;
-        Sound? previousSound = null;
+        Sound? leader = null;
 
         foreach (var k in PressedKeys)
         {
@@ -156,12 +156,24 @@ public class ConsoleKeyPlayer : IDisposable
             {
                 break;
             }
-            var soundName = GetSound(k.Key).SoundName!;
-            var delayAfterLeader = previousKey?.PostDelay ?? 0;
-            var sound = new Sound(soundName) { Strategy = new FollowPreviousSoundStrategy { DelayAfterLeader = delayAfterLeader } };
-            loop.Followers.Add(sound);
-            previousSound = sound;
+
+            var sound = GetSound(k.Key);
+            if (leader is null)
+            {
+                leader = sound; // first sound
+            }
+            else
+            {
+                sound.Strategy = new FollowPreviousSoundStrategy { DelayAfterLeader = previousKey?.PostDelay ?? 0 };
+                leader.Followers.Add(sound);
+            }
+
             previousKey = k;
+        }
+
+        if (leader is not null)
+        {
+            seq.Leader = leader;
         }
 
         return seq;
@@ -182,9 +194,20 @@ public class ConsoleKeyPlayer : IDisposable
         await PlayRepeated(seq);
     }
 
-    private TransportMessage GetSound(ConsoleKey key)
+    private string GetSoundName(ConsoleKey key)
     {
-        return _soundsMap.TryGetValue(key, out var msg) ? msg : _defaultSound;
+        var transportMessage = _transportMessageMap.TryGetValue(key, out var msg) ? msg : _defaultSound;
+        return transportMessage.SoundName!;
+    }
+
+    private Sound GetSound(ConsoleKey key)
+    {
+        return key switch
+        {
+            ConsoleKey.K => new Kick(),
+            ConsoleKey.S => new Snare(),
+            _ => new Sound(GetSoundName(key)),
+        };
     }
 
     private static int Round(TimeSpan value, double precision)

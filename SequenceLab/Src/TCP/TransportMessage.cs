@@ -16,9 +16,9 @@ public class TransportMessage
         }
     }
 
-    internal TransportMessage ToPlayMessage()
+    internal static TransportMessage ToPlayMessage(string soundName)
     {
-        return new TransportMessage($"play {SoundName};");
+        return new TransportMessage($"play {soundName};");
     }
 }
 

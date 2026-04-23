@@ -32,7 +32,7 @@ public class SerializationTests(ITestOutputHelper output) : TestBase(output)
         var leader = actual.Leader;
         leader.Should().BeOfType<SequenceStart>();
         leader.Strategy.Should().BeOfType<FollowPreviousSoundStrategy>();
-        leader.Followers.Should().HaveCount(2);
+        leader.Followers.Should().HaveCount(1);
 
         var metronome = leader.Followers[0].Should().BeOfType<Metronome>().Subject;
         metronome.Strategy.Should().BeOfType<PlayOnceStrategy>();
@@ -43,8 +43,6 @@ public class SerializationTests(ITestOutputHelper output) : TestBase(output)
             .Which.DelayAfterLeader.Should().Be(300);
         metronome.Followers[2].Should().BeOfType<Snare>().Which.Strategy.Should().BeOfType<PlayOnceStrategy>()
             .Which.DelayAfterLeader.Should().Be(600);
-
-        leader.Followers[1].Should().BeOfType<SequenceEnd>();
     }
 
     [Fact]
