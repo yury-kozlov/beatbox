@@ -124,9 +124,9 @@ public class SequenceDesign
     /// Combines current sequence with another to allow playing them in parallel (instead of playing one after another).
     /// NOTE: duration of the current sequence is calculated as maximum between the two.
     /// </summary>
-    internal SequenceDesign Combine(SequenceDesign next)
+    internal SequenceDesign Combine(SequenceDesign other)
     {
-        if (this == next)
+        if (this == other)
         {
             Console.WriteLine($"Unable to Combine sequence with itself: {Name}");
             return this;
@@ -134,20 +134,20 @@ public class SequenceDesign
 
         if (_state.IsEmpty)
         {
-            Append(next);
+            Append(other);
             return this;
         }
 
-        Duration = Math.Max(Duration, next.Duration);
-        Sequences.Add(next);
+        Duration = Math.Max(Duration, other.Duration);
+        Sequences.Add(other);
 
-        if (next.Leader.Strategy is FollowPreviousSoundStrategy followStrategy)
+        if (other.Leader.Strategy is FollowPreviousSoundStrategy followStrategy)
         {
             // if the added sequence has default strategy, change it to allow play in parallel
-            next.Leader.Strategy = followStrategy.ToPlayOnceStrategy();
+            other.Leader.Strategy = followStrategy.ToPlayOnceStrategy();
         }
 
-        Leader.WithFollower(next.Leader);
+        Leader.WithFollower(other.Leader);
         Leader.MoveFollowerToTheEnd(SequenceEnd);
         return this;
     }
