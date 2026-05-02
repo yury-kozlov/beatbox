@@ -2,6 +2,35 @@
 
 public class PrimitiveSequences
 {
+    public class Repeat : SequenceDesign
+    {
+        private readonly RepeatStrategy _repeatStrategy;
+
+        public Repeat(Sound sound, string name = "repeat") : base(name)
+        {
+            Leader = sound;
+            Leader.Strategy = _repeatStrategy = new RepeatStrategy();
+        }
+
+        public required int Count
+        {
+            get => _repeatStrategy.Count;
+            set { _repeatStrategy.Count = value; Duration = value * Interval; }
+        }
+
+        public new required int Interval
+        {
+            get => _repeatStrategy.Interval;
+            set { _repeatStrategy.Interval = value; Duration = value * Count; }
+        }
+
+        public Sequence RepeatedFollowers
+        {
+            get => FirstSound?.Followers ?? [];
+            set { FirstSound?.Followers = value; }
+        }
+    }
+
     public class Square<TSound> : SequenceDesign where TSound : Sound, new()
     {
         private readonly RepeatStrategy _repeatStrategy;

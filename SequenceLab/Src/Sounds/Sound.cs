@@ -27,6 +27,10 @@ public record Sound
         }
     } = new PlayOnceStrategy();
 
+    /// <summary>
+    /// NOTE: Followers of <see cref="SequenceDesign.Leader"/> must not be overridden because the leader in this case is 
+    /// a sequence-start and overriding its followers will break the actual first sound and sequence-end.
+    /// </summary>
     public Sequence Followers = new(); /// TODO: should this be <see cref="SequenceDesign"/> instead? Should each Sound here be a SoundDesign instead?
 
     public Sound? Leader;

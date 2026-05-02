@@ -53,6 +53,8 @@ public class SequenceDesign
         set => _state.SetDuration(value);
     }
 
+    public int Interval => (Strategy as RepeatStrategy)?.Interval ?? 0;
+
     /// <summary>
     /// Calculated automatically during generation of sequence timestamps (each sound from SequenceStart until SequenceEnd will increment auto duration).
     /// </summary>
