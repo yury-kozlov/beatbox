@@ -9,7 +9,7 @@ public class SequenceDesignState
     public int Duration { get; private set; }
     public SequenceEnd SequenceEnd { get; }
     public List<SequenceDesign> Sequences { get; } = [];
-    public bool IsEmpty => Sequences.Count == 0;
+    public bool IsEmpty => Leader.Followers.Count == 0;
 
     public SequenceDesignState(SequenceDesign sequenceDesign, string name)
     {

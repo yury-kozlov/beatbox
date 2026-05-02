@@ -179,7 +179,7 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
         var snares = new SequenceDesign("snares")
         {
             Strategy = new RepeatStrategy { Count = 2 },
-            Leader = new Snare { Strategy = new RepeatStrategy { Interval = 1000, Count = 2} },
+            Leader = new Snare { Strategy = new RepeatStrategy { Interval = 1000, Count = 2 } },
         };
 
         var main = new SequenceDesign("main");
@@ -311,6 +311,45 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "2400:end-of-loop",
             "2400:sequence-end-snares",
             "2400:sequence-end-main",
+        ]);
+    }
+
+    [Fact]
+    public void Combine_OneWithAnother()
+    {
+        // this tests checks that two sequences that are combined with each other (instead of both being combined with a third sequence)
+        // play in parallel and that the shorter sequence doesn't get cut off by the longer one
+
+        // arrange
+        var kicks = new PrimitiveSequences.Repeat(new Kick(), "kicks")
+        {
+            Count = 1,
+            Interval = 4000,
+            RepeatedFollowers = [new Kick() { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 3000, } }],
+        };
+
+        var snares = new PrimitiveSequences.Square<Snare>() { Interval = kicks.Interval / 4 };
+        kicks.Combine(snares);
+
+        // act
+        var actual = SequenceGenerator.Generate(kicks);
+        var actualTimestamps = actual.GetTimestamps();
+
+        // assert
+        actual.Should().NotContain(s => s is LoopEndTrimmed);
+        actualTimestamps.Should().BeExactSequence([
+            "0000:sequence-start-kicks",
+            "0000:k",
+            "0000:sequence-start-square",
+            "0000:s",
+            "1000:s",
+            "2000:s",
+            "3000:k",
+            "3000:s",
+            "4000:end-of-loop",
+            "4000:sequence-end-square",
+            "4000:end-of-sequence-loop-kicks",
+            "4000:sequence-end-kicks",
         ]);
     }
 }
