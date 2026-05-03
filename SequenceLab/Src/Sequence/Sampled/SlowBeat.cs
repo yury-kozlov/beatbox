@@ -40,4 +40,140 @@ public class SlowBeat
 
         return sequence;
     }
+
+    /// <summary>
+    /// K   S  K     K        K     S  K     K |||
+    /// </summary>
+    internal static SequenceDesign GetSequence1()
+    {
+        return new SequenceDesign("SlowBeat1")
+        {
+            Strategy = new RepeatStrategy() { Count = 4, Interval = 4000 },
+            Leader = new Kick()
+            {
+                Followers = new()
+                {
+                    new Snare() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300, }},
+                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200, }},
+                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500, }},
+                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 800, }},
+                    new Snare() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500, }},
+                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200, }},
+                    new Kick() { Tags = ["end"],  Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500, }},
+                },
+            },
+        };
+    }
+
+    /// <summary>
+    /// K   S  K   S  K     S     K
+    /// </summary>
+    internal static SequenceDesign GetSequence2()
+    {
+        return new SequenceDesign("SlowBeat2")
+        {
+            Strategy = new RepeatStrategy() { Count = 4, Interval = 3400 },
+            Leader = new Kick()
+            {
+                Followers = new()
+                {
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500}},
+                },
+            },
+        };
+    }
+
+    /// <summary>
+    /// K   K  K     S     K   K  K   K  K     S     K
+    /// </summary>
+    internal static SequenceDesign GetSequence3()
+    {
+        return new SequenceDesign("SlowBeat3")
+        {
+            Strategy = new RepeatStrategy() { Count = 4, Interval = 4800 },
+            Leader = new Kick()
+            {
+                Followers = new()
+                {
+                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300, }},
+                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200, }},
+                    new Snare() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500, }},
+
+                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500, }},
+                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300, }},
+                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200, }},
+                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300, }},
+                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200, }},
+
+                    new Snare() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500, }},
+                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500, }},
+                },
+            },
+        };
+    }
+
+    /// <summary>
+    /// K  K  K    S    K  K  K        S        K  K  K    S    K  K  K     K    S
+    /// </summary>
+    internal static SequenceDesign GetSequence4()
+    {
+        return new SequenceDesign("SlowBeat4")
+        {
+            Strategy = new RepeatStrategy() { Count = 4, Interval = 6400 },
+            Leader = new Kick()
+            {
+                Followers = new()
+                {
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 800}},
+
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 800}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 420}},
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
+                },
+            },
+        };
+    }
+
+    /// <summary>
+    /// K  K  K    S    K  K    K    K  S
+    /// </summary>
+    internal static SequenceDesign GetSequence5()
+    {
+        return new SequenceDesign("SlowBeat5")
+        {
+            Strategy = new RepeatStrategy() { Count = 4, Interval = 3200 },
+            Leader = new Kick
+            {
+                Followers = new()
+                {
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
+
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
+                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
+                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
+                },
+            },
+        };
+    }
 }
