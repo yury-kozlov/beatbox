@@ -55,11 +55,7 @@ public class SequenceGenerator
         foreach (var follower in leader.Followers)
         {
             follower.PreviousSounds = allFollowers;
-            if (leader.Strategy.FireAndForget)
-            {
-                // propagate this flag to direct followeres
-                follower.Strategy.FireAndForget = leader.Strategy.FireAndForget;
-            }
+            PropagateFireAndForget(leader, follower);
 
             // NOTE: separate followers are played independently to allow overlapping sequences (mixed together)
             var nestedFollowers = GenerateSequence(follower);
@@ -80,6 +76,25 @@ public class SequenceGenerator
         }
 
         return allFollowers;
+    }
+
+    /// <summary>
+    /// Propagates FireAndForget to a direct follower, with one exception:
+    /// when the leader is SequenceStart (i.e. FireAndForget is set at the sequence-design level),
+    /// only SequenceEnd inherits the flag — so external sounds cannot follow this sequence,
+    /// while internal sounds remain unaffected and still chain normally via FollowPreviousSoundStrategy.
+    /// </summary>
+    private static void PropagateFireAndForget(Sound leader, Sound follower)
+    {
+        if (!leader.Strategy.FireAndForget)
+        {
+            return;
+        }
+
+        if (leader is not SequenceStart || follower is SequenceEnd)
+        {
+            follower.Strategy.FireAndForget = true;
+        }
     }
 
     private static void SetIterationPath(Sound leader, Sound follower)
