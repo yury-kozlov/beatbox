@@ -107,4 +107,11 @@ class Examples
         var player = new ConsoleKeyPlayer();
         player.PlayRepeated(main).Wait();
     }
+
+    public void FormatDelayedSounds()
+    {
+        var formattedString = ConsoleKeyPlayer.GetFormattedDelays(0, 100, 240, 280, 260, 260);
+        // X  X      X       X      X      X
+        Console.WriteLine(formattedString);
+    }
 }

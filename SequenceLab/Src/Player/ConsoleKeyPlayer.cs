@@ -128,7 +128,7 @@ public class ConsoleKeyPlayer : IDisposable
             Logger.WriteColored($"[{keyName}]", color);
             str.Append(keyName);
 
-            var spacesCount = (int)(k.PostDelay / 100.0);
+            var spacesCount = GetSpacesCount(k.PostDelay);
             for (var i = 0; i < spacesCount; i++)
             {
                 Console.Write(" ");
@@ -136,6 +136,25 @@ public class ConsoleKeyPlayer : IDisposable
             }
         }
     }
+
+    public static string GetFormattedDelays(params int[] delays)
+    {
+        var str = new StringBuilder();
+        var totalTime = delays.Sum();
+        var scaleFactor = totalTime < 3000 ? 3000.0 / totalTime : 1; // scale to 3000ms total (line of 30 chars)
+        foreach (var delay in delays)
+        {
+            var spacesCount = GetSpacesCount((int)(delay * scaleFactor));
+            for (var i = 0; i < spacesCount; i++)
+            {
+                str.Append(' ');
+            }
+            str.Append("X");
+        }
+        return str.ToString();
+    }
+
+    private static int GetSpacesCount(int postDelay) => (int)(postDelay / 100.0);
 
     /// <summary>
     /// Generates sequence from pressed keys interactively.
