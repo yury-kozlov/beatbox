@@ -16,7 +16,7 @@ public record Sound
     }
 
     public string? Name;
-    public string? FriendlyName;
+    public virtual string? FriendlyName { get; set; }
 
     public AbstractStrategy Strategy
     {

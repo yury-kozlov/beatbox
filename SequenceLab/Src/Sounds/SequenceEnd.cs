@@ -5,18 +5,30 @@
 /// </summary>
 public record SequenceEnd : NoSound
 {
+    private string _friendlyName;
+
     public SequenceEnd()
     {
         // a default ctor is supposed to be used only for JSON deserialization purposes
-        FriendlyName = "sequence-end";
+        _friendlyName = "sequence-end";
         InitStrategy();
     }
 
     public SequenceEnd(SequenceDesign sequence)
     {
-        FriendlyName = $"sequence-end-{sequence.Name}";
+        _friendlyName = $"sequence-end-{sequence.Name}";
         Sequence = sequence;
         InitStrategy();
+    }
+
+    public override string? FriendlyName
+    {
+        get
+        {
+            // for example: "sequence-end-slow-beat-1: 2000 ms"
+            var durationStr = Sequence.AutoDuration > 0 ? $": {Sequence.AutoDuration} ms" : "";
+            return $"{_friendlyName}{durationStr}";
+        }
     }
 
     public void InitStrategy()
