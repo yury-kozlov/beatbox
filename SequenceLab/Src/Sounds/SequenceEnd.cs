@@ -26,7 +26,7 @@ public record SequenceEnd : NoSound
         get
         {
             // for example: "sequence-end-slow-beat-1: 2000 ms"
-            var durationStr = Sequence.AutoDuration > 0 ? $": {Sequence.AutoDuration} ms" : "";
+            var durationStr = Sequence?.AutoDuration > 0 ? $": {Sequence.AutoDuration} ms" : "";
             return $"{_friendlyName}{durationStr}";
         }
     }

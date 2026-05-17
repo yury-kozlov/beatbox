@@ -83,7 +83,7 @@ public class SequenceDesignTests(ITestOutputHelper output) : TestBase(output)
             "0000:sequence-start-test",
             "0000:k",
             "0200:s",
-            "0200:sequence-end-test",
+            "0200:sequence-end-test: 200 ms",
         ];
 
         // act
@@ -212,7 +212,7 @@ public class SequenceDesignTests(ITestOutputHelper output) : TestBase(output)
         [
             "0000:sequence-start-test",
             "0000:k",
-            "0500:sequence-end-test",
+            "0500:sequence-end-test: 500 ms",
         ];
 
         // act
@@ -461,14 +461,14 @@ public class SequenceDesignTests(ITestOutputHelper output) : TestBase(output)
             "0100:k",
             "0200:k",
             "0300:end-of-loop",
-            "0300:sequence-end-test",
+            "0300:sequence-end-test: 300 ms",
             "0300:sequence-start-test",
             "0300:k",
             "0400:k",
             "0500:k",
             "0600:end-of-loop",
             "0600:end-of-sequence-loop-test",
-            "0600:sequence-end-test",
+            "0600:sequence-end-test: 300 ms",
         ];
 
         // act

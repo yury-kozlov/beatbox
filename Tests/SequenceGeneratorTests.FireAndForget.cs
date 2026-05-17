@@ -35,7 +35,7 @@ public class SequenceGeneratorFireAndForgetTests(ITestOutputHelper output) : Tes
             "1250:s",
             "1300:k",
             "2000:end-of-loop",
-            "2000:sequence-end-test",
+            "2000:sequence-end-test: 2000 ms",
         ];
 
         // act
@@ -83,7 +83,7 @@ public class SequenceGeneratorFireAndForgetTests(ITestOutputHelper output) : Tes
             "1050:s",
             "1100:a",
             "2000:end-of-loop",
-            "2000:sequence-end-test",
+            "2000:sequence-end-test: 2000 ms",
         ];
 
         // act
@@ -120,7 +120,7 @@ public class SequenceGeneratorFireAndForgetTests(ITestOutputHelper output) : Tes
             "0000:s",
             "0100:s",
             "0300:s",
-            "0300:sequence-end-test",
+            "0300:sequence-end-test: 300 ms",
         ];
 
         // act

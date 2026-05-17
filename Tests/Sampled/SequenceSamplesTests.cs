@@ -42,7 +42,7 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "6785:k",
             "7025:s",
             "7520:end-of-loop",
-            "7520:sequence-end-" + sequence.Name,
+            "7520:sequence-end-" + sequence.Name + ": 7520 ms",
         ];
 
         // act
@@ -115,7 +115,7 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "14240:k",
             "14480:end-of-loop",
             "14480:end-of-loop-trimmed",
-            "14480:sequence-end-" + sequence.Name,
+            "14480:sequence-end-" + sequence.Name + ": 14480 ms",
         ];
 
         // act
@@ -184,7 +184,7 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
              "15030:k",
              "15280:s",
              "15760:end-of-loop",
-             "15760:sequence-end-" + sequence.Name,
+             "15760:sequence-end-" + sequence.Name + ": 15760 ms",
         ];
 
         // act
@@ -241,7 +241,7 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
              "6935:k",
              "7035:s",
              "7600:end-of-loop",
-             "7600:sequence-end-" + sequence.Name,
+             "7600:sequence-end-" + sequence.Name + ": 7600 ms",
         ];
 
         // act
@@ -344,7 +344,7 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "7810:end-of-loop",
             "7900:end-of-loop",
             "8000:end-of-loop",
-            "8000:sequence-end-" + sequence.Name,
+            "8000:sequence-end-" + sequence.Name + ": 8000 ms",
         ];
 
         // act
@@ -444,7 +444,7 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "7500:k",
             "7600:ts2",
             "8000:end-of-loop",
-            "8000:sequence-end-" + sequence.Name,
+            "8000:sequence-end-" + sequence.Name + ": 8000 ms",
         ];
 
         // act
@@ -470,8 +470,8 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "1300:s",
             "1500:k",
             "2000:end-of-loop",
-            "2000:sequence-end-TechnoBeat3",
-            "2000:sequence-start-TechnoBeat3",
+            "2000:sequence-end-" + sequence.Name + ": 2000 ms",
+            "2000:sequence-start-" + sequence.Name,
             "2000:k",
             "2500:k",
             "2500:s",
@@ -479,8 +479,8 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "3300:s",
             "3500:k",
             "4000:end-of-loop",
-            "4000:sequence-end-TechnoBeat3",
-            "4000:sequence-start-TechnoBeat3",
+            "4000:sequence-end-" + sequence.Name + ": 2000 ms",
+            "4000:sequence-start-" + sequence.Name,
             "4000:k",
             "4500:k",
             "4500:s",
@@ -488,8 +488,8 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "5300:s",
             "5500:k",
             "6000:end-of-loop",
-            "6000:sequence-end-TechnoBeat3",
-            "6000:sequence-start-TechnoBeat3",
+            "6000:sequence-end-" + sequence.Name + ": 2000 ms",
+            "6000:sequence-start-" + sequence.Name,
             "6000:k",
             "6500:k",
             "6500:s",
@@ -498,7 +498,7 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "7500:k",
             "8000:end-of-loop",
             "8000:end-of-sequence-loop-" + sequence.Name,
-            "8000:sequence-end-" + sequence.Name,
+            "8000:sequence-end-" + sequence.Name + ": 2000 ms",
         ];
 
         // act
@@ -578,7 +578,7 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "7585:ts1",
             "8000:end-of-loop",
             "8000:end-of-loop-trimmed",
-            "8000:sequence-end-" + sequence.Name,
+            "8000:sequence-end-" + sequence.Name + ": 8000 ms",
         ];
 
         // act
@@ -607,8 +607,8 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "1185:ts1",
             "1660:ts1",
             "1900:end-of-loop-trimmed", // ts1 loop end timestamp adjusted to the current iteration (1900 instead of 2135)
-            "1900:sequence-end-Noe_Solange_Home_DJCounselling",
-            "1900:sequence-start-Noe_Solange_Home_DJCounselling",
+            "1900:sequence-end-" + sequence.Name + ": 1900 ms",
+            "1900:sequence-start-" + sequence.Name,
             "1900:k",
             "2135:ts1",
             "2375:k",
@@ -617,8 +617,8 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "3085:ts1",
             "3560:ts1",
             "3800:end-of-loop-trimmed", // adjusted to the current iteration (3800 instead of 4035)
-            "3800:sequence-end-Noe_Solange_Home_DJCounselling",
-            "3800:sequence-start-Noe_Solange_Home_DJCounselling",
+            "3800:sequence-end-" + sequence.Name + ": 1900 ms",
+            "3800:sequence-start-" + sequence.Name,
             "3800:k",
             "4035:ts1",
             "4275:k",
@@ -627,8 +627,8 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "4985:ts1",
             "5460:ts1",
             "5700:end-of-loop-trimmed", // adjusted to the current iteration (5700 instead of 5935)
-            "5700:sequence-end-Noe_Solange_Home_DJCounselling",
-            "5700:sequence-start-Noe_Solange_Home_DJCounselling",
+            "5700:sequence-end-" + sequence.Name + ": 1900 ms",
+            "5700:sequence-start-" + sequence.Name,
             "5700:k",
             "5935:ts1",
             "6175:k",
@@ -638,7 +638,7 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "7360:ts1",
             "7600:end-of-loop-trimmed", // adjusted to the current iteration (7600 instead of 7835)
             "7600:end-of-sequence-loop-" + sequence.Name,
-            "7600:sequence-end-" + sequence.Name,
+            "7600:sequence-end-" + sequence.Name + ": 1900 ms",
         ];
 
         // act
@@ -668,7 +668,7 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
             "3710:k",
             "4160:k",
             "4490:s",
-            "5100:sequence-end-" + sequence.Name,
+            "5100:sequence-end-" + sequence.Name + ": 5100 ms",
         ];
 
         // act

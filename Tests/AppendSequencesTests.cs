@@ -37,16 +37,16 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0000:sequence-start-kicks",
             "0000:k",
             "0100:k",
-            "0100:sequence-end-kicks",
+            "0100:sequence-end-kicks: 100 ms",
             "0100:sequence-start-snares",
             "0100:s",
             "0250:s",
-            "0250:sequence-end-snares",
+            "0250:sequence-end-snares: 150 ms",
             "0250:sequence-start-hihats",
             "0250:h",
             "0450:h",
-            "0450:sequence-end-hihats",
-            "0450:sequence-end-main",
+            "0450:sequence-end-hihats: 200 ms",
+            "0450:sequence-end-main: 450 ms",
         ];
 
         // assert
@@ -79,18 +79,18 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
         var actualTimestamps = actual.GetTimestamps();
 
         string[] expected = [
-            "0000:sequence-start-main",
-            "0000:sequence-start-test1",
-            "0000:k",
-            "0100:s",
-            "0150:s",
-            "0150:sequence-end-test1",
-            "0150:sequence-start-test2",
-            "0150:k",
-            "0250:s",
-            "0300:s",
-            "0300:sequence-end-test2",
-            "0300:sequence-end-main",
+                "0000:sequence-start-main",
+                "0000:sequence-start-test1",
+                "0000:k",
+                "0100:s",
+                "0150:s",
+                "0150:sequence-end-test1: 150 ms",
+                "0150:sequence-start-test2",
+                "0150:k",
+                "0250:s",
+                "0300:s",
+                "0300:sequence-end-test2: 150 ms",
+                "0300:sequence-end-main: 300 ms",
         ];
 
         // assert
@@ -127,13 +127,13 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0000:k",
             "0100:s",
             "0150:s",
-            "0500:sequence-end-test1",
+            "0500:sequence-end-test1: 500 ms",
             "0500:sequence-start-test2",
             "0500:k",
             "0600:s",
             "0650:s",
-            "1000:sequence-end-test2",
-            "1000:sequence-end-main",
+            "1000:sequence-end-test2: 500 ms",
+            "1000:sequence-end-main: 1000 ms",
         ];
 
         // assert
@@ -186,14 +186,14 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0000:k",
             "0100:k",
             "0150:k",
-            "0200:sequence-end-kicks",
+            "0200:sequence-end-kicks: 200 ms",
             "0200:sequence-start-snares",
             "0200:s",
             // "0360:s", // this one exceeds first sequence duration and is trimmed
             // "0500:sequence-end-snares",    // this one exceeds first sequence duration and is trimmed
             "0200:sequence-trimmed-snares",   // replaced sequence-end
             "0200:end-of-sequence-loop-main", // outer loop closing "main" sequence
-            "0200:sequence-end-main",
+            "0200:sequence-end-main: 200 ms",
         ];
 
         // assert
@@ -223,8 +223,8 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0500:k",
             "1200:k",
             "1900:k",
-            "2400:sequence-end-trapezoid",
-
+            "2400:sequence-end-trapezoid: 2400 ms",
+            
             "2400:sequence-start-square",
             "2400:s",
             "3000:s",
@@ -232,8 +232,8 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
             "4200:s",
             "4800:end-of-loop",
             "4800:end-of-sequence-loop-square",
-            "4800:sequence-end-square",
-            "4800:sequence-end-main",
+            "4800:sequence-end-square: 2400 ms",
+            "4800:sequence-end-main: 4800 ms",
         };
 
         // assert
@@ -258,15 +258,15 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0000:s",
             "0100:s",
             "0200:end-of-loop",
-            "0200:sequence-end-snares",
+            "0200:sequence-end-snares: 200 ms",
             "0200:sequence-start-kicks",
             "0200:k",
             "0400:k",
             "0600:end-of-loop",
-            "0600:sequence-end-kicks",
-            "0600:sequence-end-main",
+            "0600:sequence-end-kicks: 400 ms",
+            "0600:sequence-end-main: 600 ms",
         };
-        
+
         var actualTimestamps = mainSequence.GetTimestamps();
         actualTimestamps.Should().BeExactSequence(expected);
         main.Duration.Should().Be(600);

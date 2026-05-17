@@ -23,8 +23,8 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0000:sequence-start-kicks",
             "0000:k",
             "0100:k",
-            "0100:sequence-end-kicks",
-            "0100:sequence-end-main",
+            "0100:sequence-end-kicks: 100 ms",
+            "0100:sequence-end-main: 100 ms",
         ];
         actual.GetTimestamps().Should().BeExactSequence(expected);
     }
@@ -53,10 +53,10 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0000:sequence-start-snares",
             "0000:s",
             "0100:k",
-            "0100:sequence-end-kicks",
+            "0100:sequence-end-kicks: 100 ms",
             "0150:s",
-            "0150:sequence-end-snares",
-            "0150:sequence-end-main",
+            "0150:sequence-end-snares: 150 ms",
+            "0150:sequence-end-main: 150 ms",
         ]);
     }
 
@@ -100,10 +100,10 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "1300:s",
             "1500:k",
             "1600:end-of-loop",
-            "1600:sequence-end-snares",
+            "1600:sequence-end-snares: 1600 ms",
             "2000:end-of-loop",
-            "2000:sequence-end-kicks",
-            "2000:sequence-end-main",
+            "2000:sequence-end-kicks: 2000 ms",
+            "2000:sequence-end-main: 2000 ms",
             "2000:sequence-start-main",
             "2000:sequence-start-kicks",
             "2000:sequence-start-snares",
@@ -118,10 +118,10 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "3300:s",
             "3500:k",
             "3600:end-of-loop",
-            "3600:sequence-end-snares",
+            "3600:sequence-end-snares: 1600 ms",
             "4000:end-of-loop",
-            "4000:sequence-end-kicks",
-            "4000:sequence-end-main",
+            "4000:sequence-end-kicks: 2000 ms",
+            "4000:sequence-end-main: 2000 ms",
             "4000:sequence-start-main",
             "4000:sequence-start-kicks",
             "4000:sequence-start-snares",
@@ -136,10 +136,10 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "5300:s",
             "5500:k",
             "5600:end-of-loop",
-            "5600:sequence-end-snares",
+            "5600:sequence-end-snares: 1600 ms",
             "6000:end-of-loop",
-            "6000:sequence-end-kicks",
-            "6000:sequence-end-main",
+            "6000:sequence-end-kicks: 2000 ms",
+            "6000:sequence-end-main: 2000 ms",
             "6000:sequence-start-main",
             "6000:sequence-start-kicks",
             "6000:sequence-start-snares",
@@ -154,11 +154,11 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "7300:s",
             "7500:k",
             "7600:end-of-loop",
-            "7600:sequence-end-snares",
+            "7600:sequence-end-snares: 1600 ms",
             "8000:end-of-loop",
-            "8000:sequence-end-kicks",
+            "8000:sequence-end-kicks: 2000 ms",
             "8000:end-of-sequence-loop-main",
-            "8000:sequence-end-main"
+            "8000:sequence-end-main: 2000 ms"
         ];
 
         // assert
@@ -198,24 +198,24 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0100:k",
             "0200:k",
             "0300:end-of-loop",
-            "0300:sequence-end-kicks",
+            "0300:sequence-end-kicks: 300 ms",
             "0300:sequence-start-kicks",
             "0300:k",
             "0400:k",
             "0500:k",
             "0600:end-of-loop",
             "0600:end-of-sequence-loop-kicks",
-            "0600:sequence-end-kicks",
+            "0600:sequence-end-kicks: 300 ms",
             "1000:s",
             "2000:end-of-loop",
-            "2000:sequence-end-snares",
+            "2000:sequence-end-snares: 2000 ms",
             "2000:sequence-start-snares",
             "2000:s",
             "3000:s",
             "4000:end-of-loop",
             "4000:end-of-sequence-loop-snares",
-            "4000:sequence-end-snares",
-            "4000:sequence-end-main",
+            "4000:sequence-end-snares: 2000 ms",
+            "4000:sequence-end-main: 4000 ms",
         ];
 
         // assert
@@ -250,12 +250,12 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0000:sequence-start-hihats",
             "0000:h",
             "0100:k",
-            "0100:sequence-end-kicks",
+            "0100:sequence-end-kicks: 100 ms",
             "0150:s",
-            "0150:sequence-end-snares",
+            "0150:sequence-end-snares: 150 ms",
             "0200:h",
-            "0200:sequence-end-hihats",
-            "0200:sequence-end-main",
+            "0200:sequence-end-hihats: 200 ms",
+            "0200:sequence-end-main: 200 ms",
         ]);
     }
 
@@ -307,10 +307,10 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "1500:k",
             "1800:s",
             "2000:end-of-loop",
-            "2000:sequence-end-kicks",
+            "2000:sequence-end-kicks: 2000 ms",
             "2400:end-of-loop",
-            "2400:sequence-end-snares",
-            "2400:sequence-end-main",
+            "2400:sequence-end-snares: 2400 ms",
+            "2400:sequence-end-main: 2400 ms",
         ]);
     }
 
@@ -347,9 +347,9 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
             "3000:k",
             "3000:s",
             "4000:end-of-loop",
-            "4000:sequence-end-square",
+            "4000:sequence-end-square: 4000 ms",
             "4000:end-of-sequence-loop-kicks",
-            "4000:sequence-end-kicks",
+            "4000:sequence-end-kicks: 4000 ms",
         ]);
     }
 }

@@ -31,7 +31,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "0600:s",
             "1500:s",
             "1800:k",
-            "1800:sequence-end-test",
+            "1800:sequence-end-test: 1800 ms",
         ];
 
         // act
@@ -58,7 +58,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "0000:metronome",
             "1000:metronome",
             "2000:end-of-loop",
-            "2000:sequence-end-test",
+            "2000:sequence-end-test: 2000 ms",
         ];
 
         // act
@@ -95,7 +95,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "0600:s",
             "1000:end-of-loop",
             "1000:end-of-loop-trimmed",
-            "1000:sequence-end-test",
+            "1000:sequence-end-test: 1000 ms",
         ];
 
         // act
@@ -133,7 +133,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "1000:k",
             "1500:s",
             "2000:end-of-loop",
-            "2000:sequence-end-test",
+            "2000:sequence-end-test: 2000 ms",
         ];
 
         // act
@@ -248,7 +248,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "7810:end-of-loop",
             "7900:end-of-loop",
             "8000:end-of-loop",
-            "8000:sequence-end-test",
+            "8000:sequence-end-test: 8000 ms",
         ];
 
         // act
@@ -292,7 +292,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "1300:b3",
             "1600:b4",
             "2000:end-of-loop",
-            "2000:sequence-end-test",
+            "2000:sequence-end-test: 2000 ms",
         ];
 
         // act
@@ -326,7 +326,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "3000:k",
             "3100:every-2nd",
             "4000:end-of-loop",
-            "4000:sequence-end-test",
+            "4000:sequence-end-test: 4000 ms",
         ];
 
         // act
@@ -372,7 +372,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "0550:every-3rd",
             "0600:end-of-loop",
             "1000:end-of-loop",
-            "1000:sequence-end-test",
+            "1000:sequence-end-test: 1000 ms",
         ];
 
         // act
@@ -412,7 +412,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "3000:s",
             "3500:k",
             "4000:end-of-loop",
-            "4000:sequence-end-test",
+            "4000:sequence-end-test: 4000 ms",
         ];
 
         // act
@@ -448,7 +448,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "1100:ts1",
             "1500:k",
             "2000:end-of-loop",
-            "2000:sequence-end-test",
+            "2000:sequence-end-test: 2000 ms",
         ];
 
         // act
@@ -494,7 +494,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "3500:k",
             "3600:ts1",
             "4000:end-of-loop",
-            "4000:sequence-end-test",
+            "4000:sequence-end-test: 4000 ms",
         ];
 
         // act
@@ -527,14 +527,14 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "0100:k",
             "0200:k",
             "0300:end-of-loop",
-            "0300:sequence-end-test",
+            "0300:sequence-end-test: 300 ms",
             "0300:sequence-start-test",
             "0300:k",
             "0400:k",
             "0500:k",
             "0600:end-of-loop",
             "0600:end-of-sequence-loop-test",
-            "0600:sequence-end-test",
+            "0600:sequence-end-test: 300 ms",
         ];
 
         // act
@@ -568,7 +568,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             "0300:k",
             // "0700:s", // trimmed — 700ms exceeds Kick's loop interval of 300ms starting at 300ms
             "0600:end-of-loop",
-            "0600:sequence-end-test",
+            "0600:sequence-end-test: 600 ms",
         ];
 
         // act
@@ -612,7 +612,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             // "2200:s", // trimmed — 2200ms exceeds Kick's loop interval of 1000ms starting at 1000ms
             "2000:end-of-loop", // Kick loop end
             "2000:end-of-loop-trimmed", // Snare loop end for Kick#2, trimmed from 2500ms to 2000ms
-            "2000:sequence-end-test",
+            "2000:sequence-end-test: 2000 ms",
         ];
 
         // act

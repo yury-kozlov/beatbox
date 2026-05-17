@@ -20,7 +20,7 @@ public class PrimitiveSequencesTests(ITestOutputHelper output) : TestBase(output
             "0500:k",
             "1200:k",
             "1900:k",
-            "2400:sequence-end-trapezoid",
+            "2400:sequence-end-trapezoid: 2400 ms",
         ];
 
         // act
@@ -49,26 +49,26 @@ public class PrimitiveSequencesTests(ITestOutputHelper output) : TestBase(output
             "0500:k",
             "1200:k",
             "1900:k",
-            "2400:sequence-end-trapezoid",
+            "2400:sequence-end-trapezoid: 2400 ms",
             "2400:sequence-start-trapezoid",
             "2400:k",
             "2900:k",
             "3600:k",
             "4300:k",
-            "4800:sequence-end-trapezoid",
+            "4800:sequence-end-trapezoid: 2400 ms",
             "4800:sequence-start-trapezoid",
             "4800:k",
             "5300:k",
             "6000:k",
             "6700:k",
-            "7200:sequence-end-trapezoid",
+            "7200:sequence-end-trapezoid: 2400 ms",
             "7200:sequence-start-trapezoid",
             "7200:k",
             "7700:k",
             "8400:k",
             "9100:k",
             "9600:end-of-sequence-loop-trapezoid",
-            "9600:sequence-end-trapezoid",
+            "9600:sequence-end-trapezoid: 2400 ms",
         ];
 
         // act
@@ -80,7 +80,7 @@ public class PrimitiveSequencesTests(ITestOutputHelper output) : TestBase(output
         sequence.Duration.Should().Be(9600);
 
         // verify overlapping sounds at iteration transitions are in correct order:
-        actualTimestamps![5].Should().Be("2400:sequence-end-trapezoid");
+        actualTimestamps![5].Should().Be("2400:sequence-end-trapezoid: 2400 ms");
         actualTimestamps[6].Should().Be("2400:sequence-start-trapezoid");
         actualTimestamps[7].Should().Be("2400:k");
     }
