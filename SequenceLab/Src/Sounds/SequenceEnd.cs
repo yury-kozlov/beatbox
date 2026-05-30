@@ -41,7 +41,7 @@ public record SequenceEnd : NoSound
             return;
         }
         // if duration of a sequence is unkown: current ending will be appended to the last sound
-        Strategy = new FollowPreviousSoundStrategy();
+        Strategy = new FollowPreviousSoundStrategy() { ShouldFollowSameSequence = false /* end of sequence may not necessary be limited to a single sequence */ };
     }
 
     public override string? ToString() => Format(FriendlyName);

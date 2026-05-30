@@ -3,6 +3,13 @@
 public class FollowPreviousSoundStrategy : AbstractStrategy
 {
     /// <summary>
+    /// Indicates that current sound should only follow previous sounds of the same sequence.
+    /// If sounds from other sequences are injected directly before it, they will be ignored
+    /// (delay before the current sound will be relative only to the previous sound of the same sequence).
+    /// </summary>
+    public bool ShouldFollowSameSequence { get; set; } = true;
+
+    /// <summary>
     /// Generate sequence relatively to the previous sound.
     /// So that delays will be calculated based on position of the previous sound (rather than position of the leader).
     /// </summary>
@@ -35,10 +42,17 @@ public class FollowPreviousSoundStrategy : AbstractStrategy
         return new Sequence() { leader };
     }
 
-    private static Sound? GetPreviousSound(Sound currentSound)
+    private Sound? GetPreviousSound(Sound currentSound)
     {
+        bool canBeFollowed(Sound previousSound)
+        {
+            if (ShouldFollowSameSequence && previousSound.Sequence != currentSound.Sequence)
+    {
+                return false;
+            }
         // a sound with FireAndForget strategy can't be followed unless it's direct leader of the current sound
-        bool canBeFollowed(Sound s) => !s.Strategy.FireAndForget || s == currentSound.Leader;
+            return !previousSound.Strategy.FireAndForget || previousSound == currentSound.Leader;
+        }
         return currentSound.PreviousSounds?.LastOrDefault(canBeFollowed);
     }
 

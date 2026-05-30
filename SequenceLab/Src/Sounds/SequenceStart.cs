@@ -7,7 +7,7 @@ public record SequenceStart : NoSound
         FriendlyName = $"sequence-start-{sequenceName}";
 
         /// follow last sound of the previous sequence (usually <see cref="SequenceEnd"/>):
-        Strategy = new FollowPreviousSoundStrategy();
+        Strategy = new FollowPreviousSoundStrategy() { ShouldFollowSameSequence = false /* allow appending current sequence to another sequence */ };
     }
 
     /// <summary>
