@@ -5,7 +5,7 @@ namespace Tests;
 public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
 {
     [Fact]
-    public void AppendSequences_3Sequences_WithoutExplicitDuration_ReturnJoined()
+    public void Append3SequencesToMainWrapper_WithoutExplicitDuration_ReturnJoined()
     {
         // arrange
         var kicks = new SequenceDesign("kicks")
@@ -25,11 +25,11 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
         };
 
         // act
-        var sequence = new SequenceDesign("main");
-        sequence.Append(kicks);
-        sequence.Append(snares);
-        sequence.Append(hihats);
-        var actual = SequenceGenerator.Generate(sequence);
+        var main = new SequenceDesign("main");
+        main.Append(kicks);
+        main.Append(snares);
+        main.Append(hihats);
+        var actual = SequenceGenerator.Generate(main);
         var actualTimestamps = actual.GetTimestamps();
 
         string[] expected = [
@@ -57,7 +57,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
     }
 
     [Fact]
-    public void AppendSequences_3Sounds_WithoutExplicitDuration_ReturnJoined()
+    public void Append2SequencesToMainWrapper_3Sounds_WithoutExplicitDuration_ReturnJoined()
     {
         // arrange
         var getSequence = (string name) => new SequenceDesign(name)
@@ -72,10 +72,10 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
         var seq2 = getSequence("test2");
 
         // act
-        var sequence = new SequenceDesign("main");
-        sequence.Append(seq1);
-        sequence.Append(seq2);
-        var actual = SequenceGenerator.Generate(sequence);
+        var main = new SequenceDesign("main");
+        main.Append(seq1);
+        main.Append(seq2);
+        var actual = SequenceGenerator.Generate(main);
         var actualTimestamps = actual.GetTimestamps();
 
         string[] expected = [
@@ -100,7 +100,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
     }
 
     [Fact]
-    public void AppendSequences_WithExplicitDuration_ReturnJoined()
+    public void Append2SequencesToMainWrapper_WithExplicitDuration_ReturnJoined()
     {
         // arrange
         var getSequence = (string name) => new SequenceDesign(name)
@@ -115,10 +115,10 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
         var seq2 = getSequence("test2");
 
         // act
-        var sequence = new SequenceDesign("main");
-        sequence.Append(seq1);
-        sequence.Append(seq2);
-        var actual = SequenceGenerator.Generate(sequence);
+        var main = new SequenceDesign("main");
+        main.Append(seq1);
+        main.Append(seq2);
+        var actual = SequenceGenerator.Generate(main);
         var actualTimestamps = actual.GetTimestamps();
 
         string[] expected = [
@@ -141,7 +141,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
     }
 
     [Fact]
-    public void AppendSequences_SecondSequenceExceedsExplicitDurationOfFirst_Trim()
+    public void AppendOneSequenceToAnother_SecondSequenceExceedsExplicitDurationOfFirst_Trim()
     {
         // this test assumes that if some sequence has explicit duration,
         // then any new sound added to it either as an individual sound or as part of another sequence
@@ -168,7 +168,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
         seq1.Leader.Followers.Add(seq2.Leader);
 
         // act
-        var sequence = new SequenceDesign("main")
+        var main = new SequenceDesign("main")
         {
             Strategy = new RepeatStrategy
             {
@@ -176,8 +176,8 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
                 Interval = 100, // interval will be increased to 200 after appending, so the loop will be long enough to fit both sequences without trimming
             }
         };
-        sequence.Append(seq1);
-        var actual = SequenceGenerator.Generate(sequence);
+        main.Append(seq1);
+        var actual = SequenceGenerator.Generate(main);
         var actualTimestamps = actual.GetTimestamps();
 
         string[] expected = [
@@ -201,7 +201,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
     }
 
     [Fact]
-    public void AppendTwoSequences_PlayOneAfterEachOther()
+    public void Append2SequencesToMainWrapper_PlayOneAfterEachOther()
     {
         /// this test checks that if a sequence without <see cref="FollowPreviousSoundStrategy"/> is appended to another sequence
         /// they will be played after each other and not in parallel
@@ -212,10 +212,10 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
         var main = new SequenceDesign("main");
         main.Append(trapezoid);
         main.Append(square);
-        var mainSequence = SequenceGenerator.Generate(main);
 
         // act
-        var actualTimestamps = mainSequence.GetTimestamps();
+        var actual = SequenceGenerator.Generate(main);
+        var actualTimestamps = actual.GetTimestamps();
         var expected = new string[] {
             "0000:sequence-start-main",
             "0000:sequence-start-trapezoid",
@@ -241,15 +241,17 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
     }
 
     [Fact]
-    public void AppendTwoLoopSequences_PlayOneAfterAnother()
+    public void Append2LoopSequencesToMainWrapper_PlayOneAfterAnother()
     {
         // arrange
         var snares = new SequenceDesign("snares") { Leader = new Snare { Strategy = new RepeatStrategy { Interval = 100, Count = 2 } } };
         var kicks = new SequenceDesign("kicks") { Leader = new Kick { Strategy = new RepeatStrategy { Interval = 200, Count = 2 } } };
 
         // act
-        var main = new SequenceDesign("main").Append(snares).Append(kicks);
-        var mainSequence = SequenceGenerator.Generate(main);
+        var main = new SequenceDesign("main");
+        main.Append(snares);
+        main.Append(kicks);
+        var actual = SequenceGenerator.Generate(main);
 
         // assert
         var expected = new string[] {
@@ -267,7 +269,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
             "0600:sequence-end-main: 600 ms",
         };
 
-        var actualTimestamps = mainSequence.GetTimestamps();
+        var actualTimestamps = actual.GetTimestamps();
         actualTimestamps.Should().BeExactSequence(expected);
         main.Duration.Should().Be(600);
     }
