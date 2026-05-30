@@ -27,6 +27,9 @@ public class SequenceDesign
     /// </summary>
     public Sound? FirstSound => Leader.Followers.FirstOrDefault();
 
+    /// <summary>
+    /// By default, sequence strategy is determined by the <see cref="SequenceStart"/> sound.
+    /// </summary>
     public AbstractStrategy Strategy
     {
         get => Leader.Strategy;
@@ -73,6 +76,9 @@ public class SequenceDesign
     /// </summary>
     public SequenceEnd SequenceEnd => _state.SequenceEnd;
 
+    /// <summary>
+    /// Used for tracking appended sequences.
+    /// </summary>
     public List<SequenceDesign> Sequences => _state.Sequences;
 
     public static SequenceDesign? FromJson(string json) => Serialization.FromJson<SequenceDesign>(json);
@@ -97,21 +103,48 @@ public class SequenceDesign
 
         _state.AppendDuration(next.Duration);
 
+        var previousSequence = Sequences.LastOrDefault();
         Sequences.Add(next);
 
-        if (Sequences.Count == 1 || next.Leader.Strategy is FollowPreviousSoundStrategy)
+        if (next.Leader.Strategy is FollowPreviousSoundStrategy)
         {
-            // if the added sequence is the first one or it has default strategy
             // just add it as the next follower (it will be played after all previous sequences)
             Leader.WithFollower(next.Leader);
             Leader.MoveFollowerToTheEnd(SequenceEnd);
             return this;
         }
 
-        // append to the end of the previous sequence (to make sure the added sequence is played after it and not in parallel)
-        if (Sequences[^2].SequenceEnd is SequenceEnd previousEnd)
+        if (Sequences.Count == 1)
         {
-            previousEnd.WithFollower(next.Leader);
+            // appending for the first time
+            if (Leader.Followers.HasItems())
+            {
+                /// previous sequence has items, while next sequence strategy is not <see cref="FollowPreviousSoundStrategy"/> so we need to use joint
+                // to make sure it will be played after all previous sounds
+                // (because the original strategy of the next sequence doesn't follow previous sounds)
+
+                if (next.Leader is SequenceStart start && start.Strategy is PlayOnceStrategy)
+                {
+                    next.Leader.Strategy = new FollowPreviousSoundStrategy { ShouldFollowSameSequence = false };
+                }
+                else
+                {
+                    Leader.WithFollower(new SequenceJoint(this, next));
+                }
+            }
+            else
+            {
+                // previous sequence is empty, just add the next one as a follower
+                Leader.WithFollower(next.Leader);
+            }
+            Leader.MoveFollowerToTheEnd(SequenceEnd);
+            return this;
+        }
+
+        // append to the end of the previous sequence (to make sure the added sequence is played after it and not in parallel)
+        if (previousSequence!.SequenceEnd is SequenceEnd previousEnd)
+        {
+            previousEnd.WithFollower(new SequenceJoint(previousSequence, next));
             return this;
         }
 
