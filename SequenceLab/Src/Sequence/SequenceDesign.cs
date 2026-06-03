@@ -103,6 +103,7 @@ public class SequenceDesign
 
         _state.AppendDuration(next.Duration);
 
+        var previousSequence = Sequences.LastOrDefault();
         Sequences.Add(next);
 
         if (Sequences.Count == 1 || next.Leader.Strategy is FollowPreviousSoundStrategy)
@@ -115,7 +116,7 @@ public class SequenceDesign
         }
 
         // append to the end of the previous sequence (to make sure the added sequence is played after it and not in parallel)
-        if (Sequences[^2].SequenceEnd is SequenceEnd previousEnd)
+        if (previousSequence!.SequenceEnd is SequenceEnd previousEnd)
         {
             previousEnd.WithFollower(next.Leader);
             return this;
