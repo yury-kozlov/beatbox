@@ -148,7 +148,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
         // should not exceed total duration of any of it parent's repeat loops.
 
         // arrange
-        var seq1 = new SequenceDesign("kicks")
+        var kicks = new SequenceDesign("kicks")
         {
             Duration = 200,
             Leader = new Kick()
@@ -156,7 +156,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
                 Followers = [new Kick() { DelayAfterLeader = 100 }, new Kick() { DelayAfterLeader = 150 }]
             }
         };
-        var seq2 = new SequenceDesign("snares")
+        var snares = new SequenceDesign("snares")
         {
             Duration = 300,
             DelayAfterLeader = 0, // must be 0 to be appended right after the first sequence, otherwise it will exceed first sequence duration and be trimmed
@@ -165,7 +165,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
                 Followers = [new Snare() { DelayAfterLeader = 160 }]
             }
         };
-        seq1.Leader.Followers.Add(seq2.Leader);
+        kicks.Leader.Followers.Add(snares.Leader);
 
         // act
         var main = new SequenceDesign("main")
@@ -176,7 +176,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
                 Interval = 100, // interval will be increased to 200 after appending, so the loop will be long enough to fit both sequences without trimming
             }
         };
-        main.Append(seq1);
+        main.Append(kicks);
         var actual = SequenceGenerator.Generate(main);
         var actualTimestamps = actual.GetTimestamps();
 
