@@ -32,7 +32,7 @@ public class CombineSequencesTests(ITestOutputHelper output) : TestBase(output)
     [Fact]
     public void Combine_TwoSequences_PlayInParallel()
     {
-        // second Combine converts FollowPreviousSoundStrategy → PlayOnceStrategy so both sequences start at the same time
+        // second Combine converts FollowPreviousSoundStrategy → FollowLeaderStrategy so both sequences start at the same time
 
         // arrange
         var main = new SequenceDesign("main");

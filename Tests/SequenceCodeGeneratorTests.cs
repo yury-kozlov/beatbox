@@ -46,13 +46,13 @@ public class SequenceCodeGeneratorTests(ITestOutputHelper output) : TestBase(out
     }
 
     // -------------------------------------------------------------------------
-    // Simple sequence — single sound with default PlayOnceStrategy
+    // Simple sequence — single sound with default FollowLeaderStrategy
     // -------------------------------------------------------------------------
 
     [Fact]
-    public void GenerateCode_LeaderWithDefaultPlayOnceStrategy_EmitsNoInitializerBlock()
+    public void GenerateCode_LeaderWithDefaultFollowLeaderStrategy_EmitsNoInitializerBlock()
     {
-        // arrange — Kick with default PlayOnceStrategy (no custom props)
+        // arrange — Kick with default FollowLeaderStrategy (no custom props)
         var seq = new SequenceDesign("test")
         {
             Leader = new Kick(),
@@ -63,15 +63,15 @@ public class SequenceCodeGeneratorTests(ITestOutputHelper output) : TestBase(out
 
         // assert — Leader line ends with a comma and has no initializer block
         result.Should().Contain("Leader = new Kick(),");
-        result.Should().NotContain("Strategy = new PlayOnceStrategy");
+        result.Should().NotContain("Strategy = new FollowLeaderStrategy");
     }
 
     // -------------------------------------------------------------------------
-    // Sound with custom PlayOnceStrategy → inline { Strategy = ... } block
+    // Sound with custom FollowLeaderStrategy → inline { Strategy = ... } block
     // -------------------------------------------------------------------------
 
     [Fact]
-    public void GenerateCode_LeaderWithCustomPlayOnceStrategy_EmitsInlineStrategyBlock()
+    public void GenerateCode_LeaderWithCustomFollowLeaderStrategy_EmitsInlineStrategyBlock()
     {
         // arrange
         var seq = new SequenceDesign("test")
@@ -86,7 +86,7 @@ public class SequenceCodeGeneratorTests(ITestOutputHelper output) : TestBase(out
         var result = SequenceCodeGenerator.GenerateCode(seq, "test", null);
 
         // assert
-        result.Should().Contain("Strategy = new PlayOnceStrategy()");
+        result.Should().Contain("Strategy = new FollowLeaderStrategy()");
         result.Should().Contain("DelayAfterLeader = 300");
     }
 
@@ -191,7 +191,7 @@ public class SequenceCodeGeneratorTests(ITestOutputHelper output) : TestBase(out
         // assert — follower appears as a plain one-liner with no initializer
         result.Should().Contain("new Kick(),");
         // there should be no Strategy block anywhere in the output
-        result.Should().NotContain("Strategy = new PlayOnceStrategy");
+        result.Should().NotContain("Strategy = new FollowLeaderStrategy");
     }
 
     // -------------------------------------------------------------------------
@@ -219,7 +219,7 @@ public class SequenceCodeGeneratorTests(ITestOutputHelper output) : TestBase(out
         // assert
         result.Should().ContainAll(
             "new Snare()",
-            "Strategy = new PlayOnceStrategy()",
+            "Strategy = new FollowLeaderStrategy()",
             "DelayAfterLeader = 500"
         );
     }

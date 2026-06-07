@@ -5,7 +5,7 @@ namespace Tests;
 public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
 {
     [Fact]
-    public void PlayOnceStrategy_ReturnExpected()
+    public void FollowLeaderStrategy_ReturnExpected()
     {
         // arrange
         var sequence = new SequenceDesign("test")
@@ -108,7 +108,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
     }
 
     [Fact]
-    public void PlayOnceStrategy_Repeated_ReturnExpected()
+    public void FollowLeaderStrategy_Repeated_ReturnExpected()
     {
         // arrange
         var sequence = new SequenceDesign("test")

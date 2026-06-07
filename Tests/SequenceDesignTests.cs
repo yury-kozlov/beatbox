@@ -151,7 +151,7 @@ public class SequenceDesignTests(ITestOutputHelper output) : TestBase(output)
     // -------------------------------------------------------------------------
 
     [Fact]
-    public void OnDurationSet_SequenceEnd_UsesPlayOnceStrategy_WhenDurationIsPositive()
+    public void OnDurationSet_SequenceEnd_UsesFollowLeaderStrategy_WhenDurationIsPositive()
     {
         // arrange / act
         var sequence = new SequenceDesign("test")
@@ -160,7 +160,7 @@ public class SequenceDesignTests(ITestOutputHelper output) : TestBase(output)
             Leader = new Kick()
         };
 
-        // assert — SequenceEnd.InitStrategy should have produced a PlayOnceStrategy with DelayAfterLeader = 500
+        // assert — SequenceEnd.InitStrategy should have produced a FollowLeaderStrategy with DelayAfterLeader = 500
         sequence.SequenceEnd.Strategy.Should().BeOfType<FollowLeaderStrategy>();
         sequence.SequenceEnd.Strategy.DelayAfterLeader.Should().Be(500);
     }
@@ -270,7 +270,7 @@ public class SequenceDesignTests(ITestOutputHelper output) : TestBase(output)
             Duration = 1000,
         };
 
-        // assert — PlayOnceStrategy has no Interval; confirm no exception and Duration stays set
+        // assert — FollowLeaderStrategy has no Interval; confirm no exception and Duration stays set
         sequence.Duration.Should().Be(1000);
     }
 
