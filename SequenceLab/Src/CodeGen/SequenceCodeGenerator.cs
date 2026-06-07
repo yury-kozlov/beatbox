@@ -101,7 +101,7 @@ internal class SequenceCodeGenerator
 
         foreach (var delay in delays)
         {
-            var sound = new Sound(soundName) { Strategy = new PlayOnceStrategy { DelayAfterLeader = delay } };
+            var sound = new Sound(soundName) { Strategy = new FollowLeaderStrategy { DelayAfterLeader = delay } };
             var followers = previousSound?.Followers ?? loop.Followers;
             followers.Add(sound);
 
@@ -125,7 +125,7 @@ internal class SequenceCodeGenerator
             {
                 return $"{_}{{ Strategy = new {sound.Strategy.GetType().Name}() {{{strategyCode}}}}},";
             }
-            return null; // default PlayOnceStrategy with no followers — no initializer block needed
+            return null; // default FollowLeaderStrategy with no followers — no initializer block needed
         }
 
         var code = new StringBuilder();
@@ -175,12 +175,12 @@ internal class SequenceCodeGenerator
     }
 
     /// <summary>
-    /// Returns property initializers for a strategy, or null if the strategy is a default PlayOnceStrategy.
+    /// Returns property initializers for a strategy, or null if the strategy is a default FollowLeaderStrategy.
     /// </summary>
     private static string? StrategyCode(AbstractStrategy strategy)
     {
-        // PlayOnceStrategy is a default strategy, return it only if it has non default-values
-        if (strategy is PlayOnceStrategy)
+        // FollowLeaderStrategy is a default strategy, return it only if it has non default-values
+        if (strategy is FollowLeaderStrategy)
         {
             var props = GetPropInitializers(strategy);
             return props.HasValue() ? props : null;

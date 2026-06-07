@@ -129,7 +129,7 @@ public class TypedBaseClassesContractResolver : DefaultContractResolver
             property.ShouldSerialize = obj => (vp?.GetValue(obj) as ICollection)?.Count > 0;
         }
 
-        // Skip default Strategy on Sound: the field initializer is new PlayOnceStrategy() with all
+        // Skip default Strategy on Sound: the field initializer is new FollowLeaderStrategy() with all
         // defaults, so if nothing was customized there is no need to round-trip it through JSON —
         // deserialization will reconstruct the same value from the field initializer.
         if (member.Name == nameof(Sound.Strategy) && member.DeclaringType == typeof(Sound))
@@ -152,7 +152,7 @@ public class TypedBaseClassesContractResolver : DefaultContractResolver
     }
 
     private static bool IsDefaultStrategy(AbstractStrategy? strategy)
-        => strategy is PlayOnceStrategy
+        => strategy is FollowLeaderStrategy
         {
             DelayAfterLeader: 0,
             PlayEveryX: 1,

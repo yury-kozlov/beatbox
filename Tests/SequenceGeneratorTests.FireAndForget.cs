@@ -62,7 +62,7 @@ public class SequenceGeneratorFireAndForgetTests(ITestOutputHelper output) : Tes
                 Followers = [
                     new Kick
                     {
-                        Strategy = new PlayOnceStrategy() { DelayAfterLeader = 0, FireAndForget = true },
+                        Strategy = new FollowLeaderStrategy() { DelayAfterLeader = 0, FireAndForget = true },
                         Followers = [
                             new Sound("a") { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
                         ]
@@ -104,7 +104,7 @@ public class SequenceGeneratorFireAndForgetTests(ITestOutputHelper output) : Tes
         // while the whole sequence is treated as fire-and-forget by external sequences (via SequenceEnd).
         var sequence = new SequenceDesign("test")
         {
-            Strategy = new PlayOnceStrategy() { FireAndForget = true },
+            Strategy = new FollowLeaderStrategy() { FireAndForget = true },
             Leader = new Snare()
             {
                 Followers = new()

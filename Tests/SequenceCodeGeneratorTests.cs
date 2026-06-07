@@ -78,7 +78,7 @@ public class SequenceCodeGeneratorTests(ITestOutputHelper output) : TestBase(out
         {
             Leader = new Kick()
             {
-                Strategy = new PlayOnceStrategy { DelayAfterLeader = 300 },
+                Strategy = new FollowLeaderStrategy { DelayAfterLeader = 300 },
             },
         };
 
@@ -208,7 +208,7 @@ public class SequenceCodeGeneratorTests(ITestOutputHelper output) : TestBase(out
             {
                 Followers =
                 [
-                    new Snare() { Strategy = new PlayOnceStrategy { DelayAfterLeader = 500 } },
+                    new Snare() { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 500 } },
                 ],
             },
         };
@@ -260,7 +260,7 @@ public class SequenceCodeGeneratorTests(ITestOutputHelper output) : TestBase(out
                 Followers =
                 [
                     new Kick(),
-                    new Snare() { Strategy = new PlayOnceStrategy { DelayAfterLeader = 500 } },
+                    new Snare() { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 500 } },
                 ],
             },
         };

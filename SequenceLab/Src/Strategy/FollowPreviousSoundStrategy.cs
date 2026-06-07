@@ -56,5 +56,5 @@ public class FollowPreviousSoundStrategy : AbstractStrategy
         return currentSound.PreviousSounds?.LastOrDefault(canBeFollowed);
     }
 
-    internal AbstractStrategy ToPlayOnceStrategy() => new PlayOnceStrategy().CopyBasePropertiesFrom(this);
+    internal AbstractStrategy ToFollowLeaderStrategy() => new FollowLeaderStrategy().CopyBasePropertiesFrom(this);
 }

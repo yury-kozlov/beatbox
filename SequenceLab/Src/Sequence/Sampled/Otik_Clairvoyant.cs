@@ -16,8 +16,8 @@ public class Otik_Clairvoyant
                     new Kick { Strategy = new FollowPreviousSoundStrategy() },
                     new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 360 },
                         Followers = [
-                            new Snare { Strategy = new PlayOnceStrategy() { DelayAfterLeader = 100 } },
-                            new Kick { Strategy = new PlayOnceStrategy() { DelayAfterLeader = 340 } },
+                            new Snare { Strategy = new FollowLeaderStrategy() { DelayAfterLeader = 100 } },
+                            new Kick { Strategy = new FollowLeaderStrategy() { DelayAfterLeader = 340 } },
                         ]
                     },
                     new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 205 } },

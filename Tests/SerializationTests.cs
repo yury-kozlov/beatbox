@@ -15,8 +15,8 @@ public class SerializationTests(ITestOutputHelper output) : TestBase(output)
             {
                 Followers = [
                     new Kick(),
-                    new Kick { Strategy = new PlayOnceStrategy() { DelayAfterLeader = 300 }},
-                    new Snare { Strategy = new PlayOnceStrategy() {DelayAfterLeader = 600 }},
+                    new Kick { Strategy = new FollowLeaderStrategy() { DelayAfterLeader = 300 }},
+                    new Snare { Strategy = new FollowLeaderStrategy() {DelayAfterLeader = 600 }},
                 ]
             },
         };
@@ -35,13 +35,13 @@ public class SerializationTests(ITestOutputHelper output) : TestBase(output)
         leader.Followers.Should().HaveCount(1);
 
         var metronome = leader.Followers[0].Should().BeOfType<Metronome>().Subject;
-        metronome.Strategy.Should().BeOfType<PlayOnceStrategy>();
+        metronome.Strategy.Should().BeOfType<FollowLeaderStrategy>();
         metronome.Followers.Should().HaveCount(3);
-        metronome.Followers[0].Should().BeOfType<Kick>().Which.Strategy.Should().BeOfType<PlayOnceStrategy>()
+        metronome.Followers[0].Should().BeOfType<Kick>().Which.Strategy.Should().BeOfType<FollowLeaderStrategy>()
             .Which.DelayAfterLeader.Should().Be(0);
-        metronome.Followers[1].Should().BeOfType<Kick>().Which.Strategy.Should().BeOfType<PlayOnceStrategy>()
+        metronome.Followers[1].Should().BeOfType<Kick>().Which.Strategy.Should().BeOfType<FollowLeaderStrategy>()
             .Which.DelayAfterLeader.Should().Be(300);
-        metronome.Followers[2].Should().BeOfType<Snare>().Which.Strategy.Should().BeOfType<PlayOnceStrategy>()
+        metronome.Followers[2].Should().BeOfType<Snare>().Which.Strategy.Should().BeOfType<FollowLeaderStrategy>()
             .Which.DelayAfterLeader.Should().Be(600);
     }
 

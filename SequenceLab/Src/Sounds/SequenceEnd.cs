@@ -37,7 +37,7 @@ public record SequenceEnd : NoSound
         {
             // if sequence has explicit duration: we will use it as a signal to end:
             /// NOTE: in sequence loops, DelayAfterLeader will be adjusted to inlcude only current iteration in <see cref="RepeatStrategy.AdjustSequenceEndDelay"/>
-            Strategy = new PlayOnceStrategy { DelayAfterLeader = Sequence.Duration };
+            Strategy = new FollowLeaderStrategy { DelayAfterLeader = Sequence.Duration };
             return;
         }
         // if duration of a sequence is unkown: current ending will be appended to the last sound

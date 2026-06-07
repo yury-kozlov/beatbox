@@ -53,7 +53,7 @@ public class PrimitiveSequences
         {
             Leader = new TSound()
             {
-                Strategy = new PlayOnceStrategy { },
+                Strategy = new FollowLeaderStrategy { },
                 Followers = [
                     new TSound { Strategy = new FollowPreviousSoundStrategy() },
                     new TSound { Strategy = new FollowPreviousSoundStrategy() },

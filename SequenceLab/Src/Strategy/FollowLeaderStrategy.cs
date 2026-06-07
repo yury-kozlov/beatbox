@@ -1,6 +1,6 @@
 ﻿namespace Beater;
 
-public class PlayOnceStrategy : AbstractStrategy
+public class FollowLeaderStrategy : AbstractStrategy
 {
     public override Sequence ApplyStrategy(Sound leader)
     {

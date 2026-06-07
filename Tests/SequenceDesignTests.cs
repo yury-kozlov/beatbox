@@ -33,8 +33,8 @@ public class SequenceDesignTests(ITestOutputHelper output) : TestBase(output)
             {
                 Followers =
                 [
-                    new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100 } },
-                    new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 200 } },
+                    new Snare { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 100 } },
+                    new Snare { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 200 } },
                 ]
             }
         };
@@ -73,7 +73,7 @@ public class SequenceDesignTests(ITestOutputHelper output) : TestBase(output)
             {
                 Followers =
                 [
-                    new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 200 } }
+                    new Snare { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 200 } }
                 ]
             }
         };
@@ -161,7 +161,7 @@ public class SequenceDesignTests(ITestOutputHelper output) : TestBase(output)
         };
 
         // assert — SequenceEnd.InitStrategy should have produced a PlayOnceStrategy with DelayAfterLeader = 500
-        sequence.SequenceEnd.Strategy.Should().BeOfType<PlayOnceStrategy>();
+        sequence.SequenceEnd.Strategy.Should().BeOfType<FollowLeaderStrategy>();
         sequence.SequenceEnd.Strategy.DelayAfterLeader.Should().Be(500);
     }
 

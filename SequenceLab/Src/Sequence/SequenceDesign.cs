@@ -153,7 +153,7 @@ public class SequenceDesign
         if (other.Leader.Strategy is FollowPreviousSoundStrategy followStrategy)
         {
             // if the added sequence has default strategy, change it to allow play in parallel
-            other.Leader.Strategy = followStrategy.ToPlayOnceStrategy();
+            other.Leader.Strategy = followStrategy.ToFollowLeaderStrategy();
         }
 
         Leader.WithFollower(other.Leader);

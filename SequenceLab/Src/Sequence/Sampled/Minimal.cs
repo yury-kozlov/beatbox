@@ -12,8 +12,8 @@ public class Minimal
                 Strategy = new RepeatStrategy { Count = 16, Interval = 500 },
                 Followers = [
                   new Sound("ts1") { Strategy = new RepeatStrategy { DelayAfterLeader = 150, Count = 2, Interval = 80 }},
-                  new Sound("ts2") { Strategy = new PlayOnceStrategy { PlayEveryX = 4 } },
-                  new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 4 } },
+                  new Sound("ts2") { Strategy = new FollowLeaderStrategy { PlayEveryX = 4 } },
+                  new Snare { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 250, PlayEveryX = 4 } },
                   new Sound("ts3") { Strategy = new RepeatStrategy { DelayAfterLeader = 80, Count = 4, Interval = 80, LinearIncrement = -10, PlayEveryX = 8 } },
                ]
             },
@@ -28,11 +28,11 @@ public class Minimal
             {
                 Strategy = new RepeatStrategy { Count = 16, Interval = 500, SilenceEveryXSoundOutOf = "3/4" },
                 Followers = [
-                    new Snare { Strategy = new PlayOnceStrategy { PlayEveryXOutOf = "3/4" } },
+                    new Snare { Strategy = new FollowLeaderStrategy { PlayEveryXOutOf = "3/4" } },
                     new Sound("ts1") { Strategy = new RepeatStrategy { DelayAfterLeader = 100, Interval = 80, Count = 2, PlayEveryXOutOf="1/4" } },
                     new Kick { Strategy = new RepeatStrategy { PlayEveryXOutOf = "1/4", DelayAfterLeader = 100, Interval = 100, Count = 2 } },
                     new Sound("ts2") { Strategy = new RepeatStrategy { DelayAfterLeader = 100, Interval=100, Count=2, PlayEveryXOutOf="2/4" } },
-                    new Sound("ts2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100, PlayEveryXOutOf="4/4" } },
+                    new Sound("ts2") { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 100, PlayEveryXOutOf="4/4" } },
                     new Sound("ts3") { Strategy = new RepeatStrategy { DelayAfterLeader = 50, Count = 4, Interval = 80, LinearIncrement = -10, PlayEveryXOutOf = "2/4" } },
                ]
             },
@@ -51,8 +51,8 @@ public class Minimal
             {
                 Strategy = new RepeatStrategy { Interval = 500, Count = 4 },
                 Followers = [
-                    new Snare { Strategy = new PlayOnceStrategy { PlayEveryXOutOf = "2/4" } },
-                    new Snare { Strategy = new PlayOnceStrategy { PlayEveryXOutOf = "3/4", DelayAfterLeader = 300 } },
+                    new Snare { Strategy = new FollowLeaderStrategy { PlayEveryXOutOf = "2/4" } },
+                    new Snare { Strategy = new FollowLeaderStrategy { PlayEveryXOutOf = "3/4", DelayAfterLeader = 300 } },
                 ],
             },
         };
@@ -70,17 +70,17 @@ public class Minimal
                     {
                         Strategy = new RepeatStrategy { Count = 2, Interval = 250 },
                         Followers = [
-                            new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 2 } }
+                            new Snare { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 250, PlayEveryX = 2 } }
                         ]
                     },
                     new Kick
                     {
                         Strategy = new RepeatStrategy { DelayAfterLeader = 1085, Count = 2, Interval = 125 },
                     },
-                    new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 1460 } },
+                    new Snare { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 1460 } },
                     new Sound("ts1") { Strategy = new RepeatStrategy { DelayAfterLeader = 85, Interval = 500, Count = 4 },
                         Followers = [
-                            new Sound("ts2") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 125, PlayEveryXOutOf = "2/4" } },
+                            new Sound("ts2") { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 125, PlayEveryXOutOf = "2/4" } },
                         ]
                     },
                 ]

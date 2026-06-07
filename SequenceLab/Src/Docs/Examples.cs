@@ -95,7 +95,7 @@ class Examples
             Leader = new Metronome
             {
                 Strategy = new RepeatStrategy { Interval = 400, Count = 4 },
-                Followers = [new Snare { Strategy = new PlayOnceStrategy { PlayEveryX = 2, DelayAfterLeader = 100 } }],
+                Followers = [new Snare { Strategy = new FollowLeaderStrategy { PlayEveryX = 2, DelayAfterLeader = 100 } }],
             },
         };
 

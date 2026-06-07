@@ -15,10 +15,10 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             {
                 Followers = [
                     new Kick(),
-                    new Kick { Strategy = new PlayOnceStrategy() { DelayAfterLeader = 300 }},
-                    new Snare { Strategy = new PlayOnceStrategy() {DelayAfterLeader = 600 }},
-                    new Snare { Strategy = new PlayOnceStrategy() {DelayAfterLeader = 1500 }},
-                    new Kick { Strategy = new PlayOnceStrategy() {DelayAfterLeader = 1800 }},
+                    new Kick { Strategy = new FollowLeaderStrategy() { DelayAfterLeader = 300 }},
+                    new Snare { Strategy = new FollowLeaderStrategy() {DelayAfterLeader = 600 }},
+                    new Snare { Strategy = new FollowLeaderStrategy() {DelayAfterLeader = 1500 }},
+                    new Kick { Strategy = new FollowLeaderStrategy() {DelayAfterLeader = 1800 }},
                 ]
             },
         };
@@ -119,7 +119,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
                 Strategy = new RepeatStrategy() { Count = 2, Interval = 1000 },
                 Followers = [
                     new Kick(),
-                    new Snare { Strategy = new PlayOnceStrategy() {DelayAfterLeader = 500 }},
+                    new Snare { Strategy = new FollowLeaderStrategy() {DelayAfterLeader = 500 }},
                 ]
             },
         };
@@ -157,8 +157,8 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
                 Strategy = new RepeatStrategy { Count = 16, Interval = 500 },
                 Followers = [
                   new Sound("ts1") { Strategy = new RepeatStrategy { DelayAfterLeader = 150, Count = 2, Interval = 80 } },
-                  new Sound("ts2") { Strategy = new PlayOnceStrategy { PlayEveryX = 4 } },
-                  new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 250, PlayEveryX = 4 } },
+                  new Sound("ts2") { Strategy = new FollowLeaderStrategy { PlayEveryX = 4 } },
+                  new Snare { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 250, PlayEveryX = 4 } },
                   new Sound("ts3") { Strategy = new RepeatStrategy { DelayAfterLeader = 80, Count = 4, Interval = 80, LinearIncrement = -10, PlayEveryX = 8 } },
                ]
             },
@@ -314,7 +314,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 4, Interval = 1000 },
-                Followers = [new Sound("every-2nd") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100, PlayEveryX = 2 } }],
+                Followers = [new Sound("every-2nd") { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 100, PlayEveryX = 2 } }],
             },
         };
         string[] expected = [
@@ -353,7 +353,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
                     {
                         Strategy = new RepeatStrategy { Count = 6, Interval = 100 },
                         Followers = [
-                            new Sound("every-3rd") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 50, PlayEveryX = 3 } },
+                            new Sound("every-3rd") { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 50, PlayEveryX = 3 } },
                        ]
                     },
                 ]
@@ -395,7 +395,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             {
                 Strategy = new RepeatStrategy { Count = 8, Interval = 500 },
                 Followers = [
-                  new Snare { Strategy = new PlayOnceStrategy { PlayEveryXOutOf = "3/4" } },
+                  new Snare { Strategy = new FollowLeaderStrategy { PlayEveryXOutOf = "3/4" } },
                 ]
             },
         };
@@ -435,7 +435,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             {
                 Strategy = new RepeatStrategy { Count = 4, Interval = 500 },
                 Followers = [
-                  new Sound("ts1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100, PlayEveryXOutOf = "1/2" } },
+                  new Sound("ts1") { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 100, PlayEveryXOutOf = "1/2" } },
                 ]
             },
         };
@@ -471,7 +471,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             {
                 Strategy = new RepeatStrategy { Count = 8, Interval = 500, SilenceEveryXSoundOutOf = "3/4" },
                 Followers = [
-                  new Sound("ts1") { Strategy = new PlayOnceStrategy { DelayAfterLeader = 100, SilenceEveryXOutOf = "2/4" } },
+                  new Sound("ts1") { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 100, SilenceEveryXOutOf = "2/4" } },
                 ]
             },
         };
@@ -557,7 +557,7 @@ public class SequenceGeneratorTests(ITestOutputHelper output) : TestBase(output)
             Leader = new Kick
             {
                 Strategy = new RepeatStrategy { Count = 2, Interval = 300 },
-                Followers = [new Snare { Strategy = new PlayOnceStrategy { DelayAfterLeader = 400 } }]
+                Followers = [new Snare { Strategy = new FollowLeaderStrategy { DelayAfterLeader = 400 } }]
             }
         };
 

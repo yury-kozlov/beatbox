@@ -25,7 +25,7 @@ public record Sound
             field = value;
             OnStrategyChange();
         }
-    } = new PlayOnceStrategy();
+    } = new FollowLeaderStrategy();
 
     /// <summary>
     /// NOTE: Followers of <see cref="SequenceDesign.Leader"/> must not be overridden because the leader in this case is 
