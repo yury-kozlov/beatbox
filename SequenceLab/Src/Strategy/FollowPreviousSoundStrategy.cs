@@ -1,5 +1,10 @@
 ﻿namespace Beater;
 
+/// <summary>
+/// WARNING: Injecting a sound with this strategy in the middle of another sequence can break the timing of subsequent sounds.
+/// The injected sound becomes the new "previous sound" for everything after it,
+/// shifting all subsequent delays by the injected sound's timestamp offset.
+/// </summary>
 public class FollowPreviousSoundStrategy : AbstractStrategy
 {
     /// <summary>
@@ -47,10 +52,10 @@ public class FollowPreviousSoundStrategy : AbstractStrategy
         bool canBeFollowed(Sound previousSound)
         {
             if (ShouldFollowSameSequence && previousSound.Sequence != currentSound.Sequence)
-    {
+            {
                 return false;
             }
-        // a sound with FireAndForget strategy can't be followed unless it's direct leader of the current sound
+            // a sound with FireAndForget strategy can't be followed unless it's direct leader of the current sound
             return !previousSound.Strategy.FireAndForget || previousSound == currentSound.Leader;
         }
         return currentSound.PreviousSounds?.LastOrDefault(canBeFollowed);
