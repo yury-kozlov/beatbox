@@ -106,10 +106,9 @@ public class SequenceDesign
         var previousSequence = Sequences.LastOrDefault();
         Sequences.Add(next);
 
-        if (Sequences.Count == 1 || next.Leader.Strategy is FollowPreviousSoundStrategy)
+        if (previousSequence is null)
         {
-            // if the added sequence is the first one or it has default strategy
-            // just add it as the next follower (it will be played after all previous sequences)
+            // appending for the first time
             Leader.WithFollower(next.Leader);
             Leader.MoveFollowerToTheEnd(SequenceEnd);
             return this;
