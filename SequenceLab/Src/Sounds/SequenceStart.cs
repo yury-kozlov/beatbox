@@ -5,9 +5,6 @@ public record SequenceStart : NoSound
     public SequenceStart(string sequenceName)
     {
         FriendlyName = $"sequence-start-{sequenceName}";
-
-        /// follow last sound of the previous sequence (usually <see cref="SequenceEnd"/>):
-        Strategy = new FollowPreviousSoundStrategy() { ShouldFollowSameSequence = false /* allow appending current sequence to another sequence */ };
     }
 
     /// <summary>

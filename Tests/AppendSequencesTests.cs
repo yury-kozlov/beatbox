@@ -165,7 +165,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
                 Followers = [new Snare() { DelayAfterLeader = 160 }]
             }
         };
-        kicks.Leader.Followers.Add(snares.Leader);
+        kicks.SequenceEnd.Followers.Add(snares.Leader); // add snares directly to the last sound without calling Append() in order not to change duration of the kicks
 
         // act
         var main = new SequenceDesign("main")
@@ -177,6 +177,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
             }
         };
         main.Append(kicks);
+
         var actual = SequenceGenerator.Generate(main);
         var actualTimestamps = actual.GetTimestamps();
 
@@ -224,7 +225,7 @@ public class AppendSequencesTests(ITestOutputHelper output) : TestBase(output)
             "1200:k",
             "1900:k",
             "2400:sequence-end-trapezoid: 2400 ms",
-            
+
             "2400:sequence-start-square",
             "2400:s",
             "3000:s",

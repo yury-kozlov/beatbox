@@ -116,13 +116,13 @@ public class SequenceCodeGeneratorTests(ITestOutputHelper output) : TestBase(out
     }
 
     // -------------------------------------------------------------------------
-    // Default FollowPreviousSoundStrategy on SequenceDesign → added with default props
+    // Default FollowLeaderStrategy on SequenceDesign → added with default props
     // -------------------------------------------------------------------------
 
     [Fact]
-    public void GenerateCode_DefaultFollowPreviousSoundStrategyOnSequenceDesign_EmittedWithDefaultProps()
+    public void GenerateCode_DefaultFollowLeaderStrategyOnSequenceDesign_EmittedWithDefaultProps()
     {
-        // arrange — no explicit strategy set: SequenceStart uses FollowPreviousSoundStrategy by default
+        // arrange — no explicit strategy set: SequenceStart uses FollowLeaderStrategy by default
         var seq = new SequenceDesign("test")
         {
             Leader = new Kick(),
@@ -132,7 +132,7 @@ public class SequenceCodeGeneratorTests(ITestOutputHelper output) : TestBase(out
         var result = SequenceCodeGenerator.GenerateCode(seq, "test", null);
 
         // assert
-        result.Should().Contain("FollowPreviousSoundStrategy() { ShouldFollowSameSequence = False");
+        result.Should().NotContain("FollowLeaderStrategy"); // default strategy should not be defined explicitly
     }
 
     // -------------------------------------------------------------------------

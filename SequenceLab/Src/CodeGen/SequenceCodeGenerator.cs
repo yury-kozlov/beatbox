@@ -7,6 +7,7 @@ namespace Beater;
 internal class SequenceCodeGenerator
 {
     private static Dictionary<Type, object?> _defaultInstances = new();
+    private static Type DefaultStrategy = typeof(FollowLeaderStrategy);
 
     private static string GetIndetation(int level)
     {
@@ -40,7 +41,7 @@ internal class SequenceCodeGenerator
         code.AppendLine($"{_}{{");
         code.AppendLine($"{_}{_}return new SequenceDesign(\"{sequenceName}\")");
         code.AppendLine($"{_}{_}{{");
-        if (sequenceStrategy is not FollowPreviousSoundStrategy || GetPropInitializers(sequenceStrategy).HasValue())
+        if (sequenceStrategy.GetType() != DefaultStrategy || GetPropInitializers(sequenceStrategy).HasValue())
         {
             code.AppendLine($"{_}{_}{_}Strategy = new {sequenceStrategy.GetType().Name}() {{ {GetPropInitializers(sequenceStrategy)} }},");
         }

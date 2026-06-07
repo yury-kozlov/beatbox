@@ -31,7 +31,7 @@ public class SerializationTests(ITestOutputHelper output) : TestBase(output)
 
         var leader = actual.Leader;
         leader.Should().BeOfType<SequenceStart>();
-        leader.Strategy.Should().BeOfType<FollowPreviousSoundStrategy>();
+        leader.Strategy.Should().BeOfType<FollowLeaderStrategy>();
         leader.Followers.Should().HaveCount(1);
 
         var metronome = leader.Followers[0].Should().BeOfType<Metronome>().Subject;
