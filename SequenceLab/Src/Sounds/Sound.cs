@@ -31,7 +31,16 @@ public record Sound
     /// NOTE: Followers of <see cref="SequenceDesign.Leader"/> must not be overridden because the leader in this case is 
     /// a sequence-start and overriding its followers will break the actual first sound and sequence-end.
     /// </summary>
-    public Sequence Followers = new(); /// TODO: should this be <see cref="SequenceDesign"/> instead? Should each Sound here be a SoundDesign instead?
+    public Sequence Followers
+    {
+        get; set
+        {
+            // capture initial length of the followers in order to keep track of any changes for example when a new sound is injected
+            (field = value).InitialLength = value.Count;
+        }
+    } = []; /// TODO: should this be <see cref="SequenceDesign"/> instead? Should each Sound here be a SoundDesign instead?
+
+    public List<Sound>? InjectedSounds;
 
     public Sound? Leader;
 
@@ -160,6 +169,8 @@ public record Sound
         {
             clone.Followers.Add(follower.DeepClone());
         }
+        clone.Followers.InitialLength = Followers.InitialLength;
+
         return clone;
     }
 

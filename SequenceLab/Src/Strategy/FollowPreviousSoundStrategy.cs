@@ -1,6 +1,8 @@
 ﻿namespace Beater;
 
 /// <summary>
+/// This strategy is mainly for convenience: it allows to specify all subsequent followers as a flat list
+/// (instead of nesting each sound as a single follower of another follower reursively).
 /// WARNING: Injecting a sound with this strategy in the middle of another sequence can break the timing of subsequent sounds.
 /// The injected sound becomes the new "previous sound" for everything after it,
 /// shifting all subsequent delays by the injected sound's timestamp offset.
@@ -53,6 +55,7 @@ public class FollowPreviousSoundStrategy : AbstractStrategy
         {
             if (ShouldFollowSameSequence && previousSound.Sequence != currentSound.Sequence)
             {
+                // a sound from another sequence was injected directly before the current sound
                 return false;
             }
             // a sound with FireAndForget strategy can't be followed unless it's direct leader of the current sound
