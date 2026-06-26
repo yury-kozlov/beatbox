@@ -1,4 +1,5 @@
 ﻿using Beater;
+using Beater.Sampled;
 
 namespace Tests;
 

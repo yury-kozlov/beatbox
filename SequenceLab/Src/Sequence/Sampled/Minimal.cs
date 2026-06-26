@@ -1,5 +1,5 @@
 ﻿
-namespace Beater;
+namespace Beater.Sampled;
 
 public class Minimal
 {

@@ -1,4 +1,4 @@
-namespace Beater;
+namespace Beater.Sampled;
 
 public class James_Shinra_Poppin
 {

@@ -1,4 +1,6 @@
-﻿namespace Beater;
+﻿using Beater.Sampled;
+
+namespace Beater;
 
 /// <summary>
 /// based on https://learn.microsoft.com/en-us/dotnet/api/system.net.sockets.tcpclient

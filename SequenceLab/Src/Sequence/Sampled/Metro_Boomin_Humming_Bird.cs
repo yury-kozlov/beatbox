@@ -1,4 +1,4 @@
-namespace Beater;
+namespace Beater.Sampled;
 
 public class Metro_Boomin_Humming_Bird
 {

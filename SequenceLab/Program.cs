@@ -1,4 +1,6 @@
-﻿namespace Beater;
+﻿using Beater.Sampled;
+
+namespace Beater;
 
 public static partial class Program
 {

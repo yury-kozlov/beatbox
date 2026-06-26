@@ -1,5 +1,6 @@
 ﻿using Beater;
 using System.Collections;
+using Beater.Sampled;
 
 namespace Tests;
 

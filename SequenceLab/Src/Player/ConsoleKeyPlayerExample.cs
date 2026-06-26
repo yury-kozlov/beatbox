@@ -1,6 +1,6 @@
-﻿using Beater;
+﻿using Beater.Sampled;
 
-namespace KeyBeatListener;
+namespace Beater;
 
 public static partial class ConsoleKeyPlayerExample
 {

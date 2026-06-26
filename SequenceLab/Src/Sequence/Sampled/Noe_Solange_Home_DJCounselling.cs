@@ -1,4 +1,4 @@
-namespace Beater;
+namespace Beater.Sampled;
 
 /// <summary>
 /// Noe Solange - Home (DJ Counselling remix) beat pattern.

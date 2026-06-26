@@ -1,4 +1,4 @@
-namespace Beater;
+namespace Beater.Sampled;
 
 /// <summary>
 /// S  S  K K K  K  K   S    K  K  K  K  K  K  S
