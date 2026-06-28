@@ -63,6 +63,7 @@ public class SequenceGenerator
             allFollowers.AddRange(nestedFollowers);
         }
 
+        // adjust timestamps of all followers only after nested sequences were generated (because on nested levels timestamps are expected to be relative)
         foreach (var follower in allFollowers)
         {
             // shift timestamp relatively to the leader (so that each sound will have an absolute position from the beginning of the whole sequence):

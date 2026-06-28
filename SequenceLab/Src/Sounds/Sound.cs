@@ -95,6 +95,7 @@ public record Sound
 
     /// <summary>
     /// Previous sounds that were generated before the current sound (for the same leader).
+    /// NOTE: those sounds have already rendered timestamps (as part of generated sequence).
     /// </summary>
     internal Sequence? PreviousSounds { get; set; }
 
