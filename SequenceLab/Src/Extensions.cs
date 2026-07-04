@@ -19,7 +19,7 @@ public static class Extensions
         return source is not null && source.Contains(item);
     }
 
-    public static bool HasItems<T>(this IEnumerable<T>? source)
+    public static bool HasItems<T>([NotNullWhen(true)] this IEnumerable<T>? source)
     {
         return source is not null && source.Count() > 0;
     }
@@ -32,5 +32,23 @@ public static class Extensions
     public static T? SecondOrDefault<T>(this IEnumerable<T>? source)
     {
         return source is null ? default : source.ElementAtOrDefault(1);
+    }
+
+    public static void MoveBefore<T>(this List<T> source, int targetIndex, int indexToMove)
+    {
+        if (indexToMove == targetIndex)
+        {
+            return;
+        }
+
+        var item = source[indexToMove];
+        source.RemoveAt(indexToMove);
+
+        if (indexToMove < targetIndex)
+        {
+            targetIndex--;
+        }
+
+        source.Insert(targetIndex, item);
     }
 }

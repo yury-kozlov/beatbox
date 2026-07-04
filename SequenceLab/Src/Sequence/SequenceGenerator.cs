@@ -17,8 +17,7 @@ public class SequenceGenerator
     {
         leader = leader with { /* clone */ };
         leader.Followers.SetLeader(leader);
-        leader.Followers.DetectInjectedSounds();
-        
+
         leader.Strategy.CheckedTimes++;
         if (IsSkipped(leader))
         {
@@ -53,14 +52,25 @@ public class SequenceGenerator
     private static Sequence GenerateFollowersSequence(Sound leader)
     {
         var allFollowers = new Sequence();
+        var injectionMap = new InjectionMap(leader.Followers);
+        leader.Followers = injectionMap.Ordered ?? leader.Followers;
+
         foreach (var follower in leader.Followers)
         {
             follower.PreviousSounds = allFollowers;
+            follower.Injected = injectionMap.GetInjectedSequence(follower);
+            
             PropagateFireAndForget(leader, follower);
 
             // NOTE: separate followers are played independently to allow overlapping sequences (mixed together)
             var nestedFollowers = GenerateSequence(follower);
+            if (!nestedFollowers.HasItems())
+            {
+                continue;
+            }
+
             allFollowers.AddRange(nestedFollowers);
+            injectionMap.SetInjectionSequence(follower, nestedFollowers);
         }
 
         // adjust timestamps of all followers only after nested sequences were generated (because on nested levels timestamps are expected to be relative)

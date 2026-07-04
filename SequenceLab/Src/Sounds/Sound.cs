@@ -3,6 +3,13 @@ namespace Beater;
 
 public record Sound
 {
+    /// <summary>
+    /// Unique Id of a sound.
+    /// NOTE: within a loop a sound is cloned on each iteration, however the same ID is retained between iterations.
+    /// Id is required to compare sounds for equality outside the scope of a loop.
+    /// </summary>
+    public Guid Id = Guid.NewGuid();
+
     public Sound(string name)
     {
         Name = name.IsNullOrEmpty() ? NoSound.Name : name;
@@ -40,7 +47,11 @@ public record Sound
         }
     } = []; /// TODO: should this be <see cref="SequenceDesign"/> instead? Should each Sound here be a SoundDesign instead?
 
-    public List<Sound>? InjectedSounds;
+    /// <summary>
+    /// Sequence of injected sounds with already rendered timestamps.
+    /// Those injected sounds were not originally part of design of the current sequence, but were injected later.
+    /// </summary>
+    public Sequence? Injected;
 
     public Sound? Leader;
 
@@ -50,6 +61,7 @@ public record Sound
     /// NOTE: during sequence generation, this value is calculated relatively to the current leader and then shifted according to leader's position (becomes absolute).
     /// </summary>
     public int Timestamp;
+
     public string? Comment;
 
     /// <summary>
