@@ -40,7 +40,7 @@ public class PrimitiveSequences
             Leader = new TSound() { Strategy = _repeatStrategy = new RepeatStrategy { Count = 4 } };
         }
 
-        public required int Interval
+        public required new int Interval
         {
             get => _repeatStrategy.Interval;
             set { _repeatStrategy.Interval = value; Duration = value * 4; }

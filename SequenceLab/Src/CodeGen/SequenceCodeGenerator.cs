@@ -6,8 +6,8 @@ namespace Beater;
 
 internal class SequenceCodeGenerator
 {
-    private static Dictionary<Type, object?> _defaultInstances = new();
-    private static Type DefaultStrategy = typeof(FollowLeaderStrategy);
+    private static readonly Dictionary<Type, object?> _defaultInstances = [];
+    private static readonly Type DefaultStrategy = typeof(FollowLeaderStrategy);
 
     private static string GetIndetation(int level)
     {
@@ -98,7 +98,7 @@ internal class SequenceCodeGenerator
         Sound? previousSound = null;
 
 
-        delays = delays.Prepend(0).ToArray(); // the first sound should always sound without delay
+        delays = [.. delays.Prepend(0)]; // the first sound should always sound without delay
 
         foreach (var delay in delays)
         {
@@ -229,7 +229,6 @@ internal class SequenceCodeGenerator
         foreach (var field in fields)
         {
             var fieldValue = field.GetValue(obj);
-            var fieldType = field.FieldType;
             var defaultValue = field.GetValue(defaultInstance);
             yield return (field.Name, fieldValue, defaultValue);
         }
@@ -270,18 +269,18 @@ internal class SequenceCodeGenerator
         return result.ToString();
     }
 
-    private static string GetSourceCodeDestination([CallerFilePath] string sourceCodePath = null)
+    private static string GetSourceCodeDestination([CallerFilePath] string sourceCodePath = "")
     {
         var i = sourceCodePath.LastIndexOf(@"\Src\");
         if (i >= 0)
         {
-            var sourcePath = sourceCodePath.Substring(0, i + @"\Src\".Length);
+            var sourcePath = sourceCodePath[..(i + @"\Src\".Length)];
             return Path.Combine(sourcePath, "Sequence", "Sampled");
         }
         i = sourceCodePath.LastIndexOf(@"\Program.cs");
         if (i >= 0)
         {
-            var sourcePath = sourceCodePath.Substring(0, i);
+            var sourcePath = sourceCodePath[..i];
             return Path.Combine(sourcePath, "Src", "Sequence", "Sampled");
         }
         return "";

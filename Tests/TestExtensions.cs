@@ -12,7 +12,7 @@ public static class TestExtensions
 
     public static string Print(this Sequence? source)
     {
-        var timestamps = source?.GetTimestamps() ?? new();
+        var timestamps = source?.GetTimestamps() ?? [];
         var text = string.Join(",\r\n", timestamps);
         Console.WriteLine(text);
 
@@ -28,7 +28,7 @@ public static class TestExtensions
         {
             should.BeEquivalentTo(expected, options => options.WithStrictOrdering());
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // print out actual timestamps for easier debugging:
             var actual = "\"" + string.Join("\",\r\n\"", should.Subject) + "\"";

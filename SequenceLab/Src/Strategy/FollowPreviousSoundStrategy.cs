@@ -46,7 +46,7 @@ public class FollowPreviousSoundStrategy : AbstractStrategy
             leader.Sequence.AutoDuration = leader.Timestamp;
         }
 
-        return new Sequence() { leader };
+        return [leader];
     }
 
     private Sound? GetPreviousSound(Sound currentSound)

@@ -21,7 +21,7 @@ public static class Extensions
 
     public static bool HasItems<T>([NotNullWhen(true)] this IEnumerable<T>? source)
     {
-        return source is not null && source.Count() > 0;
+        return source is not null && source.Any();
     }
 
     public static string Join<T>(this IEnumerable<T>? source, char delimiter = ',')

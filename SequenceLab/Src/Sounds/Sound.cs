@@ -177,11 +177,10 @@ public record Sound
     /// </summary>
     public Sound DeepClone()
     {
-        var clone = this with { Followers = new Sequence() };
-        foreach (var follower in Followers)
+        var clone = this with
         {
-            clone.Followers.Add(follower.DeepClone());
-        }
+            Followers = [.. Followers.Select(f => f.DeepClone())]
+        };
         clone.Followers.InitialLength = Followers.InitialLength;
 
         return clone;

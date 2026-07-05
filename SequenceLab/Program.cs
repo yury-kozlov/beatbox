@@ -4,7 +4,7 @@ namespace Beater;
 
 public static partial class Program
 {
-    public static void Main(params string[] args)
+    public static void Main()
     {
         GracefulShutdown.Subscribe(TcpTransport.Close);
 

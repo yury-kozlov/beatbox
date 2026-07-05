@@ -22,7 +22,7 @@ public class SequenceGenerator
         if (IsSkipped(leader))
         {
             // skip
-            return new();
+            return [];
         }
 
         if (IsSilenced(leader))
