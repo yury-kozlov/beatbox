@@ -1,3 +1,5 @@
+using static Beater.SoundExtensions;
+
 namespace Beater.Sampled;
 
 public class James_Shinra_Poppin
@@ -10,17 +12,13 @@ public class James_Shinra_Poppin
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 3620 },
                 Followers = [
-                    new Kick
-                    {
-                        Followers = [
-                            new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 680 } },
-                            new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 1340 } },
-                            new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 460 } },
-                            new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 460 } },
-                            new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 340 } },
-                            new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 100 } },
-                        ]
-                    },
+                    Chain(new Kick { },
+                          new Kick { DelayAfterLeader = 680 },
+                          new Kick { DelayAfterLeader = 1340 },
+                          new Kick { DelayAfterLeader = 460 },
+                          new Kick { DelayAfterLeader = 460 },
+                          new Kick { DelayAfterLeader = 340 },
+                          new Kick { DelayAfterLeader = 100 }),
                     new Snare
                     {
                         // note: this sound (s) has a constant loop, although its logic leader (k) is played at more irregular intervals

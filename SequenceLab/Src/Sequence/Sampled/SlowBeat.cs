@@ -1,4 +1,6 @@
-﻿namespace Beater.Sampled;
+﻿using static Beater.SoundExtensions;
+
+namespace Beater.Sampled;
 
 public class SlowBeat
 {
@@ -51,16 +53,15 @@ public class SlowBeat
             Strategy = new RepeatStrategy() { Count = 4, Interval = 4000 },
             Leader = new Kick()
             {
-                Followers = new()
-                {
-                    new Snare() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300, }},
-                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200, }},
-                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500, }},
-                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 800, }},
-                    new Snare() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500, }},
-                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200, }},
-                    new Kick() { Tags = ["end"],  Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500, }},
-                },
+                Followers = [Chain(
+                    new Snare() { DelayAfterLeader = 300 },
+                    new Kick()  { DelayAfterLeader = 200 },
+                    new Kick()  { DelayAfterLeader = 500 },
+                    new Kick()  { DelayAfterLeader = 800 },
+                    new Snare() { DelayAfterLeader = 500 },
+                    new Kick()  { DelayAfterLeader = 200 },
+                    new Kick()  { Tags = ["end"], DelayAfterLeader = 500, }
+                )],
             },
         };
     }
@@ -75,15 +76,14 @@ public class SlowBeat
             Strategy = new RepeatStrategy() { Count = 4, Interval = 3400 },
             Leader = new Kick()
             {
-                Followers = new()
-                {
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500}},
-                },
+                Followers = [Chain(
+                    new Snare { DelayAfterLeader = 300 },
+                    new Kick  { DelayAfterLeader = 200 },
+                    new Snare { DelayAfterLeader = 300 },
+                    new Kick  { DelayAfterLeader = 200 },
+                    new Snare { DelayAfterLeader = 500 },
+                    new Kick  { DelayAfterLeader = 500 }
+                )],
             },
         };
     }
@@ -98,21 +98,20 @@ public class SlowBeat
             Strategy = new RepeatStrategy() { Count = 4, Interval = 4800 },
             Leader = new Kick()
             {
-                Followers = new()
-                {
-                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300, }},
-                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200, }},
-                    new Snare() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500, }},
-
-                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500, }},
-                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300, }},
-                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200, }},
-                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300, }},
-                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200, }},
-
-                    new Snare() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500, }},
-                    new Kick() { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500, }},
-                },
+                Followers = [Chain(
+                    new Kick()  { DelayAfterLeader = 300 },
+                    new Kick()  { DelayAfterLeader = 200 },
+                    new Snare() { DelayAfterLeader = 500 },
+                                                         
+                    new Kick()  { DelayAfterLeader = 500 },
+                    new Kick()  { DelayAfterLeader = 300 },
+                    new Kick()  { DelayAfterLeader = 200 },
+                    new Kick()  { DelayAfterLeader = 300 },
+                    new Kick()  { DelayAfterLeader = 200 },
+                                                         
+                    new Snare() { DelayAfterLeader = 500 },
+                    new Kick()  { DelayAfterLeader = 500 }
+                )],
             },
         };
     }
@@ -127,26 +126,25 @@ public class SlowBeat
             Strategy = new RepeatStrategy() { Count = 4, Interval = 6400 },
             Leader = new Kick()
             {
-                Followers = new()
-                {
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 800}},
-
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 800}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 420}},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
-                },
+                Followers = [Chain(
+                    new Kick  { DelayAfterLeader = 200 },
+                    new Kick  { DelayAfterLeader = 200 },
+                    new Snare { DelayAfterLeader = 400 },
+                    new Kick  { DelayAfterLeader = 400 },
+                    new Kick  { DelayAfterLeader = 200 },
+                    new Kick  { DelayAfterLeader = 200 },
+                    new Snare { DelayAfterLeader = 800 },
+                                                       
+                    new Kick  { DelayAfterLeader = 800 },
+                    new Kick  { DelayAfterLeader = 200 },
+                    new Kick  { DelayAfterLeader = 200 },
+                    new Snare { DelayAfterLeader = 400 },
+                    new Kick  { DelayAfterLeader = 400 },
+                    new Kick  { DelayAfterLeader = 200 },
+                    new Kick  { DelayAfterLeader = 200 },
+                    new Kick  { DelayAfterLeader = 420 },
+                    new Snare { DelayAfterLeader = 400 }
+                )],
             },
         };
     }
@@ -161,18 +159,17 @@ public class SlowBeat
             Strategy = new RepeatStrategy() { Count = 4, Interval = 3200 },
             Leader = new Kick
             {
-                Followers = new()
-                {
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
+                Followers = [Chain(
+                    new Kick  { DelayAfterLeader = 200 },
+                    new Kick  { DelayAfterLeader = 200 },
+                    new Snare { DelayAfterLeader = 400 },
 
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 400}},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200}},
-                },
+                    new Kick  { DelayAfterLeader = 400 },
+                    new Kick  { DelayAfterLeader = 200 },
+                    new Kick  { DelayAfterLeader = 400 },
+                    new Kick  { DelayAfterLeader = 400 },
+                    new Snare { DelayAfterLeader = 200 }
+                )],
             },
         };
     }

@@ -1,5 +1,7 @@
 namespace Beater.Sampled;
 
+using static Beater.SoundExtensions;
+
 /// <summary>
 /// "K    K S  K    K   S"
 /// </summary>
@@ -12,14 +14,14 @@ public class James_Shinra_Gritty
             Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 1880 },
-                Followers = [
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() },
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 350 } },
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 115 } },
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 210 } },
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 470 } },
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 240 } },
-                ]
+                Followers = [Chain(
+                    new Kick  { },
+                    new Kick  { DelayAfterLeader = 350 },
+                    new Snare { DelayAfterLeader = 115 },
+                    new Kick  { DelayAfterLeader = 210 },
+                    new Kick  { DelayAfterLeader = 470 },
+                    new Snare { DelayAfterLeader = 240 }
+                )],
             }
         };
 

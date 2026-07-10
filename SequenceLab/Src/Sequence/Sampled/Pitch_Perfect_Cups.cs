@@ -1,3 +1,5 @@
+using static Beater.SoundExtensions;
+
 namespace Beater.Sampled;
 
 /// <summary>
@@ -14,24 +16,24 @@ public class Pitch_Perfect_Cups
             Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 3700 },
-                Followers = [
-                    new Sound("ts2") { Strategy = new FollowPreviousSoundStrategy() },
-                    new Sound("ts2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 235 }},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 210 }},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 80 }},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 130 }},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 270 }},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 215 }},
-                    new Sound("ts2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200 }},
+                Followers = [Chain(
+                    new Sound("ts2") { },
+                    new Sound("ts2") { DelayAfterLeader = 235 },
+                    new Kick  { DelayAfterLeader = 210 },
+                    new Kick  { DelayAfterLeader = 80  },
+                    new Kick  { DelayAfterLeader = 130 },
+                    new Snare { DelayAfterLeader = 270 },
+                    new Snare { DelayAfterLeader = 215 },
+                    new Sound("ts2") { DelayAfterLeader = 200 },
 
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 470 }},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 240 }},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 215 }},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 240 }},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 225 }},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 220 }},
-                    new Sound("ts2") { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 255 }},
-                ]
+                    new Kick  { DelayAfterLeader = 470 },
+                    new Kick  { DelayAfterLeader = 240 },
+                    new Kick  { DelayAfterLeader = 215 },
+                    new Kick  { DelayAfterLeader = 240 },
+                    new Snare { DelayAfterLeader = 225 },
+                    new Snare { DelayAfterLeader = 220 },
+                    new Sound("ts2") { DelayAfterLeader = 255 }
+                )]
             },
         };
     }

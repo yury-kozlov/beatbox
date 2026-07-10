@@ -90,6 +90,11 @@ public record Sound
     public List<string>? Tags;
 
     /// <summary>
+    /// A proxy of underlying strategy's PlayEveryX.
+    /// </summary>
+    public int? PlayEveryX { get => Strategy.PlayEveryX; set => Strategy.PlayEveryX = value ?? 0; }
+
+    /// <summary>
     /// Assigns delay to the underlying strategy.
     /// </summary>
     public int? DelayAfterLeader
@@ -210,5 +215,14 @@ public static class SoundExtensions
     public static bool IsLeader(this Sound? sound)
     {
         return sound is not null && sound.Leader is null;
+    }
+
+    public static Sound Chain(params Sound[] sounds)
+    {
+        for (int i = sounds.Length - 1; i > 0; i--)
+        {
+            sounds[i - 1].WithFollower(sounds[i]);
+        }
+        return sounds.First();
     }
 }

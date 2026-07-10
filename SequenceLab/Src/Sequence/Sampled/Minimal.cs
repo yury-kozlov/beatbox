@@ -1,4 +1,5 @@
-﻿
+﻿using static Beater.SoundExtensions;
+
 namespace Beater.Sampled;
 
 public class Minimal
@@ -167,17 +168,16 @@ public class Minimal
             Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 4700 },
-                Followers =
-                [
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() },
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 900 }},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
-                ]
+                Followers = [Chain(
+                        new Kick  { },
+                        new Kick  { DelayAfterLeader = 900 },
+                        new Snare { DelayAfterLeader = 300 },
+                        new Snare { DelayAfterLeader = 600 },
+                        new Snare { DelayAfterLeader = 300 },
+                        new Kick  { DelayAfterLeader = 300 },
+                        new Kick  { DelayAfterLeader = 600 },
+                        new Snare { DelayAfterLeader = 600 }
+                )]
             },
 
         };
@@ -193,18 +193,19 @@ public class Minimal
             Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 4400 },
-                Followers = [
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {PlayEveryX = 1}},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 350 }},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200 }},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 200 }},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 350 }},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 800 }},
+                Followers = [Chain(
+                    new Kick  { PlayEveryX = 1 },
+                    new Kick  { DelayAfterLeader = 350 },
+                    new Kick  { DelayAfterLeader = 200 },
+                    new Snare { DelayAfterLeader = 200 },
+                    new Kick  { DelayAfterLeader = 350 },
+                    new Kick  { DelayAfterLeader = 800 },
+                    
                     // those two percussions need more accent from some other sound:
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 500 }},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 600 }},
-                ]
+                    new Snare { DelayAfterLeader = 300 },
+                    new Snare { DelayAfterLeader = 500 },
+                    new Kick  { DelayAfterLeader = 600 }
+                )]
             },
         };
     }
@@ -219,14 +220,13 @@ public class Minimal
             Leader = new Metronome()
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 2400 },
-                Followers =
-                [
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() },
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
-                    new Snare { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 900 }},
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() {DelayAfterLeader = 300 }},
-                ]
+                Followers = [Chain(
+                    new Kick { },
+                    new Kick  { DelayAfterLeader = 300 },
+                    new Snare { DelayAfterLeader = 300 },
+                    new Snare { DelayAfterLeader = 900 },
+                    new Kick  { DelayAfterLeader = 300 }
+                )]
             },
         };
     }

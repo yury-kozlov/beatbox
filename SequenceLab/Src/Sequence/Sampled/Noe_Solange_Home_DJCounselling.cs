@@ -1,3 +1,5 @@
+using static Beater.SoundExtensions;
+
 namespace Beater.Sampled;
 
 /// <summary>
@@ -12,10 +14,10 @@ public class Noe_Solange_Home_DJCounselling
             Duration = 1900,
             Leader = new Kick()
             {
-                Followers = [
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 480 } },
-                    new Kick { Strategy = new FollowPreviousSoundStrategy() { DelayAfterLeader = 350 } },
-                ]
+                Followers = [Chain(
+                    new Kick { DelayAfterLeader = 480 },
+                    new Kick { DelayAfterLeader = 350 })
+                ],
             }
         };
         var snares = new PrimitiveSequences.Square<Snare1>() { DelayAfterLeader = 235, Interval = 470 };
