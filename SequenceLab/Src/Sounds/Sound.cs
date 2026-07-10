@@ -94,7 +94,8 @@ public record Sound
     /// </summary>
     public int? DelayAfterLeader
     {
-        get; set
+        get => field ?? Strategy.DelayAfterLeader;
+        set
         {
             var isChanged = field != value;
             field = value;

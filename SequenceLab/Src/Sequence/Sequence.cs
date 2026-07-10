@@ -1,5 +1,8 @@
-﻿namespace Beater;
+﻿using System.Diagnostics;
 
+namespace Beater;
+
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class Sequence : List<Sound>
 {
     /// <summary>
@@ -26,4 +29,9 @@ public class Sequence : List<Sound>
         AddRange(followers);
         return SequenceSoundSorter.SortByTimestamp(this);
     }
+
+    /// <summary>
+    /// Example returned value: "k, 1200 k, 1200 k, 600 k, 600 k".
+    /// </summary>
+    public string DebuggerDisplay => SequenceDebuggerDisplay.Get(this);
 }
