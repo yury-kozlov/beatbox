@@ -591,6 +591,90 @@ public class SequenceSamplesTests(ITestOutputHelper output) : TestBase(output)
         sequence.AutoDuration.Should().Be(8000);
     }
 
+    [Fact]
+    public void Pitch_Perfect_Cups_ReturnExpected()
+    {
+        // arrange
+        var sequence = Pitch_Perfect_Cups.GetSequence();
+
+        string[] expected = [
+            "0000:sequence-start-" + sequence.Name,
+            "0000:metronome",
+            "0000:ts2",
+            "0235:ts2",
+            "0445:k",
+            "0525:k",
+            "0655:k",
+            "0925:s",
+            "1140:s",
+            "1340:ts2",
+            "1810:k",
+            "2050:k",
+            "2265:k",
+            "2505:k",
+            "2730:s",
+            "2950:s",
+            "3205:ts2",
+            "3700:metronome",
+            "3700:ts2",
+            "3935:ts2",
+            "4145:k",
+            "4225:k",
+            "4355:k",
+            "4625:s",
+            "4840:s",
+            "5040:ts2",
+            "5510:k",
+            "5750:k",
+            "5965:k",
+            "6205:k",
+            "6430:s",
+            "6650:s",
+            "6905:ts2",
+            "7400:metronome",
+            "7400:ts2",
+            "7635:ts2",
+            "7845:k",
+            "7925:k",
+            "8055:k",
+            "8325:s",
+            "8540:s",
+            "8740:ts2",
+            "9210:k",
+            "9450:k",
+            "9665:k",
+            "9905:k",
+            "10130:s",
+            "10350:s",
+            "10605:ts2",
+            "11100:metronome",
+            "11100:ts2",
+            "11335:ts2",
+            "11545:k",
+            "11625:k",
+            "11755:k",
+            "12025:s",
+            "12240:s",
+            "12440:ts2",
+            "12910:k",
+            "13150:k",
+            "13365:k",
+            "13605:k",
+            "13830:s",
+            "14050:s",
+            "14305:ts2",
+            "14800:end-of-loop",
+            "14800:sequence-end-" + sequence.Name + ": 14800 ms"
+        ];
+
+        // act
+        var actual = SequenceGenerator.Generate(sequence);
+        var actualTimestamps = actual.GetTimestamps();
+
+        // assert
+        actualTimestamps.Should().BeExactSequence(expected);
+        sequence.Duration.Should().Be(14800);
+    }
 
     [Fact]
     public void Noe_Solange_Home_DJCounselling_ReturnExpected()
