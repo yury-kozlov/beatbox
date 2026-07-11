@@ -87,7 +87,7 @@ public record Sound
     /// Indicates that starting from the current sound all its followers belong to the same tag.
     /// Tags are used for searching a sound within a sequence.
     /// </summary>
-    public List<string>? Tags;
+    public Tags? Tags;
 
     /// <summary>
     /// A proxy of underlying strategy's PlayEveryX.
