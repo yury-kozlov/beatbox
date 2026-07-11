@@ -21,8 +21,18 @@ internal class SequenceDebuggerDisplay
         }
         recursionDepth++;
 
-        foreach (var sound in sequence.Where(s => s is not NoSound))
+        foreach (var sound in sequence)
         {
+            if (sound is NoSound)
+            {
+                if (sound.Followers.Any())
+                {
+                    FillDebuggerDisplayStrings(result, sound.Followers, recursionDepth);
+                }
+                // don't display system sounds in debugger
+                continue;
+            }
+
             if (sound.DelayAfterLeader > 0)
             {
                 result.Add($"{sound.DelayAfterLeader} {sound.Name}");
