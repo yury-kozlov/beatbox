@@ -117,10 +117,19 @@ public record Sound
     /// </summary>
     internal Sequence? PreviousSounds { get; set; }
 
+    /// <summary>
+    /// Example returned value: "k, 1200 k, 1200 k, 600 k, 600 k".
+    /// </summary>
+    public string DebuggerDisplay => SequenceDebuggerDisplay.Get(this);
+
     public override string? ToString() => Format(Name);
 
     protected string Format(string? friendlyName)
     {
+        if (Tags.HasItems())
+        {
+            return $"{friendlyName}: {Timestamp:0000} {Tags}";
+        }
         return $"{friendlyName}: {Timestamp:0000}";
     }
 

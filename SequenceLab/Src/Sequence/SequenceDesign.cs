@@ -161,4 +161,9 @@ public class SequenceDesign
     }
 
     public override string ToString() => Name ?? base.ToString() ?? "";
+
+    /// <summary>
+    /// Example returned value: "k, 1200 k, 1200 k, 600 k, 600 k".
+    /// </summary>
+    public string DebuggerDisplay => SequenceDebuggerDisplay.Get(Leader.Followers);
 }

@@ -7,12 +7,22 @@ internal class SequenceDebuggerDisplay
     /// </summary>
     internal static string Get(Sequence sequence)
     {
-        var result = new List<string>();
+        var result = new List<Sound>();
         FillDebuggerDisplayStrings(result, sequence);
-        return string.Join(", ", result);
+        return string.Join(", ", result.Select(DebuggerDisplay));
     }
 
-    private static void FillDebuggerDisplayStrings(List<string> result, Sequence sequence, int recursionDepth = 0)
+    /// <summary>
+    /// Example returned value: "k, 1200 k, 1200 k, 600 k, 600 k".
+    /// </summary>
+    internal static string Get(Sound leader)
+    {
+        List<Sound> result = leader is NoSound ? [] : [leader];
+        FillDebuggerDisplayStrings(result, leader.Followers);
+        return string.Join(", ", result.Select(DebuggerDisplay));
+    }
+
+    private static void FillDebuggerDisplayStrings(List<Sound> result, Sequence sequence, int recursionDepth = 0)
     {
         const int maxRecursion = 10;
         if (recursionDepth >= maxRecursion)
@@ -33,15 +43,21 @@ internal class SequenceDebuggerDisplay
                 continue;
             }
 
-            if (sound.DelayAfterLeader > 0)
+            if (!result.Any(s => s.Id == sound.Id))
             {
-                result.Add($"{sound.DelayAfterLeader} {sound.Name}");
+                result.Add(sound);
             }
-            else
-            {
-                result.Add(sound.Name!);
-            }
+
             FillDebuggerDisplayStrings(result, sound.Followers, recursionDepth);
         }
+    }
+
+    private static string DebuggerDisplay(Sound sound)
+    {
+        if (sound.DelayAfterLeader > 0)
+        {
+            return $"{sound.DelayAfterLeader} {sound.Name}";
+        }
+        return sound.Name!;
     }
 }

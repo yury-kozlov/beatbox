@@ -2,7 +2,6 @@
 
 namespace Beater;
 
-[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class Sequence : List<Sound>
 {
     /// <summary>
