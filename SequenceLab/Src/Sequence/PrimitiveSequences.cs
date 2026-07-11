@@ -1,4 +1,6 @@
-﻿namespace Beater;
+﻿using static Beater.SoundExtensions;
+
+namespace Beater;
 
 public class PrimitiveSequences
 {
@@ -49,17 +51,18 @@ public class PrimitiveSequences
 
     public class Trapezoid<TSound> : SequenceDesign where TSound : Sound, new()
     {
+        private readonly TSound _s2;
+        private readonly TSound _s3;
+        private readonly TSound _s4;
+
         public Trapezoid(string name = "trapezoid") : base(name)
         {
-            Leader = new TSound()
-            {
-                Strategy = new FollowLeaderStrategy { },
-                Followers = [
-                    new TSound { Strategy = new FollowPreviousSoundStrategy() },
-                    new TSound { Strategy = new FollowPreviousSoundStrategy() },
-                    new TSound { Strategy = new FollowPreviousSoundStrategy() },
-                ],
-            };
+            Leader = Chain(
+                    new TSound(),
+                    _s2 = new TSound(),
+                    _s3 = new TSound(),
+                    _s4 = new TSound()
+            );
         }
 
         public required int XInterval
@@ -68,9 +71,9 @@ public class PrimitiveSequences
             set
             {
                 field = value;
-                FirstSound?.Followers.FirstOrDefault()?.DelayAfterLeader = value;
+                _s2?.DelayAfterLeader = value;
                 // Duration = XInterval*2 + YInterval*2
-                Duration = (value * 2) + ((FirstSound?.Followers.LastOrDefault()?.Strategy.DelayAfterLeader ?? 0) * 2);
+                Duration = (value * 2) + (_s4?.DelayAfterLeader * 2 ?? 0);
             }
         }
 
@@ -80,10 +83,10 @@ public class PrimitiveSequences
             set
             {
                 field = value;
-                FirstSound?.Followers.SecondOrDefault()?.DelayAfterLeader = value;
-                FirstSound?.Followers.LastOrDefault()?.DelayAfterLeader = value;
+                _s3?.DelayAfterLeader = value;
+                _s4?.DelayAfterLeader = value;
                 // Duration = XInterval*2 + YInterval*2
-                Duration = (value * 2) + ((FirstSound?.Followers.FirstOrDefault()?.Strategy.DelayAfterLeader ?? 0) * 2);
+                Duration = (value * 2) + (_s2?.DelayAfterLeader * 2 ?? 0);
             }
         }
     }
