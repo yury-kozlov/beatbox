@@ -231,6 +231,7 @@ public static class SoundExtensions
         for (int i = sounds.Length - 1; i > 0; i--)
         {
             sounds[i - 1].WithFollower(sounds[i]);
+            sounds[i - 1].Followers.InitialLength++;
         }
         return sounds.First();
     }
