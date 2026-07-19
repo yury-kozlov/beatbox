@@ -27,11 +27,11 @@ public class RepeatStrategy : AbstractStrategy
 
     private int _previousIterval;
 
-    public override Sequence ApplyStrategy(Sound leader)
+    public override GeneratedSequence ApplyStrategy(Sound leader)
     {
         var originalSound = leader;
         var repeatedSound = leader;
-        var sequence = new Sequence();
+        var sequence = new GeneratedSequence();
         for (int i = 0; i < Count; i++)
         {
             repeatedSound = originalSound.DeepClone();

@@ -1,6 +1,13 @@
-﻿using System.Diagnostics;
+﻿namespace Beater;
 
-namespace Beater;
+public class GeneratedSequence : Sequence
+{
+    public GeneratedSequence()
+    { }
+
+    public GeneratedSequence(IEnumerable<Sound> source) : base(source)
+    { }
+}
 
 public class Sequence : List<Sound>
 {
@@ -23,7 +30,7 @@ public class Sequence : List<Sound>
         }
     }
 
-    public Sequence Mix(Sequence followers)
+    public GeneratedSequence Mix(GeneratedSequence followers)
     {
         AddRange(followers);
         return SequenceSoundSorter.SortByTimestamp(this);

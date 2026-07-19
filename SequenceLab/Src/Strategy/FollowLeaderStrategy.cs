@@ -7,7 +7,7 @@ public class FollowLeaderStrategy : AbstractStrategy
     /// </summary>
     public int MinBufferAfterInjectedSounds = 200;
 
-    public override Sequence ApplyStrategy(Sound leader)
+    public override GeneratedSequence ApplyStrategy(Sound leader)
     {
         leader.Timestamp = DelayAfterLeader;
 
@@ -26,6 +26,6 @@ public class FollowLeaderStrategy : AbstractStrategy
             }
         }
 
-        return new Sequence() { leader };
+        return new GeneratedSequence() { leader };
     }
 }

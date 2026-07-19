@@ -20,7 +20,7 @@ public class FollowPreviousSoundStrategy : AbstractStrategy
     /// Generate sequence relatively to the previous sound.
     /// So that delays will be calculated based on position of the previous sound (rather than position of the leader).
     /// </summary>
-    public override Sequence ApplyStrategy(Sound leader)
+    public override GeneratedSequence ApplyStrategy(Sound leader)
     {
         var delay = DelayAfterLeader;
         var previousSound = GetPreviousSound(leader);

@@ -4,7 +4,7 @@ namespace Beater;
 
 public static class SequencePlayer
 {
-    public static async Task Play(this TcpTransport? transport, Sequence sequence)
+    public static async Task Play(this TcpTransport? transport, GeneratedSequence sequence)
     {
         if (transport is not null)
         {
@@ -12,7 +12,7 @@ public static class SequencePlayer
         }
     }
 
-    public static async Task PlayRepeated(this TcpTransport? transport, Sequence sequence)
+    public static async Task PlayRepeated(this TcpTransport? transport, GeneratedSequence sequence)
     {
         if (transport is not null)
         {

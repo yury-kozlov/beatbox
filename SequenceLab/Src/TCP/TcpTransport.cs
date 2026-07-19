@@ -55,7 +55,7 @@ public class TcpTransport
         }
     }
 
-    public async Task SendScheduled(Sequence sequence)
+    public async Task SendScheduled(GeneratedSequence sequence)
     {
         switch (SendMode)
         {
@@ -71,7 +71,7 @@ public class TcpTransport
         }
     }
 
-    private void SendAllAtOnce(Sequence sequence)
+    private void SendAllAtOnce(GeneratedSequence sequence)
     {
         var startedAt = DateTime.Now;
         var batch = new TransportBatchMessage();
@@ -91,7 +91,7 @@ public class TcpTransport
         Send(batch.ToTransportMessage());
     }
 
-    private async Task SendDelayedMessages(Sequence sequence)
+    private async Task SendDelayedMessages(GeneratedSequence sequence)
     {
         var startedAt = DateTime.Now;
         Sound? previous = null;

@@ -7,9 +7,9 @@ public static class SequenceSoundSorter
     /// Required when mixing simultaneous sequences so that sounds from earlier-generated sub-sequences
     /// stay before sounds from later-generated sub-sequences at the same timestamp.
     /// </summary>
-    public static Sequence SortByTimestamp(List<Sound> sequence)
+    public static GeneratedSequence SortByTimestamp(List<Sound> sequence)
     {
-        var sorted = new Sequence(sequence
+        var sorted = new GeneratedSequence(sequence
             // store aside each sound with the original "index" (indicating the initial order in which sounds were added to their sequences)
             .Select((sound, index) => (sound, index))
             .OrderBy(x => x.sound.Timestamp)

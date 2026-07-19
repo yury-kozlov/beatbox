@@ -50,7 +50,7 @@ public abstract class AbstractStrategy
     /// </summary>
     public bool FireAndForget { get; set; }
 
-    public abstract Sequence ApplyStrategy(Sound leader);
+    public abstract GeneratedSequence ApplyStrategy(Sound leader);
 
     public override string? ToString() => DelayAfterLeader > 0 ? $"{DelayAfterLeader:0000}:{base.ToString()}" : base.ToString();
 }

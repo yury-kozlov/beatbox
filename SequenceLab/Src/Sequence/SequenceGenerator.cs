@@ -3,7 +3,7 @@ namespace Beater;
 
 public class SequenceGenerator
 {
-    public static Sequence Generate(SequenceDesign seq)
+    public static GeneratedSequence Generate(SequenceDesign seq)
     {
         seq.Leader.WithSequenceIfMissing(seq);
         return GenerateSequence(seq.Leader);
@@ -13,7 +13,7 @@ public class SequenceGenerator
     /// An entry point to generate sequence of sounds of leader/follower.
     /// </summary>
     /// <param name="previousSounds">Sequence of previous sounds (if any), from which the generated sequence will continue.</param>
-    private static Sequence GenerateSequence(Sound leader)
+    private static GeneratedSequence GenerateSequence(Sound leader)
     {
         leader = leader with { /* clone */ };
         leader.Followers.SetLeader(leader);
@@ -33,10 +33,10 @@ public class SequenceGenerator
         leader.Strategy.CalledTimes++;
 
         // in most cases "leaders" will contain single sound (current leader), except for repeat strategy which will clone leader in loop
-        Sequence leaders = leader.Strategy.ApplyStrategy(leader);
+        GeneratedSequence leaders = leader.Strategy.ApplyStrategy(leader);
 
         // note: followers are generated separately from the leader - meaning leader will not be able to take decisions based on its followers
-        var followers = new Sequence();
+        var followers = new GeneratedSequence();
         foreach (var currentLeader in leaders)
         {
             if (currentLeader.Followers.HasItems())
@@ -49,9 +49,9 @@ public class SequenceGenerator
         return leaders.Mix(followers);
     }
 
-    private static Sequence GenerateFollowersSequence(Sound leader)
+    private static GeneratedSequence GenerateFollowersSequence(Sound leader)
     {
-        var allFollowers = new Sequence();
+        var allFollowers = new GeneratedSequence();
         var injectionMap = new InjectionMap(leader.Followers);
         leader.Followers = injectionMap.Ordered ?? leader.Followers;
 
@@ -129,7 +129,7 @@ public class SequenceGenerator
     /// <summary>
     /// Any sounds exceeding total duration of repeated sequence are removed here.
     /// </summary>
-    private static void RemoveSoundsExceedingLoop(Sound leader, Sequence seq)
+    private static void RemoveSoundsExceedingLoop(Sound leader, GeneratedSequence seq)
     {
         var repeatStrategy = (RepeatStrategy)leader.Strategy;
         var maxAllowedTimestamp = leader.Timestamp + repeatStrategy.Interval;
