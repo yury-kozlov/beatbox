@@ -75,7 +75,7 @@ public class TcpTransport
     {
         var startedAt = DateTime.Now;
         var batch = new TransportBatchMessage();
-        Sound? previous = null;
+        GeneratedSound? previous = null;
         foreach (var sound in sequence)
         {
             var preDelay = sound.Timestamp - previous?.Timestamp;
@@ -94,8 +94,8 @@ public class TcpTransport
     private async Task SendDelayedMessages(GeneratedSequence sequence)
     {
         var startedAt = DateTime.Now;
-        Sound? previous = null;
-        foreach (var sound in sequence)
+        GeneratedSound? previous = null;
+        foreach (GeneratedSound sound in sequence)
         {
             if (previous is not null)
             {

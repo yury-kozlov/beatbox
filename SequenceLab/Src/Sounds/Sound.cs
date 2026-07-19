@@ -1,7 +1,22 @@
-﻿
-namespace Beater;
+﻿namespace Beater;
 
-public record Sound
+public record GeneratedSound
+{
+    public string? Name;
+
+    /// <summary>
+    /// In the final sequence, represents absolute position of the sound from the beginning of the whole sequence.
+    /// If the sound is an X iteration inside a loop, position will still be calculated from the very beginning (including all previous iterations).
+    /// NOTE: during sequence generation, this value is calculated relatively to the current leader and then shifted according to leader's position (becomes absolute).
+    /// </summary>
+    public int Timestamp;
+
+    public bool IsSilenced;
+
+    public Sound SoundDesign;
+}
+
+public record Sound : GeneratedSound
 {
     /// <summary>
     /// Unique Id of a sound.
@@ -13,6 +28,7 @@ public record Sound
     public Sound(string name)
     {
         Name = name.IsNullOrEmpty() ? NoSound.Name : name;
+        SoundDesign = this;
     }
 
     public Sound(string name, string simultaneousSound)
@@ -22,7 +38,6 @@ public record Sound
         Followers.Add(new Sound(simultaneousSound) { Strategy = new FollowPreviousSoundStrategy() });
     }
 
-    public string? Name;
     public virtual string? FriendlyName { get; set; }
 
     public AbstractStrategy Strategy
@@ -55,13 +70,6 @@ public record Sound
 
     public Sound? Leader;
 
-    /// <summary>
-    /// In the final sequence, represents absolute position of the sound from the beginning of the whole sequence.
-    /// If the sound is an X iteration inside a loop, position will still be calculated from the very beginning (including all previous iterations).
-    /// NOTE: during sequence generation, this value is calculated relatively to the current leader and then shifted according to leader's position (becomes absolute).
-    /// </summary>
-    public int Timestamp;
-
     public string? Comment;
 
     /// <summary>
@@ -79,9 +87,7 @@ public record Sound
     /// All followers will automatically get this name assigned when a leader sound is added to a sequence.
     /// NOTE: Sequence may be null when deserializing a sound from json.
     /// </summary>
-    public SequenceDesign Sequence;
-
-    public bool IsSilenced;
+    public SequenceDesign? Sequence;
 
     /// <summary>
     /// Indicates that starting from the current sound all its followers belong to the same tag.

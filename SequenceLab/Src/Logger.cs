@@ -18,7 +18,7 @@ public class Logger
         ConsoleColor.DarkCyan,
     ]);
 
-    public static void Log(Sound sound, DateTime startedAt, int? sinceStart = null)
+    public static void Log(GeneratedSound sound, DateTime startedAt, int? sinceStart = null)
     {
         DateTime now;
         if (sinceStart.HasValue)
@@ -37,14 +37,14 @@ public class Logger
         var name = sound.Name;
         if (sound is Metronome or LoopEnd or SequenceStart or SequenceEnd)
         {
-            name = sound.FriendlyName;
+            name = sound.SoundDesign.FriendlyName;
         }
 
-        var tags = sound.Tags?.Count > 0 ? " " + sound.Tags.Join() : "";
+        var tags = sound.SoundDesign.Tags?.Count > 0 ? " " + sound.SoundDesign.Tags.Join() : "";
 
         // text inside square brackets will be colored:
-        var comment = name.IsNullOrEmpty() ? $"[{sound.Comment}]" : $"[{name}] {sound.Comment}{tags}";
-        var sequenceName = sound.Sequence?.Name ?? "";
+        var comment = name.IsNullOrEmpty() ? $"[{sound.SoundDesign.Comment}]" : $"[{name}] {sound.SoundDesign.Comment}{tags}";
+        var sequenceName = sound.SoundDesign.Sequence?.Name ?? "";
 
         WriteColored($"{now:H:mm:ss}:{now.Millisecond:000}, seq: [{sequenceName,5}] ", AssignedColor(sequenceName));
 
@@ -61,13 +61,13 @@ public class Logger
         Console.WriteLine();
     }
 
-    private static ConsoleColor GetColor(Sound sound)
+    private static ConsoleColor GetColor(GeneratedSound sound)
     {
         if (sound.Name is null || sound.IsSilenced)
         {
             return ConsoleColor.DarkGray;
         }
-        if (sound.IsLeader())
+        if (sound.SoundDesign.IsLeader())
         {
             return ConsoleColor.Green;
         }
