@@ -21,7 +21,7 @@ public class InjectionMapTests(ITestOutputHelper output) : TestBase(output)
         // arrange
         var soundA = CreateSound("a", 10);
         var soundB = CreateSound("b", 20);
-        var source = new Sequence { soundA, soundB };
+        var source = new FollowersDesign { soundA, soundB };
         source.InitialLength = source.Count;
 
         // act
@@ -38,7 +38,7 @@ public class InjectionMapTests(ITestOutputHelper output) : TestBase(output)
         var soundA = CreateSound("a", 100);
         var soundB = CreateSound("b", 200);
         var soundC = CreateSound("c", 50);
-        var source = new Sequence { soundA, soundB, soundC };
+        var source = new FollowersDesign { soundA, soundB, soundC };
         source.InitialLength = 2; // soundA, soundB were part of the initial sequence; soundC was injected later
 
         // act
@@ -55,7 +55,7 @@ public class InjectionMapTests(ITestOutputHelper output) : TestBase(output)
         var soundA = CreateSound("a", 10);
         var soundB = CreateSound("b", 20);
         var soundC = CreateSound("c", 100);
-        var source = new Sequence { soundA, soundB, soundC };
+        var source = new FollowersDesign { soundA, soundB, soundC };
         source.InitialLength = 2;
 
         // act
@@ -72,12 +72,12 @@ public class InjectionMapTests(ITestOutputHelper output) : TestBase(output)
         var soundA = CreateSound("a", 200);
         var soundB = CreateSound("b", 300, new FollowPreviousSoundStrategy());
         var soundC = CreateSound("c", 150);
-        var source = new Sequence { soundA, soundB, soundC };
+        var source = new FollowersDesign { soundA, soundB, soundC };
         source.InitialLength = 2;
 
         // act
         var map = new InjectionMap(source);
-        map.SetInjectionSequence(soundC, new Sequence());
+        map.SetInjectionSequence(soundC, new GeneratedSequence());
 
         // assert
         map.GetInjectedSequence(soundA).Should().NotBeNull();
@@ -91,7 +91,7 @@ public class InjectionMapTests(ITestOutputHelper output) : TestBase(output)
         var soundA = CreateSound("a", 100);
         var soundB = CreateSound("b", 200);
         var soundC = CreateSound("c", 50);
-        var source = new Sequence { soundA, soundB, soundC };
+        var source = new FollowersDesign { soundA, soundB, soundC };
         source.InitialLength = 2;
         var map = new InjectionMap(source);
 
@@ -109,10 +109,10 @@ public class InjectionMapTests(ITestOutputHelper output) : TestBase(output)
         var soundA = CreateSound("a", 100);
         var soundB = CreateSound("b", 200);
         var soundC = CreateSound("c", 50);
-        var source = new Sequence { soundA, soundB, soundC };
+        var source = new FollowersDesign { soundA, soundB, soundC };
         source.InitialLength = 2;
         var map = new InjectionMap(source);
-        var generatedSequence = new Sequence { CreateSound("generated", 0) };
+        var generatedSequence = new GeneratedSequence(CreateSound("generated", 0));
 
         // act
         map.SetInjectionSequence(soundC, generatedSequence);
@@ -129,10 +129,10 @@ public class InjectionMapTests(ITestOutputHelper output) : TestBase(output)
         var soundA = CreateSound("a", 100);
         var soundB = CreateSound("b", 200);
         var soundC = CreateSound("c", 50);
-        var source = new Sequence { soundA, soundB, soundC };
+        var source = new FollowersDesign { soundA, soundB, soundC };
         source.InitialLength = 2;
         var map = new InjectionMap(source);
-        map.SetInjectionSequence(soundC, new Sequence());
+        map.SetInjectionSequence(soundC, new GeneratedSequence());
 
         // act
         var injectedSequence = map.GetInjectedSequence(soundC);

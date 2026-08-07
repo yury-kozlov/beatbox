@@ -1,4 +1,4 @@
-﻿
+
 namespace Beater;
 
 public class SequenceGenerator
@@ -13,9 +13,9 @@ public class SequenceGenerator
     /// An entry point to generate sequence of sounds of leader/follower.
     /// </summary>
     /// <param name="previousSounds">Sequence of previous sounds (if any), from which the generated sequence will continue.</param>
-    private static GeneratedSequence GenerateSequence(Sound leader)
+    private static GeneratedSequence GenerateSequence(SoundDesign leader)
     {
-        leader = leader with { /* clone */ };
+        leader = leader.DeepClone();
         leader.Followers.SetLeader(leader);
 
         leader.Strategy.CheckedTimes++;
@@ -27,21 +27,21 @@ public class SequenceGenerator
 
         if (IsSilenced(leader))
         {
-            leader = leader with { IsSilenced = true };
+            leader.Generated.IsSilenced = true;
         }
 
         leader.Strategy.CalledTimes++;
 
         // in most cases "leaders" will contain single sound (current leader), except for repeat strategy which will clone leader in loop
-        GeneratedSequence leaders = leader.Strategy.ApplyStrategy(leader);
+        var leaders = leader.Strategy.ApplyStrategy(leader);
 
         // note: followers are generated separately from the leader - meaning leader will not be able to take decisions based on its followers
         var followers = new GeneratedSequence();
         foreach (var currentLeader in leaders)
         {
-            if (currentLeader.Followers.HasItems())
+            if (currentLeader.SoundDesign.Followers.HasItems())
             {
-                followers.AddRange(GenerateFollowersSequence(currentLeader));
+                followers.AddRange(GenerateFollowersSequence(currentLeader.SoundDesign));
             }
         }
 
@@ -49,7 +49,7 @@ public class SequenceGenerator
         return leaders.Mix(followers);
     }
 
-    private static GeneratedSequence GenerateFollowersSequence(Sound leader)
+    private static GeneratedSequence GenerateFollowersSequence(SoundDesign leader)
     {
         var allFollowers = new GeneratedSequence();
         var injectionMap = new InjectionMap(leader.Followers);
@@ -59,7 +59,7 @@ public class SequenceGenerator
         {
             follower.PreviousSounds = allFollowers;
             follower.Injected = injectionMap.GetInjectedSequence(follower);
-            
+
             PropagateFireAndForget(leader, follower);
 
             // NOTE: separate followers are played independently to allow overlapping sequences (mixed together)
@@ -77,7 +77,7 @@ public class SequenceGenerator
         foreach (var follower in allFollowers)
         {
             // shift timestamp relatively to the leader (so that each sound will have an absolute position from the beginning of the whole sequence):
-            follower.Timestamp += leader.Timestamp;
+            follower.Timestamp += leader.Generated.Timestamp;
             SetIterationPath(leader, follower);
         }
 
@@ -96,7 +96,7 @@ public class SequenceGenerator
     /// only SequenceEnd inherits the flag — so external sounds cannot follow this sequence,
     /// while internal sounds remain unaffected and still chain normally via FollowPreviousSoundStrategy.
     /// </summary>
-    private static void PropagateFireAndForget(Sound leader, Sound follower)
+    private static void PropagateFireAndForget(SoundDesign leader, SoundDesign follower)
     {
         if (!leader.Strategy.FireAndForget)
         {
@@ -109,9 +109,9 @@ public class SequenceGenerator
         }
     }
 
-    private static void SetIterationPath(Sound leader, Sound follower)
+    private static void SetIterationPath(SoundDesign leader, GeneratedSound follower)
     {
-        if (leader.Iteration.IsNullOrEmpty())
+        if (leader.Generated.Iteration.IsNullOrEmpty())
         {
             // nothing to prepend to the follower
             return;
@@ -119,45 +119,49 @@ public class SequenceGenerator
 
         if (follower.Iteration.IsNullOrEmpty())
         {
-            follower.Iteration = leader.Iteration;
+            follower.Iteration = leader.Generated.Iteration;
             return;
         }
 
-        follower.Iteration = $"{leader.Iteration}.{follower.Iteration}";
+        follower.Iteration = $"{leader.Generated.Iteration}.{follower.Iteration}";
     }
 
     /// <summary>
     /// Any sounds exceeding total duration of repeated sequence are removed here.
     /// </summary>
-    private static void RemoveSoundsExceedingLoop(Sound leader, GeneratedSequence seq)
+    private static void RemoveSoundsExceedingLoop(SoundDesign leader, GeneratedSequence seq)
     {
         var repeatStrategy = (RepeatStrategy)leader.Strategy;
-        var maxAllowedTimestamp = leader.Timestamp + repeatStrategy.Interval;
+        var maxAllowedTimestamp = leader.Generated.Timestamp + repeatStrategy.Interval;
         var outliers = seq.Where(s => s.Timestamp > maxAllowedTimestamp).ToList();
         foreach (var sound in outliers)
         {
-            Console.WriteLine($"Trimming sound '{sound.ToString()}' as it exceeds parent loop interval of {repeatStrategy.Interval}ms started at {leader.Timestamp}");
+            Console.WriteLine($"Trimming sound '{sound.ToString()}' as it exceeds parent loop interval of {repeatStrategy.Interval}ms started at {leader.Generated.Timestamp}");
             seq.Remove(sound);
 
-            if (sound is SequenceEnd sequenceEnd)
+            if (sound.SoundDesign is SequenceEnd sequenceEnd)
             {
                 // add indication that sequence was trimmed (instead of previously deleted SequenceEnd)
-                seq.Add(new SequenceEndTrimmed(sequenceEnd) { Timestamp = maxAllowedTimestamp });
+                var trimmedEnd = new SequenceEndTrimmed(sequenceEnd);
+                trimmedEnd.Generated.Timestamp = maxAllowedTimestamp;
+                seq.Add(trimmedEnd.Generated);
             }
-            else if (sound is LoopEnd loopEnd)
+            else if (sound.SoundDesign is LoopEnd loopEnd)
             {
                 // add indication that the loop was trimmed (instead of previously deleted LoopEnd)
-                seq.Add(new LoopEndTrimmed(loopEnd) { Timestamp = maxAllowedTimestamp });
+                var trimmedLoop = new LoopEndTrimmed(loopEnd);
+                trimmedLoop.Generated.Timestamp = maxAllowedTimestamp;
+                seq.Add(trimmedLoop.Generated);
             }
         }
     }
 
-    private static bool IsSilenced(Sound sound)
+    private static bool IsSilenced(SoundDesign sound)
     {
         return Numbers.IsXOutOf(sound.Strategy.SilenceEveryXOutOf, sound.Strategy.CheckedTimes);
     }
 
-    private static bool IsSkipped(Sound sound)
+    private static bool IsSkipped(SoundDesign sound)
     {
         if (sound.Strategy.PlayEveryXOutOf.HasValue())
         {

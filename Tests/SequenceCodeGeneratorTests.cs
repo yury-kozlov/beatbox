@@ -241,7 +241,7 @@ public class SequenceCodeGeneratorTests(ITestOutputHelper output) : TestBase(out
         var result = SequenceCodeGenerator.GenerateCode(seq, "test", null);
 
         // assert
-        result.Should().Contain("new Sound(\"hi-hat\")");
+        result.Should().Contain("new SoundDesign(\"hi-hat\")");
     }
 
     // -------------------------------------------------------------------------

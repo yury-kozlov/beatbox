@@ -11,5 +11,5 @@ public record Metronome : NoSound
         FriendlyName = "metronome";
     }
 
-    public override string? ToString() => $"{Format(FriendlyName)}: #{Iteration}";
+    public override string? ToString() => $"{Format(FriendlyName)}: #{Generated.Iteration}";
 }

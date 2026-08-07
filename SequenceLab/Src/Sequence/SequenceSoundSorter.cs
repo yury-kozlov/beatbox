@@ -7,15 +7,15 @@ public static class SequenceSoundSorter
     /// Required when mixing simultaneous sequences so that sounds from earlier-generated sub-sequences
     /// stay before sounds from later-generated sub-sequences at the same timestamp.
     /// </summary>
-    public static GeneratedSequence SortByTimestamp(List<Sound> sequence)
+    public static GeneratedSequence SortByTimestamp(List<GeneratedSound> sequence)
     {
         var sorted = new GeneratedSequence(sequence
             // store aside each sound with the original "index" (indicating the initial order in which sounds were added to their sequences)
             .Select((sound, index) => (sound, index))
             .OrderBy(x => x.sound.Timestamp)
-            .ThenBy(x => x, Comparer<(Sound sound, int index)>.Create((x, y) =>
+            .ThenBy(x => x, Comparer<(GeneratedSound sound, int index)>.Create((x, y) =>
             {
-                var order = Compare(x.sound, y.sound);
+                var order = Compare(x.sound.SoundDesign, y.sound.SoundDesign);
                 return order != 0 ? order : x.index.CompareTo(y.index); // stable: preserve original index on tie
             }))
             .Select(x => x.sound));
@@ -42,7 +42,7 @@ public static class SequenceSoundSorter
         return aParts.Length.CompareTo(bParts.Length);
     }
 
-    private static int Compare(Sound a, Sound b)
+    private static int Compare(SoundDesign a, SoundDesign b)
     {
         // Both LoopEnds with different types: type takes priority over iteration paths
         if (a is LoopEnd aLoopEnd && b is LoopEnd bLoopEnd && aLoopEnd.IsSequenceLoop != bLoopEnd.IsSequenceLoop)
@@ -52,9 +52,9 @@ public static class SequenceSoundSorter
 
         // If sequence is repeated in loop and some sounds are overlapping, compare them by iteration path.
         // Hierarchical path (e.g. "2.1") sorts after its parent level ("2"), placing followers after their SequenceStart:
-        if (a.Iteration.HasValue() && b.Iteration.HasValue() && a.Iteration != b.Iteration)
+        if (a.Generated.Iteration.HasValue() && b.Generated.Iteration.HasValue() && a.Generated.Iteration != b.Generated.Iteration)
         {
-            return CompareIterations(a.Iteration, b.Iteration);
+            return CompareIterations(a.Generated.Iteration, b.Generated.Iteration);
         }
 
         // Trimmed marker goes before sequence-end

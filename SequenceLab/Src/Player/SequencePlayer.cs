@@ -20,33 +20,6 @@ public static class SequencePlayer
         }
     }
 
-    public static string ToString(this Sequence sequence)
-    {
-        Sound? previous = null;
-        var str = new StringBuilder();
-        foreach (var sound in sequence)
-        {
-            if (previous is not null)
-            {
-                var delay = sound.Timestamp - previous.Timestamp;
-                if (delay > 0)
-                {
-                    var spacesCount = (int)(delay / 100.0);
-                    for (var i = 0; i < spacesCount; i++)
-                    {
-                        str.Append(' ');
-                    }
-                }
-            }
-            previous = sound;
-            if (!sound.IsSilenced)
-            {
-                str.Append(sound.Name);
-            }
-        }
-        return str.ToString();
-    }
-
     private static async Task Repeat(Func<Task> repeatAction, Action onExit)
     {
         char keyChar;

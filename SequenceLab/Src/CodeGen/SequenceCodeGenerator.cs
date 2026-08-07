@@ -95,14 +95,14 @@ internal class SequenceCodeGenerator
         var iterationsCount = 4;
         var loop = new Metronome() { Strategy = new RepeatStrategy { Count = iterationsCount, Interval = totalTime } };
         var seq = new SequenceDesign(sequenceName) { Leader = loop };
-        Sound? previousSound = null;
+        SoundDesign? previousSound = null;
 
 
         delays = [.. delays.Prepend(0)]; // the first sound should always sound without delay
 
         foreach (var delay in delays)
         {
-            var sound = new Sound(soundName) { Strategy = new FollowLeaderStrategy { DelayAfterLeader = delay } };
+            var sound = new SoundDesign(soundName) { Strategy = new FollowLeaderStrategy { DelayAfterLeader = delay } };
             var followers = previousSound?.Followers ?? loop.Followers;
             followers.Add(sound);
 
@@ -115,7 +115,7 @@ internal class SequenceCodeGenerator
         return code;
     }
 
-    private static string? NewSoundCode(Sound sound, int level)
+    private static string? NewSoundCode(SoundDesign sound, int level)
     {
         var _ = GetIndetation(level);
         if (sound.Followers.Count == 0)
@@ -189,17 +189,17 @@ internal class SequenceCodeGenerator
         return GetPropInitializers(strategy);
     }
 
-    private static string GetSoundName(Sound sound)
+    private static string GetSoundName(SoundDesign sound)
     {
         return sound.Name.IsNullOrEmpty() ? $"{nameof(NoSound)}.{nameof(NoSound.Name)}" : $"\"{sound.Name}\"";
     }
 
-    private static string Ctor(Sound sound)
+    private static string Ctor(SoundDesign sound)
     {
         var soundType = sound.GetType();
-        if (soundType == typeof(Sound))
+        if (soundType == typeof(SoundDesign))
         {
-            return $"Sound({GetSoundName(sound)})";
+            return $"SoundDesign({GetSoundName(sound)})";
         }
 
         return $"{soundType.Name}()";

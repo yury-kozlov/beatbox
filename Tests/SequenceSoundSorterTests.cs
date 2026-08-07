@@ -9,13 +9,12 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // already sorted:
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new LoopEnd() { Timestamp = 0 },
-                new SequenceStart("test") { Timestamp = 0 },
-                new Kick() { Timestamp = 0 },
-                new Snare() { Timestamp = 0 },
-            },
+            new GeneratedSequence(
+                new LoopEnd(),
+                new SequenceStart("test"),
+                new Kick(),
+                new Snare()
+            ),
             // expected
             new string[] {
                 "0000:end-of-loop",
@@ -28,13 +27,12 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // "end-of-loop" should go before "sequence-start":
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new SequenceStart("test") { Timestamp = 0 },
-                new LoopEnd() { Timestamp = 0 },
-                new Kick() { Timestamp = 0 },
-                new Snare() { Timestamp = 0 },
-            },
+            new GeneratedSequence(
+                new SequenceStart("test"),
+                new LoopEnd(),
+                new Kick(),
+                new Snare()
+            ),
             // expected
             new string[] {
                 "0000:end-of-loop",
@@ -47,13 +45,12 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // "end-of-loop" and "sequence-start" should go before regular sounds:
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new Kick() { Timestamp = 0 },
-                new Snare() { Timestamp = 0 },
-                new SequenceStart("test") { Timestamp = 0 },
-                new LoopEnd() { Timestamp = 0 },
-            },
+            new GeneratedSequence(
+                new Kick(),
+                new Snare(),
+                new SequenceStart("test"),
+                new LoopEnd()
+            ),
             // expected
             new string[] {
                 "0000:end-of-loop",
@@ -66,13 +63,12 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // relative order of regular sounds should be preserved:
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new Snare() { Timestamp = 0 },
-                new SequenceStart("test") { Timestamp = 0 },
-                new LoopEnd() { Timestamp = 0 },
-                new Kick() { Timestamp = 0 },
-            },
+            new GeneratedSequence(
+                new Snare(),
+                new SequenceStart("test"),
+                new LoopEnd(),
+                new Kick()
+            ),
             // expected
             new string[] {
                 "0000:end-of-loop",
@@ -85,13 +81,12 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // should sort by timestamp when all timestamps are different:
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new Snare() { Timestamp = 3 },
-                new SequenceStart("test") { Timestamp = 1 },
-                new LoopEnd() { Timestamp = 4 },
-                new Kick() { Timestamp = 2 },
-            },
+            new GeneratedSequence(
+                new Snare().With(s => s.Generated.Timestamp = 3),
+                new SequenceStart("test").With(s => s.Generated.Timestamp = 1),
+                new LoopEnd().With(s => s.Generated.Timestamp = 4),
+                new Kick().With(s => s.Generated.Timestamp = 2)
+            ),
             // expected
             new string[] {
                 "0001:sequence-start-test",
@@ -104,13 +99,12 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // "sequence-start" should go after "end-of-loop":
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new Kick() { Timestamp = 0 },
-                new Snare() { Timestamp = 0 },
-                new LoopEnd() { Timestamp = 0 },
-                new SequenceStart("test") { Timestamp = 0 },
-            },
+            new GeneratedSequence(
+                new Kick(),
+                new Snare(),
+                new LoopEnd(),
+                new SequenceStart("test")
+            ),
             // expected
             new string[] {
                 "0000:end-of-loop",
@@ -123,13 +117,12 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // "end-of-loop" should go first even when placed last:
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new Kick() { Timestamp = 0 },
-                new Snare() { Timestamp = 0 },
-                new SequenceStart("test") { Timestamp = 0 },
-                new LoopEnd() { Timestamp = 0 },
-            },
+            new GeneratedSequence(
+                new Kick(),
+                new Snare(),
+                new SequenceStart("test"),
+                new LoopEnd()
+            ),
             // expected
             new string[] {
                 "0000:end-of-loop",
@@ -142,11 +135,10 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // "sequence-end" should go after "end-of-loop":
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new SequenceEnd(new SequenceDesign("test")) { Timestamp = 0 },
-                new LoopEnd() { Timestamp = 0 },
-            },
+            new GeneratedSequence(
+                new SequenceEnd(new SequenceDesign("test")),
+                new LoopEnd()
+            ),
             // expected
             new string[] {
                 "0000:end-of-loop",
@@ -157,11 +149,10 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // "sequence-end" should go after "metronome":
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new SequenceEnd(new SequenceDesign("test")) { Timestamp = 0 },
-                new Metronome() { Timestamp = 0 },
-            },
+            new GeneratedSequence(
+                new SequenceEnd(new SequenceDesign("test")),
+                new Metronome()
+            ),
             // expected
             new string[] {
                 "0000:metronome",
@@ -172,11 +163,10 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // "sequence-end" should go before "sequence-start" when sequences are different (generation order):
         yield return new object[] {
             // input — prev-end generated before next-start, as in real sequences (sequential append)
-            new Sequence()
-            {
-                new SequenceEnd(new SequenceDesign("prev")) { Timestamp = 0 },
-                new SequenceStart("next") { Timestamp = 0 },
-            },
+            new GeneratedSequence(
+                new SequenceEnd(new SequenceDesign("prev")),
+                new SequenceStart("next")
+            ),
             // expected
             new string[] {
                 "0000:sequence-end-prev",
@@ -187,12 +177,11 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // "sequence-end" should go after "sequence-start" in same sequence:
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new SequenceStart("test") { Timestamp = 0 },
-                new SequenceEnd() { Timestamp = 0 },
-                new Kick() { Timestamp = 0 },
-            },
+            new GeneratedSequence(
+                new SequenceStart("test"),
+                new SequenceEnd(),
+                new Kick()
+            ),
             // expected
             new string[] {
                 "0000:sequence-start-test",
@@ -204,11 +193,10 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // "sequence-end" should go after regular sounds of same sequence:
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new SequenceEnd(new SequenceDesign("test")) { Timestamp = 0, Sequence = SharedSeq },
-                new Kick() { Timestamp = 0, Sequence = SharedSeq },
-            },
+            new GeneratedSequence(
+                new SequenceEnd(new SequenceDesign("test")) { Sequence = SharedSeq },
+                new Kick() { Sequence = SharedSeq }
+            ),
             // expected
             new string[] {
                 "0000:k",
@@ -219,11 +207,10 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // "sequence-end" should go before regular sounds of a different sequence (generation order):
         yield return new object[] {
             // input — sequence-end generated before the sound from the other sequence, as in real sequences
-            new Sequence()
-            {
-                new SequenceEnd(new SequenceDesign("other")) { Timestamp = 0 },
-                new Kick() { Timestamp = 0, Sequence = SharedSeq },
-            },
+            new GeneratedSequence(
+                new SequenceEnd(new SequenceDesign("other")),
+                new Kick() { Sequence = SharedSeq }
+            ),
             // expected
             new string[] {
                 "0000:sequence-end-other",
@@ -231,15 +218,15 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
             },
         };
 
+
         // sounds with different iterations at the same timestamp should be ordered by iteration:
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new Kick() { Timestamp = 0, Iteration = "2" },
-                new SequenceEnd(new SequenceDesign("test")) { Timestamp = 0, Iteration = "1" },
-                new SequenceStart("test") { Timestamp = 0, Iteration = "2" },
-            },
+            new GeneratedSequence(
+                new Kick().With(s => s.Generated.Iteration = "2"),
+                new SequenceEnd(new SequenceDesign("test")).With(s => s.Generated.Iteration = "1"),
+                new SequenceStart("test").With(s => s.Generated.Iteration = "2")
+            ),
             // expected
             new string[] {
                 "0000:sequence-end-test",  // iteration 1
@@ -251,11 +238,10 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // inner sound (iteration "2.1") should follow its SequenceStart (iteration "2"), not precede it:
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new Kick() { Timestamp = 0, Iteration = "2.1" },
-                new SequenceStart("loop") { Timestamp = 0, Iteration = "2" },
-            },
+            new GeneratedSequence(
+                new Kick().With(s => s.Generated.Iteration = "2.1"),
+                new SequenceStart("loop").With(s => s.Generated.Iteration = "2")
+            ),
             // expected
             new string[] {
                 "0000:sequence-start-loop", // "2" < "2.1" — outer start precedes its own followers
@@ -266,13 +252,12 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // full outer-iteration: inner loop end → sequence end → next sequence start → first inner sound:
         yield return new object[] {
             // input (deliberately shuffled)
-            new Sequence()
-            {
-                new Kick() { Timestamp = 0, Iteration = "2.1" },
-                new SequenceStart("loop") { Timestamp = 0, Iteration = "2" },
-                new SequenceEnd(new SequenceDesign("loop")) { Timestamp = 0, Iteration = "1" },
-                new LoopEnd() { Timestamp = 0, Iteration = "1" },
-            },
+            new GeneratedSequence(
+                new Kick().With(s => s.Generated.Iteration = "2.1"),
+                new SequenceStart("loop").With(s => s.Generated.Iteration = "2"),
+                new SequenceEnd(new SequenceDesign("loop")).With(s => s.Generated.Iteration = "1"),
+                new LoopEnd().With(s => s.Generated.Iteration = "1")
+            ),
             // expected
             new string[] {
                 "0000:end-of-loop",          // "1" — inner loop closes
@@ -285,12 +270,11 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // last sound of previous outer iteration vs first sound of next outer iteration:
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new Kick() { Timestamp = 0, Iteration = "2.1" },
-                new Sound("ts") { Timestamp = 0, Iteration = "1.3" },
-                new SequenceStart("loop") { Timestamp = 0, Iteration = "2" },
-            },
+            new GeneratedSequence(
+                new Kick().With(s => s.Generated.Iteration = "2.1"),
+                new SoundDesign("ts").With(s => s.Generated.Iteration = "1.3"),
+                new SequenceStart("loop").With(s => s.Generated.Iteration = "2")
+            ),
             // expected
             new string[] {
                 "0000:ts",                   // "1.3" — tail of outer iteration 1 (1 < 2)
@@ -302,12 +286,11 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // three-level nesting: outer start → middle repeat → innermost sound, all at same timestamp:
         yield return new object[] {
             // input
-            new Sequence()
-            {
-                new Kick() { Timestamp = 0, Iteration = "2.1.1" },
-                new Sound("metro") { Timestamp = 0, Iteration = "2.1" },
-                new SequenceStart("loop") { Timestamp = 0, Iteration = "2" },
-            },
+            new GeneratedSequence(
+                new Kick().With(s => s.Generated.Iteration = "2.1.1"),
+                new SoundDesign("metro").With(s => s.Generated.Iteration = "2.1"),
+                new SequenceStart("loop").With(s => s.Generated.Iteration = "2")
+            ),
             // expected
             new string[] {
                 "0000:sequence-start-loop", // "2"     — outermost
@@ -319,11 +302,10 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         // "end-of-loop" should go before "end-of-sequence-loop":
         yield return new object[] {
             // input (sequence loop placed first)
-            new Sequence()
-            {
-                new LoopEnd(new SequenceStart("seq")) { Timestamp = 0 },
-                new LoopEnd() { Timestamp = 0 },
-            },
+            new GeneratedSequence(
+                new LoopEnd(new SequenceStart("seq")),
+                new LoopEnd()
+            ),
             // expected
             new string[] {
                 "0000:end-of-loop",
@@ -335,11 +317,10 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
         yield return new object[] {
             // input — sequence loop has iteration "1" (parent path), regular loop has "1.1" (child path);
             // without special handling the iteration-based comparison would incorrectly put sequence loop first
-            new Sequence()
-            {
-                new LoopEnd(new SequenceStart("seq")) { Timestamp = 0, Iteration = "1" },
-                new LoopEnd() { Timestamp = 0, Iteration = "1.1" },
-            },
+            new GeneratedSequence(
+                new LoopEnd(new SequenceStart("seq")).With(s => s.Generated.Iteration = "1"),
+                new LoopEnd().With(s => s.Generated.Iteration = "1.1")
+            ),
             // expected — type wins over iteration: regular loop end before sequence loop end
             new string[] {
                 "0000:end-of-loop",           // "1.1" — inner regular loop
@@ -352,11 +333,10 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
             var main = new SequenceDesign("main");
             yield return new object[] {
                 // input (reversed)
-                new Sequence()
-                {
-                    new SequenceEnd(main) { Timestamp = 0, Sequence = main },
-                    new LoopEnd(new SequenceStart("main")) { Timestamp = 0, Sequence = main },
-                },
+                new GeneratedSequence(
+                    new SequenceEnd(main) { Sequence = main },
+                    new LoopEnd(new SequenceStart("main")) { Sequence = main }
+                ),
                 // expected
                 new string[] {
                     "0000:end-of-sequence-loop",
@@ -370,13 +350,12 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
             var main = new SequenceDesign("main");
             yield return new object[] {
                 // input — LoopEnd first (low insertion index), regular sounds next, SequenceEnd last (highest index, as in real generation)
-                new Sequence()
-                {
-                    new LoopEnd(new SequenceStart("main")) { Timestamp = 0, Sequence = main },
-                    new Kick() { Timestamp = 0 },
-                    new Snare() { Timestamp = 0 },
-                    new SequenceEnd(main) { Timestamp = 0, Sequence = main },
-                },
+                new GeneratedSequence(
+                    new LoopEnd(new SequenceStart("main")) { Sequence = main },
+                    new Kick(),
+                    new Snare(),
+                    new SequenceEnd(main) { Sequence = main }
+                ),
                 // expected
                 new string[] {
                     "0000:k",
@@ -392,12 +371,11 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
             var main = new SequenceDesign("main");
             yield return new object[] {
                 // input (reversed)
-                new Sequence()
-                {
-                    new SequenceEnd(main) { Timestamp = 0, Sequence = main },
-                    new LoopEnd(new SequenceStart("main")) { Timestamp = 0, Sequence = main },
-                    new SequenceStart("inner") { Timestamp = 0 },
-                },
+                new GeneratedSequence(
+                    new SequenceEnd(main) { Sequence = main },
+                    new LoopEnd(new SequenceStart("main")) { Sequence = main },
+                    new SequenceStart("inner")
+                ),
                 // expected
                 new string[] {
                     "0000:sequence-start-inner",
@@ -413,12 +391,11 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
             var snares = new SequenceDesign("snares");
             yield return new object[] {
                 // input (reversed)
-                new Sequence()
-                {
-                    new SequenceEnd(main) { Timestamp = 0, Sequence = main },
-                    new LoopEnd(new SequenceStart("main")) { Timestamp = 0, Sequence = main },
-                    new SequenceEndTrimmed(new SequenceEnd(snares)) { Timestamp = 0 },
-                },
+                new GeneratedSequence(
+                    new SequenceEnd(main) { Sequence = main },
+                    new LoopEnd(new SequenceStart("main")) { Sequence = main },
+                    new SequenceEndTrimmed(new SequenceEnd(snares))
+                ),
                 // expected
                 new string[] {
                     "0000:sequence-trimmed-snares",
@@ -435,12 +412,11 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
             outerSeq.Sequences.Add(innerSeq);
             yield return new object[] {
                 // input (reversed, LoopEnd placed first to test it moves after inner seq-end)
-                new Sequence()
-                {
-                    new LoopEnd(new SequenceStart("main")) { Timestamp = 0, Sequence = outerSeq },
-                    new SequenceEnd(innerSeq) { Timestamp = 0, Sequence = innerSeq },
-                    new SequenceEnd(outerSeq) { Timestamp = 0, Sequence = outerSeq },
-                },
+                new GeneratedSequence(
+                    new LoopEnd(new SequenceStart("main")) { Sequence = outerSeq },
+                    new SequenceEnd(innerSeq) { Sequence = innerSeq },
+                    new SequenceEnd(outerSeq) { Sequence = outerSeq }
+                ),
                 // expected — inner closes first, then outer loop, then outer sequence
                 new string[] {
                     "0000:sequence-end-kicks",
@@ -455,7 +431,7 @@ public class SequenceSoundSorterTests(ITestOutputHelper output) : TestBase(outpu
 
     [Theory]
     [MemberData(nameof(GetTestData))]
-    public void SortByTimestamp_ReturnExpected(Sequence sequence, string[] expected)
+    public void SortByTimestamp_ReturnExpected(GeneratedSequence sequence, string[] expected)
     {
         // act
         var sorted = SequenceSoundSorter.SortByTimestamp(sequence);

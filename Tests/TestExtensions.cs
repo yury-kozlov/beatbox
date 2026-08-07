@@ -5,15 +5,15 @@ namespace Tests;
 
 public static class TestExtensions
 {
-    public static List<string>? GetTimestamps(this Sequence? source)
+    public static List<string>? GetTimestamps(this GeneratedSequence? source)
     {
-        return source?.Select(sound => $"{sound.Timestamp:0000}:{(sound.FriendlyName ?? sound.Name)?.Trim()}").ToList();
+        return source?.Select(sound => $"{sound.Timestamp:0000}:{(sound.SoundDesign?.FriendlyName ?? sound.Name)?.Trim()}").ToList();
     }
 
-    public static string Print(this Sequence? source)
+    public static string Print(this GeneratedSequence? source)
     {
-        var timestamps = source?.GetTimestamps() ?? [];
-        var text = string.Join(",\r\n", timestamps);
+        var timestamps = source?.GetTimestamps();
+        var text = string.Join(",\r\n", timestamps ?? []);
         Console.WriteLine(text);
 
         return text;
@@ -37,4 +37,14 @@ public static class TestExtensions
             throw;
         }
     }
+
+    /// <summary>
+    /// Test-only helper to set generation-time state (Timestamp/Iteration) on a SoundDesign fixture.
+    /// </summary>
+    public static T With<T>(this T sound, Action<T> callback) where T : SoundDesign
+    {
+        callback(sound);
+        return sound;
+    }
+
 }

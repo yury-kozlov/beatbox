@@ -6,7 +6,7 @@
 /// </summary>
 public record LoopEnd : NoSound
 {
-    public LoopEnd(Sound? repeatedSound = null)
+    public LoopEnd(SoundDesign? repeatedSound = null)
     {
         IsSequenceLoop = repeatedSound is SequenceStart;
         FriendlyName = GetFriendlyName(repeatedSound);
@@ -16,9 +16,9 @@ public record LoopEnd : NoSound
 
     public bool FireAndForget { get => Strategy.FireAndForget; set => Strategy.FireAndForget = value; }
 
-    public override string? ToString() => $"{Format(FriendlyName)}: {Comment}";
+    public override string? ToString() => $"{Format(FriendlyName)}: {Generated.Comment}";
 
-    private string GetFriendlyName(Sound? repeatedSound)
+    private string GetFriendlyName(SoundDesign? repeatedSound)
     {
         if (IsSequenceLoop)
         {

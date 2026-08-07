@@ -35,7 +35,7 @@ public class Logger
         }
 
         var name = sound.Name;
-        if (sound is Metronome or LoopEnd or SequenceStart or SequenceEnd)
+        if (sound.SoundDesign is Metronome or LoopEnd or SequenceStart or SequenceEnd)
         {
             name = sound.SoundDesign.FriendlyName;
         }
@@ -43,7 +43,7 @@ public class Logger
         var tags = sound.SoundDesign.Tags?.Count > 0 ? " " + sound.SoundDesign.Tags.Join() : "";
 
         // text inside square brackets will be colored:
-        var comment = name.IsNullOrEmpty() ? $"[{sound.SoundDesign.Comment}]" : $"[{name}] {sound.SoundDesign.Comment}{tags}";
+        var comment = name.IsNullOrEmpty() ? $"[{sound.Comment}]" : $"[{name}] {sound.Comment}{tags}";
         var sequenceName = sound.SoundDesign.Sequence?.Name ?? "";
 
         WriteColored($"{now:H:mm:ss}:{now.Millisecond:000}, seq: [{sequenceName,5}] ", AssignedColor(sequenceName));

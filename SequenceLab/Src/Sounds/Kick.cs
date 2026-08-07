@@ -3,7 +3,7 @@
 /// <summary>
 /// Main beat sound.
 /// </summary>
-public record Kick : Sound
+public record Kick : SoundDesign
 {
     public Kick() : base(Name)
     { }

@@ -8,7 +8,7 @@ public class PrimitiveSequences
     {
         private readonly RepeatStrategy _repeatStrategy;
 
-        public Repeat(Sound sound, string name = "repeat") : base(name)
+        public Repeat(SoundDesign sound, string name = "repeat") : base(name)
         {
             Leader = sound;
             Leader.Strategy = _repeatStrategy = new RepeatStrategy();
@@ -26,14 +26,14 @@ public class PrimitiveSequences
             set { _repeatStrategy.Interval = value; Duration = value * Count; }
         }
 
-        public Sequence RepeatedFollowers
+        public FollowersDesign RepeatedFollowers
         {
             get => FirstSound?.Followers ?? [];
             set { FirstSound?.Followers = value; }
         }
     }
 
-    public class Square<TSound> : SequenceDesign where TSound : Sound, new()
+    public class Square<TSound> : SequenceDesign where TSound : SoundDesign, new()
     {
         private readonly RepeatStrategy _repeatStrategy;
 
@@ -49,7 +49,7 @@ public class PrimitiveSequences
         }
     }
 
-    public class Trapezoid<TSound> : SequenceDesign where TSound : Sound, new()
+    public class Trapezoid<TSound> : SequenceDesign where TSound : SoundDesign, new()
     {
         private readonly TSound _s2;
         private readonly TSound _s3;

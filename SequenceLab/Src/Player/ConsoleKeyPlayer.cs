@@ -167,7 +167,7 @@ public class ConsoleKeyPlayer : IDisposable
         };
 
         KeyPressed? previousKey = null;
-        Sound? leader = null;
+        SoundDesign? leader = null;
 
         foreach (var k in PressedKeys)
         {
@@ -219,13 +219,13 @@ public class ConsoleKeyPlayer : IDisposable
         return transportMessage.SoundName!;
     }
 
-    private Sound GetSound(ConsoleKey key)
+    private SoundDesign GetSound(ConsoleKey key)
     {
         return key switch
         {
             ConsoleKey.K => new Kick(),
             ConsoleKey.S => new Snare(),
-            _ => new Sound(GetSoundName(key)),
+            _ => new SoundDesign(GetSoundName(key)),
         };
     }
 

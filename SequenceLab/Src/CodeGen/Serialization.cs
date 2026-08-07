@@ -15,8 +15,8 @@ public static class Serialization
         {
             ContractResolver = new TypedBaseClassesContractResolver(),
             DefaultValueHandling = DefaultValueHandling.Ignore,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore, // circular reference: Sequence -> SequenceStart -> Sequence -> ...
-            Converters = { new SequenceConverter() },
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore, // circular reference: Followers -> SequenceStart -> Followers -> ...
+            Converters = { new FollowersConverter() },
         };
         return JsonConvert.SerializeObject(seq, Formatting.Indented, settings);
     }
@@ -34,7 +34,7 @@ public static class Serialization
 
 public class SoundConverter : JsonConverter
 {
-    public override bool CanConvert(Type objectType) => objectType == typeof(Sound);
+    public override bool CanConvert(Type objectType) => objectType == typeof(SoundDesign);
 
     public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
@@ -44,14 +44,14 @@ public class SoundConverter : JsonConverter
         if (typeToken != null)
         {
             var actualType = Type.GetType(typeToken);
-            if (actualType != null && actualType != typeof(Sound))
+            if (actualType != null && actualType != typeof(SoundDesign))
             {
                 return serializer.Deserialize(obj.CreateReader(), actualType);
             }
         }
 
         var name = obj["Name"]?.Value<string>() ?? string.Empty;
-        var sound = new Sound(name);
+        var sound = new SoundDesign(name);
         serializer.Populate(obj.CreateReader(), sound);
         return sound;
     }
@@ -60,14 +60,14 @@ public class SoundConverter : JsonConverter
         => throw new NotSupportedException($"{nameof(SoundConverter)} does not support writing.");
 }
 
-public class SequenceConverter : JsonConverter<Sequence>
+public class FollowersConverter : JsonConverter<FollowersDesign>
 {
-    public override void WriteJson(JsonWriter writer, Sequence? value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, FollowersDesign? value, JsonSerializer serializer)
     {
-        // By taking over Sequence serialization, we bypass the ItemTypeNameHandling = TypeNameHandling.All
-        // that TypedBaseClassesContractResolver sets on the Sequence array contract.
-        // Without it, concrete Sound subtypes (Metronome, Kick, etc.) lose their $type field and
-        // deserialize back as plain Sound. We temporarily set TypeNameHandling.All on the shared
+        // By taking over Followers serialization, we bypass the ItemTypeNameHandling = TypeNameHandling.All
+        // that TypedBaseClassesContractResolver sets on the Followers array contract.
+        // Without it, concrete SoundDesign subtypes (Metronome, Kick, etc.) lose their $type field and
+        // deserialize back as plain SoundDesign. We temporarily set TypeNameHandling.All on the shared
         // serializer so each item emits $type, then restore the original value afterward.
         var prevTypeNameHandling = serializer.TypeNameHandling;
         serializer.TypeNameHandling = TypeNameHandling.All;
@@ -79,9 +79,9 @@ public class SequenceConverter : JsonConverter<Sequence>
             {
                 if (item is SequenceEnd)
                     continue;
-                // typeof(Sound) as the nominal type makes the declared/runtime type mismatch explicit,
+                // typeof(SoundDesign) as the nominal type makes the declared/runtime type mismatch explicit,
                 // ensuring $type is written even when TypeNameHandling is Auto instead of All.
-                serializer.Serialize(writer, item, typeof(Sound));
+                serializer.Serialize(writer, item, typeof(SoundDesign));
             }
         }
         writer.WriteEndArray();
@@ -89,10 +89,10 @@ public class SequenceConverter : JsonConverter<Sequence>
         serializer.TypeNameHandling = prevTypeNameHandling;
     }
 
-    public override Sequence ReadJson(JsonReader reader, Type objectType, Sequence? existingValue, bool hasExistingValue, JsonSerializer serializer)
+    public override FollowersDesign ReadJson(JsonReader reader, Type objectType, FollowersDesign? existingValue, bool hasExistingValue, JsonSerializer serializer)
     {
-        var items = serializer.Deserialize<List<Sound>>(reader) ?? [];
-        var result = new Sequence();
+        var items = serializer.Deserialize<List<SoundDesign>>(reader) ?? [];
+        var result = new FollowersDesign();
         foreach (var item in items)
         {
             result.Add(item);
@@ -121,18 +121,18 @@ public class TypedBaseClassesContractResolver : DefaultContractResolver
             property.Ignored = true;
         }
 
-        // Skip empty Followers: Sound ctor initializes it to new Sequence(), which is a non-null
+        // Skip empty Followers: SoundDesign ctor initializes it to new FollowersDesign(), which is a non-null
         // reference and therefore not caught by DefaultValueHandling.Ignore.
-        if (member.Name == "Followers" && member.DeclaringType == typeof(Sound))
+        if (member.Name == "Followers" && member.DeclaringType == typeof(SoundDesign))
         {
             var vp = property.ValueProvider;
             property.ShouldSerialize = obj => (vp?.GetValue(obj) as ICollection)?.Count > 0;
         }
 
-        // Skip default Strategy on Sound: the field initializer is new FollowLeaderStrategy() with all
+        // Skip default Strategy on SoundDesign: the field initializer is new FollowLeaderStrategy() with all
         // defaults, so if nothing was customized there is no need to round-trip it through JSON —
         // deserialization will reconstruct the same value from the field initializer.
-        if (member.Name == nameof(Sound.Strategy) && member.DeclaringType == typeof(Sound))
+        if (member.Name == nameof(SoundDesign.Strategy) && member.DeclaringType == typeof(SoundDesign))
         {
             var vp = property.ValueProvider;
             property.ShouldSerialize = obj => !IsDefaultStrategy(vp?.GetValue(obj) as AbstractStrategy);
@@ -244,7 +244,7 @@ public class TypedBaseClassesContractResolver : DefaultContractResolver
         {
             return true;
         }
-        if (type == typeof(Sound) || type.IsSubclassOf(typeof(Sound)))
+        if (type == typeof(SoundDesign) || type.IsSubclassOf(typeof(SoundDesign)))
         {
             return true;
         }
@@ -257,11 +257,11 @@ public class TypedBaseClassesContractResolver : DefaultContractResolver
         {
             return false;
         }
-        return type == typeof(Sound) || type.IsSubclassOf(typeof(Sound));
+        return type == typeof(SoundDesign) || type.IsSubclassOf(typeof(SoundDesign));
     }
 
     /// <summary>
-    /// Checks if type is derived from List<Sound>
+    /// Checks if type is derived from List<SoundDesign>
     /// </summary>
     private bool IsListOfSounds(Type? type)
     {
@@ -270,7 +270,7 @@ public class TypedBaseClassesContractResolver : DefaultContractResolver
         {
             if (t.IsGenericType &&
                 t.GetGenericTypeDefinition() == typeof(List<>) &&
-                typeof(Sound).IsAssignableFrom(t.GetGenericArguments()[0]))
+                typeof(SoundDesign).IsAssignableFrom(t.GetGenericArguments()[0]))
             {
                 return true;
             }

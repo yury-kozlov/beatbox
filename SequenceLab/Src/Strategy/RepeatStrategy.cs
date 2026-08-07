@@ -27,7 +27,7 @@ public class RepeatStrategy : AbstractStrategy
 
     private int _previousIterval;
 
-    public override GeneratedSequence ApplyStrategy(Sound leader)
+    public override GeneratedSequence ApplyStrategy(SoundDesign leader)
     {
         var originalSound = leader;
         var repeatedSound = leader;
@@ -37,12 +37,12 @@ public class RepeatStrategy : AbstractStrategy
             repeatedSound = originalSound.DeepClone();
             if (Numbers.IsXOutOf(SilenceEveryXSoundOutOf, i + 1))
             {
-                repeatedSound.IsSilenced = true;
+                repeatedSound.Generated.IsSilenced = true;
             }
 
-            repeatedSound.Timestamp = DelayAfterLeader + CalculateInterval(i);
-            repeatedSound.Iteration = $"{i + 1}";
-            repeatedSound.Comment = $"#{repeatedSound.Iteration}";
+            repeatedSound.Generated.Timestamp = DelayAfterLeader + CalculateInterval(i);
+            repeatedSound.Generated.Iteration = $"{i + 1}";
+            repeatedSound.Generated.Comment = $"#{repeatedSound.Generated.Iteration}";
 
             if (repeatedSound is SequenceStart sequenceStart)
             {
@@ -50,7 +50,7 @@ public class RepeatStrategy : AbstractStrategy
             }
 
             if (repeatedSound.Leader?.Strategy is RepeatStrategy leaderLoop
-                && TrimIfExceedsParentLoop && repeatedSound.Timestamp > leaderLoop.Interval)
+                && TrimIfExceedsParentLoop && repeatedSound.Generated.Timestamp > leaderLoop.Interval)
             {
                 // sound is positioned outside leader's loop, ignore it
                 // example: Kick repeats every 200ms inside a parent loop of 500ms → the Kick iteration at 600ms is never added to the leaders sequence
@@ -58,12 +58,12 @@ public class RepeatStrategy : AbstractStrategy
                 continue;
             }
 
-            sequence.Add(repeatedSound);
+            sequence.Add(repeatedSound.Generated);
         }
 
         // close sequence with empty sound (acting as a spacer) so that any sound appended as a follower
         // to the current sequence later will continue only after current sequence ends
-        sequence.Add(GetEndingMessage(repeatedSound));
+        sequence.Add(GetEndingMessage(repeatedSound).Generated);
 
         return sequence;
     }
@@ -72,8 +72,8 @@ public class RepeatStrategy : AbstractStrategy
     {
         // adjust end of sequence delay to only include duration of the current iteration (instead of duration of the whole loop which includes all iterations)
         var sequenceEnd = sequenceStart.GetSequenceEnd();
-        sequenceEnd.DelayAfterLeader = DelayAfterLeader + Interval; // NOTE: Interval is not multipled here by loop Count
-        sequenceEnd.Comment = sequenceStart.Comment;
+        sequenceEnd.DelayAfterLeader = DelayAfterLeader + Interval; // NOTE: Interval is not multiplied here by loop Count
+        sequenceEnd.Generated.Comment = sequenceStart.Generated.Comment;
         /// NOTE: Iteration is not set here — it will be assigned during propagation in <see cref="SequenceGenerator.GenerateFollowersSequence"/>
     }
 
@@ -94,7 +94,7 @@ public class RepeatStrategy : AbstractStrategy
         return _previousIterval += Interval + (i - 1) * LinearIncrement;
     }
 
-    private Sound GetEndingMessage(Sound repeatedSound)
+    private SoundDesign GetEndingMessage(SoundDesign repeatedSound)
     {
         var calledTimesText = CheckedTimes == CalledTimes ? $"call #{CheckedTimes}" : $"call #{CalledTimes}, check #{CheckedTimes}";
 
@@ -102,22 +102,21 @@ public class RepeatStrategy : AbstractStrategy
 
         var loopEnd = new LoopEnd(repeatedSound)
         {
-            Timestamp = timestamp,
             Sequence = repeatedSound.Sequence,
-            Comment = $"{(repeatedSound is Metronome ? "metronome" : repeatedSound.Name)} repeat x{Count} ends, {calledTimesText}",
             FireAndForget = repeatedSound.Strategy.FireAndForget,
         };
+        loopEnd.Generated.Timestamp = timestamp;
+        loopEnd.Generated.Comment = $"{(repeatedSound is Metronome ? "metronome" : repeatedSound.Name)} repeat x{Count} ends, {calledTimesText}";
 
         var trimmedText = "";
         if (TryTrim(repeatedSound.Leader?.Sequence.Strategy, ref timestamp, ref trimmedText) ||
             TryTrim(repeatedSound.Leader?.Strategy, ref timestamp, ref trimmedText))
         {
             // add indication that the loop was trimmed
-            return new LoopEndTrimmed(loopEnd)
-            {
-                Timestamp = timestamp,
-                Comment = loopEnd.Comment + trimmedText,
-            };
+            var loopEndTrimmed = new LoopEndTrimmed(loopEnd);
+            loopEndTrimmed.Generated.Timestamp = timestamp;
+            loopEndTrimmed.Generated.Comment = loopEnd.Generated.Comment + trimmedText;
+            return loopEndTrimmed;
         }
 
         return loopEnd;

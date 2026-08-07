@@ -34,7 +34,7 @@ class Examples
         {
             var sequence = Minimal.SlowBeat1WithoutRepeats();
             sequence.Leader.FindByTag($"group-4")?.Followers.Add(
-                new Sound("ts1", "ts9") // play ts1 + ts9 at the same time when group-4 begins to close
+                new SoundDesign("ts1", "ts9") // play ts1 + ts9 at the same time when group-4 begins to close
             );
             result.Append(sequence);
         }

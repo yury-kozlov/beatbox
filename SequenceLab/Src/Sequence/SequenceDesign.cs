@@ -16,7 +16,7 @@ public class SequenceDesign
     /// Here we make sure that when setting leader of a sequence, the first sound will always remain sequence-start.
     /// Actual leader will be the first follower of <see cref="SequenceStart"/>.
     /// </summary>
-    public Sound Leader
+    public SoundDesign Leader
     {
         get => _state.Leader;
         set => _state.SetLeader(value);
@@ -25,7 +25,7 @@ public class SequenceDesign
     /// <summary>
     /// First sound simplifies access to the first actual sound of the sequence, because Leader of a sequence is always a SequenceStart sound.
     /// </summary>
-    public Sound? FirstSound => Leader.Followers.FirstOrDefault();
+    public SoundDesign? FirstSound => Leader.Followers.FirstOrDefault();
 
     /// <summary>
     /// By default, sequence strategy is determined by the <see cref="SequenceStart"/> sound.

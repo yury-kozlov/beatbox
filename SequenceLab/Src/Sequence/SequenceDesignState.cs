@@ -5,7 +5,7 @@ public class SequenceDesignState
 {
     private readonly SequenceDesign _sequenceDesign;
 
-    public Sound Leader { get; private set; }
+    public SoundDesign Leader { get; private set; }
     public int Duration { get; private set; }
     public SequenceEnd SequenceEnd { get; }
     public List<SequenceDesign> Sequences { get; } = [];
@@ -18,7 +18,7 @@ public class SequenceDesignState
         Leader = new SequenceStart(name) { Sequence = sequenceDesign };
     }
 
-    public void SetLeader(Sound leader)
+    public void SetLeader(SoundDesign leader)
     {
         if (leader is SequenceStart sequenceStart)
         {

@@ -3,7 +3,7 @@
 /// <summary>
 /// Snare sound.
 /// </summary>
-public record Snare : Sound
+public record Snare : SoundDesign
 {
     public Snare() : base(Name)
     { }
@@ -16,7 +16,7 @@ public record Snare : Sound
 /// <summary>
 /// Snare sound.
 /// </summary>
-public record Snare1 : Sound
+public record Snare1 : SoundDesign
 {
     public Snare1() : base(Name)
     { }

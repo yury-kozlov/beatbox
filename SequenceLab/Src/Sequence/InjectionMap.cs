@@ -8,9 +8,9 @@ public class InjectionMap
 {
     private class InjectionInfo
     {
-        public required Sound InjectedSound;
-        public required Sound YieldingSound;
-        public Sequence? InjectedSequence;
+        public required SoundDesign InjectedSound;
+        public required SoundDesign YieldingSound;
+        public GeneratedSequence? InjectedSequence;
     }
 
     private readonly List<InjectionInfo> _injections = [];
@@ -18,12 +18,12 @@ public class InjectionMap
     /// <summary>
     /// Gets ordered followers if any injections were detected, or null otherwise.
     /// </summary>
-    public readonly Sequence? Ordered;
+    public readonly FollowersDesign? Ordered;
 
     /// <summary>
     /// Detects sounds that were injected into the sequence after it was already initialized.
     /// </summary>
-    internal InjectionMap(Sequence source)
+    internal InjectionMap(FollowersDesign source)
     {
         if (source.Count == source.InitialLength)
         {
@@ -61,9 +61,9 @@ public class InjectionMap
     /// <summary>
     /// Mmove injected followers before other sounds if their delay is less (because during injection they are placed at the end of the followers list).
     /// This is necessary because other sounds must know duration of any sequences injected before them so they can decide whether to change their behavior.
-    private Sequence OrderByInjections(Sequence source)
+    private FollowersDesign OrderByInjections(FollowersDesign source)
     {
-        var ordered = new Sequence(source);
+        var ordered = new FollowersDesign(source);
         foreach (var injection in _injections)
         {
             // injected sound should go right before the yielding sound
@@ -82,7 +82,7 @@ public class InjectionMap
     /// NOTE: It's important that sequence of injected sounds is generated before the sound with injection
     ///       because sounds that go after injection need to know duration of injected sequences.
     /// </summary>
-    public void SetInjectionSequence(Sound follower, Sequence injectedSequence)
+    public void SetInjectionSequence(SoundDesign follower, GeneratedSequence injectedSequence)
     {
         foreach (var injection in _injections)
         {
@@ -98,7 +98,7 @@ public class InjectionMap
     /// If a follower has a sequence injected before it, it needs to know about such injection
     /// to recalculate position based on duration of the injected sequence.
     /// </summary>
-    public Sequence? GetInjectedSequence(Sound yielding)
+    public GeneratedSequence? GetInjectedSequence(SoundDesign yielding)
     {
         var injection = _injections.Find(i => i.InjectedSequence is not null && i.YieldingSound?.Id == yielding.Id);
         return injection?.InjectedSequence;

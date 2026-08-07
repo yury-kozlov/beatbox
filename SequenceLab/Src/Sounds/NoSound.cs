@@ -1,6 +1,6 @@
 ﻿namespace Beater;
 
-public record NoSound : Sound
+public record NoSound : SoundDesign
 {
     public NoSound() : base(Name)
     { }

@@ -38,13 +38,14 @@ internal class Theory
         /// to omit specifying explicit duration of a sequence and calculate it on-the-fly
     }
 
-    public void Sound()
+    public void SoundDesign()
     {
+        // sound design is a code model of a sound before it's generated and played
         // each sound has a strategy
-        // it depends on the strategy when this sound should play
-        
+        // strategy decides when this sound should play
+
         // each sound may have followers
-        // it depends on the followers which sounds will be played after the current sound
+        // followers are the sounds that will be played after the current sound
     }
 
     public void Lifecycle()

@@ -20,7 +20,7 @@ public class FollowPreviousSoundStrategy : AbstractStrategy
     /// Generate sequence relatively to the previous sound.
     /// So that delays will be calculated based on position of the previous sound (rather than position of the leader).
     /// </summary>
-    public override GeneratedSequence ApplyStrategy(Sound leader)
+    public override GeneratedSequence ApplyStrategy(SoundDesign leader)
     {
         var delay = DelayAfterLeader;
         var previousSound = GetPreviousSound(leader);
@@ -32,34 +32,34 @@ public class FollowPreviousSoundStrategy : AbstractStrategy
             delay += previousSound.Timestamp;
         }
 
-        leader.Timestamp = delay;
+        leader.Generated.Timestamp = delay;
 
         if (leader is SequenceStart)
         {
             // sync timestamp of SequenceStart because current leader was cloned from it while timestamp of the original sound is not initialized
             // (we do this initialization only here because SequenceStart has FollowPreviousSoundStrategy)
-            leader.Sequence.Leader.Timestamp = leader.Timestamp;
+            leader.Sequence.Leader.Generated.Timestamp = leader.Generated.Timestamp;
         }
         else
         {
             // at this point, timestamp is relative to the sequence-start (and will be shifted according to the sequence leader position later down the flow)
-            leader.Sequence.AutoDuration = leader.Timestamp;
+            leader.Sequence.AutoDuration = leader.Generated.Timestamp;
         }
 
-        return [leader];
+        return [leader.Generated];
     }
 
-    private Sound? GetPreviousSound(Sound currentSound)
+    private GeneratedSound? GetPreviousSound(SoundDesign currentSound)
     {
-        bool canBeFollowed(Sound previousSound)
+        bool canBeFollowed(GeneratedSound previousSound)
         {
-            if (ShouldFollowSameSequence && previousSound.Sequence != currentSound.Sequence)
+            if (ShouldFollowSameSequence && previousSound.SoundDesign.Sequence != currentSound.Sequence)
             {
                 // a sound from another sequence was injected directly before the current sound
                 return false;
             }
             // a sound with FireAndForget strategy can't be followed unless it's direct leader of the current sound
-            return !previousSound.Strategy.FireAndForget || previousSound == currentSound.Leader;
+            return !previousSound.SoundDesign.Strategy.FireAndForget || previousSound.SoundDesign == currentSound.Leader;
         }
         return currentSound.PreviousSounds?.LastOrDefault(canBeFollowed);
     }

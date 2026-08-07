@@ -8,7 +8,7 @@ public class SequenceDebuggerDisplayTests(ITestOutputHelper output) : TestBase(o
     public void Get_EmptySequence_ReturnsEmptyString()
     {
         // arrange
-        var sequence = new Sequence();
+        var sequence = new FollowersDesign();
 
         // act
         var result = SequenceDebuggerDisplay.Get(sequence);
@@ -21,7 +21,7 @@ public class SequenceDebuggerDisplayTests(ITestOutputHelper output) : TestBase(o
     public void Get_SoundWithoutDelay_ReturnsNameOnly()
     {
         // arrange
-        var sequence = new Sequence { new Kick() };
+        var sequence = new FollowersDesign { new Kick() };
 
         // act
         var result = SequenceDebuggerDisplay.Get(sequence);
@@ -34,7 +34,7 @@ public class SequenceDebuggerDisplayTests(ITestOutputHelper output) : TestBase(o
     public void Get_SoundWithDelay_ReturnsDelayAndName()
     {
         // arrange
-        var sequence = new Sequence { new Kick { DelayAfterLeader = 100 } };
+        var sequence = new FollowersDesign { new Kick { DelayAfterLeader = 100 } };
 
         // act
         var result = SequenceDebuggerDisplay.Get(sequence);
@@ -47,7 +47,7 @@ public class SequenceDebuggerDisplayTests(ITestOutputHelper output) : TestBase(o
     public void Get_MultipleSounds_JoinsWithCommaAndSpace()
     {
         // arrange
-        var sequence = new Sequence { new Kick(), new Snare { DelayAfterLeader = 50 } };
+        var sequence = new FollowersDesign { new Kick(), new Snare { DelayAfterLeader = 50 } };
 
         // act
         var result = SequenceDebuggerDisplay.Get(sequence);
@@ -60,7 +60,7 @@ public class SequenceDebuggerDisplayTests(ITestOutputHelper output) : TestBase(o
     public void Get_SequenceContainsNoSound_ExcludesItFromResult()
     {
         // arrange
-        var sequence = new Sequence { new Kick(), new NoSound() };
+        var sequence = new FollowersDesign { new Kick(), new NoSound() };
 
         // act
         var result = SequenceDebuggerDisplay.Get(sequence);
@@ -75,7 +75,7 @@ public class SequenceDebuggerDisplayTests(ITestOutputHelper output) : TestBase(o
         // arrange
         var leader = new Kick();
         leader.WithFollower(new Snare { DelayAfterLeader = 50 });
-        var sequence = new Sequence { leader };
+        var sequence = new FollowersDesign { leader };
 
         // act
         var result = SequenceDebuggerDisplay.Get(sequence);
@@ -96,7 +96,7 @@ public class SequenceDebuggerDisplayTests(ITestOutputHelper output) : TestBase(o
             current.WithFollower(next);
             current = next;
         }
-        var sequence = new Sequence { leader };
+        var sequence = new FollowersDesign { leader };
 
         // act
         var result = SequenceDebuggerDisplay.Get(sequence);

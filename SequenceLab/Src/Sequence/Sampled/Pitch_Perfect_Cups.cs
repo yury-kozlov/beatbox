@@ -17,14 +17,14 @@ public class Pitch_Perfect_Cups
             {
                 Strategy = new RepeatStrategy() { Count = 4, Interval = 3700 },
                 Followers = [Chain(
-                    new Sound("ts2") { },
-                    new Sound("ts2") { DelayAfterLeader = 235 },
+                    new SoundDesign("ts2") { },
+                    new SoundDesign("ts2") { DelayAfterLeader = 235 },
                     new Kick  { DelayAfterLeader = 210 },
                     new Kick  { DelayAfterLeader = 80  },
                     new Kick  { DelayAfterLeader = 130 },
                     new Snare { DelayAfterLeader = 270 },
                     new Snare { DelayAfterLeader = 215 },
-                    new Sound("ts2") { DelayAfterLeader = 200 },
+                    new SoundDesign("ts2") { DelayAfterLeader = 200 },
 
                     new Kick  { DelayAfterLeader = 470 },
                     new Kick  { DelayAfterLeader = 240 },
@@ -32,7 +32,7 @@ public class Pitch_Perfect_Cups
                     new Kick  { DelayAfterLeader = 240 },
                     new Snare { DelayAfterLeader = 225 },
                     new Snare { DelayAfterLeader = 220 },
-                    new Sound("ts2") { DelayAfterLeader = 255 }
+                    new SoundDesign("ts2") { DelayAfterLeader = 255 }
                 )]
             },
         };
