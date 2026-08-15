@@ -27,6 +27,7 @@ public class BatchItem
 {
     public int PreDelay;
     public string? SoundName;
+    public int Index;
 
     internal static BatchItem? Parse(string message)
     {
@@ -56,6 +57,7 @@ public class TransportBatchMessage
         {
             SoundName = soundName ?? NoSound.Name, // if no sound should be played - delay still must be applied
             PreDelay = preDelay ?? 0,
+            Index = _items.Count,
         });
     }
 
@@ -64,25 +66,36 @@ public class TransportBatchMessage
         var sb = new StringBuilder();
         sb.Append($"seq clear;"); // clear any previous sequences that were played before
 
-        for (int i = 0; i < _items.Count; i++)
+        foreach (var item in _items)
         {
-            var item = _items[i];
-            if (item.SoundName == NoSound.Name)
+            if (!ShouldSkip(item))
             {
-                if (item.PreDelay == 0 || i == _items.Count - 1)
-                {
-                    continue; // skip empty sounds if they have no effect on others
-                }
+                // add keyword "seq" to allow receiver to recognize this message as a sequence
+                sb.Append($"seq {item.PreDelay} {item.SoundName};");
             }
-
-            // add keyword "seq" to allow receiver to recognize this message as a sequence
-            sb.Append($"seq {item.PreDelay} {item.SoundName};");
         }
 
         sb.Append($"seq play;"); // play immediately after the last sound received
 
         var batchMessage = Encoding.ASCII.GetBytes(sb.ToString());
         return new TransportMessage { SoundName = "batch", Message = batchMessage };
+    }
+
+    private bool ShouldSkip(BatchItem item)
+    {
+        if (item.SoundName != NoSound.Name)
+        {
+            return false; // this is a real sound
+        }
+
+        if (item.PreDelay == 0)
+        {
+            // skip system sounds that have no effect on others
+            return true;
+        }
+
+        // skip the last system sound (it has no effect on others)
+        return item.Index == _items.Count - 1;
     }
 }
 
