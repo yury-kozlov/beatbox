@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Beater;
 
@@ -22,15 +23,31 @@ public class TransportMessage
     }
 }
 
-public class TransportBatchMessage
+public class BatchItem
 {
-    class BatchItem
+    public int PreDelay;
+    public string? SoundName;
+
+    internal static BatchItem? Parse(string message)
     {
-        public int PreDelay;
-        public string? SoundName;
-        public override string ToString() => $"{PreDelay} {SoundName}";
+        var match = Regex.Match(message, @"^(?<preDelay>\d+) (?<soundName>[^ ]+);$");
+        if (match.Success)
+        {
+            return new BatchItem
+            {
+                PreDelay = int.Parse(match.Groups["preDelay"].Value),
+                SoundName = match.Groups["soundName"].Value,
+            };
+        }
+        return null;
     }
 
+    public override string ToString() => $"{PreDelay} {SoundName}";
+}
+
+
+public class TransportBatchMessage
+{
     private List<BatchItem> _items = new();
 
     internal void Add(string? soundName, int? preDelay)

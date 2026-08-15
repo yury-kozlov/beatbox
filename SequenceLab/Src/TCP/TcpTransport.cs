@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.Net;
+using System.Net.Sockets;
 using System.Text;
 
 namespace Beater;
@@ -19,18 +20,37 @@ public enum SendMode
 
 public class TcpTransport
 {
-    private readonly TcpClient _client;
-    private readonly NetworkStream _channel;
-    private static TcpTransport? _instance;
+    private const int OutputPort = 3312;
+    private const int InputPort = 3311;
+
+    private static readonly UdpClient _client = new UdpClient(OutputPort);
     private bool _isDisposed;
 
     public SendMode SendMode { get; set; } = SendMode.AllAtOnce;
 
     public TcpTransport()
     {
-        _client = new TcpClient("localhost", 3311);
-        _channel = _client.GetStream();
-        _instance = this;
+        Task.Run(StartListener);
+    }
+
+    /// <summary>
+    /// Starts listening for incoming messages sent back from remote peer.
+    /// </summary>
+    private async Task StartListener()
+    {
+        try
+        {
+            while (true)
+            {
+                var result = await _client.ReceiveAsync();
+                var message = Encoding.UTF8.GetString(result.Buffer);
+                var transportMessage = BatchItem.Parse(message);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("TcpTransport error: " + ex);
+        }
     }
 
     public void Dispose()
@@ -40,7 +60,7 @@ public class TcpTransport
         _isDisposed = true;
     }
 
-    public static void Close() => _instance?.Dispose();
+    public static void Close() => _client?.Dispose();
 
     public void Send(TransportMessage message)
     {
@@ -51,7 +71,7 @@ public class TcpTransport
     {
         if (!_isDisposed)
         {
-            _channel.Write(message, 0, message.Length);
+            _client.Send(message, message.Length, new IPEndPoint(IPAddress.Loopback, InputPort));
         }
     }
 

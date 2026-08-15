@@ -1,0 +1,1 @@
+﻿global using Sound = Beater.SoundDesign;
