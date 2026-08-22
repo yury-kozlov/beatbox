@@ -27,7 +27,6 @@ public class BatchItem
 {
     public int PreDelay;
     public string? SoundName;
-    public int Index;
 
     internal static BatchItem? Parse(string message)
     {
@@ -47,17 +46,20 @@ public class BatchItem
 }
 
 
+/// <summary>
+/// Only real (non NoSound) items get added - callers are responsible for filtering those out beforehand
+/// (see PlaybackSync.Build), so every item added here always ends up in the outbound message.
+/// </summary>
 public class TransportBatchMessage
 {
     private List<BatchItem> _items = new();
 
-    internal void Add(string? soundName, int? preDelay)
+    internal void Add(string soundName, int? preDelay)
     {
         _items.Add(new BatchItem
         {
-            SoundName = soundName ?? NoSound.Name, // if no sound should be played - delay still must be applied
+            SoundName = soundName,
             PreDelay = preDelay ?? 0,
-            Index = _items.Count,
         });
     }
 
@@ -68,34 +70,14 @@ public class TransportBatchMessage
 
         foreach (var item in _items)
         {
-            if (!ShouldSkip(item))
-            {
-                // add keyword "seq" to allow receiver to recognize this message as a sequence
-                sb.Append($"seq {item.PreDelay} {item.SoundName};");
-            }
+            // add keyword "seq" to allow receiver to recognize this message as a sequence
+            sb.Append($"seq {item.PreDelay} {item.SoundName};");
         }
 
         sb.Append($"seq play;"); // play immediately after the last sound received
 
         var batchMessage = Encoding.ASCII.GetBytes(sb.ToString());
         return new TransportMessage { SoundName = "batch", Message = batchMessage };
-    }
-
-    private bool ShouldSkip(BatchItem item)
-    {
-        if (item.SoundName != NoSound.Name)
-        {
-            return false; // this is a real sound
-        }
-
-        if (item.PreDelay == 0)
-        {
-            // skip system sounds that have no effect on others
-            return true;
-        }
-
-        // skip the last system sound (it has no effect on others)
-        return item.Index == _items.Count - 1;
     }
 }
 

@@ -7,5 +7,5 @@ public record NoSound : SoundDesign
 
     public override string? ToString() => base.ToString();
 
-    public static new string Name = "no-sound";
+    public new const string Name = "no-sound";
 }
