@@ -4,8 +4,15 @@ public class FollowLeaderStrategy : AbstractStrategy
 {
     /// <summary>
     /// In milliseconds.
+    /// NOTE: right now it's hard coded, but in future it should be resolved dynamically based on injected sounds.
     /// </summary>
-    public int MinBufferAfterInjectedSounds = 200;
+    public int MinBufferAfterInjectedSounds = 300;
+
+    /// <summary>
+    /// Minimum distance after injected sounds at which the buffer has to be increased.
+    /// NOTE: right now it's hard coded, but in future it should be resolved dynamically based on injected sounds.
+    /// </summary>
+    public int MinBufferThreshold = 50;
 
     public override GeneratedSequence ApplyStrategy(SoundDesign leader)
     {
@@ -19,7 +26,7 @@ public class FollowLeaderStrategy : AbstractStrategy
         {
             // increase delay of the current sound by total duration of injected followers + some extra buffer
             var exceedingDuration = leader.Injected.Last().Timestamp - leader.Generated.Timestamp;
-            if (exceedingDuration > 0)
+            if (exceedingDuration > -MinBufferThreshold)
             {
                 leader.Generated.Timestamp += exceedingDuration + MinBufferAfterInjectedSounds;
                 leader.Sequence.AutoDuration += exceedingDuration + MinBufferAfterInjectedSounds;
