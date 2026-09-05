@@ -16,7 +16,6 @@ public class SequenceGenerator
     private static GeneratedSequence GenerateSequence(SoundDesign leader)
     {
         leader = leader.DeepClone();
-        leader.Followers.SetLeader(leader);
 
         leader.Strategy.CheckedTimes++;
         if (IsSkipped(leader))
@@ -63,14 +62,14 @@ public class SequenceGenerator
             PropagateFireAndForget(leader, follower);
 
             // NOTE: separate followers are played independently to allow overlapping sequences (mixed together)
-            var nestedFollowers = GenerateSequence(follower);
-            if (!nestedFollowers.HasItems())
+            var followerChain = GenerateSequence(follower);
+            if (!followerChain.HasItems())
             {
                 continue;
             }
 
-            allFollowers.AddRange(nestedFollowers);
-            injectionMap.SetInjectionSequence(follower, nestedFollowers);
+            allFollowers.AddRange(followerChain);
+            injectionMap.SetInjectionSequence(follower, followerChain);
         }
 
         // adjust timestamps of all followers only after nested sequences were generated (because on nested levels timestamps are expected to be relative)

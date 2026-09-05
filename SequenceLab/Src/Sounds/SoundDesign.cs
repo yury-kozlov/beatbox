@@ -183,6 +183,7 @@ public record SoundDesign
         };
         clone.Followers.InitialLength = Followers.InitialLength;
         clone.Generated.SoundDesign = clone;
+        clone.Followers.SetLeader(clone); // update cloned reference (so that any change on the clone will be visible to its followers)
 
         return clone;
     }
