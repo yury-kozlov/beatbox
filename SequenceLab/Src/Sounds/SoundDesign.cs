@@ -24,6 +24,17 @@ public record SoundDesign
     /// </summary>
     public Guid Id = Guid.NewGuid();
 
+    /// <summary>
+    /// This object is used only for generating hash code.
+    /// </summary>
+    private object _uniqueInstance = new();
+
+    /// <summary>
+    /// Since SoundDesign is a record, we can't use default implementation of GetHashCode because it will go over all properties.
+    /// Some properties may have indirect circular references (e.g. Leader/Follower) which will cause stack overflow when generating hash codes.
+    /// </summary>
+    public override int GetHashCode() => _uniqueInstance.GetHashCode();
+
     [JsonIgnore]
     public GeneratedSound Generated { get; init; }
 
@@ -180,6 +191,7 @@ public record SoundDesign
         {
             Followers = [.. Followers.Select(f => f.DeepClone())],
             Generated = new GeneratedSound(this),
+            _uniqueInstance = new object(),
         };
         clone.Followers.InitialLength = Followers.InitialLength;
         clone.Generated.SoundDesign = clone;
