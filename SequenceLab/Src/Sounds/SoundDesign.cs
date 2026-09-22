@@ -120,11 +120,12 @@ public record SoundDesign
 
     protected string Format(string? friendlyName)
     {
+        var iteration = Generated.Iteration.IsNullOrEmpty() ? "" : $" #{Generated.Iteration}";
         if (Tags.HasItems())
         {
-            return $"{friendlyName}: {Generated.Timestamp:0000} {Tags}";
+            return $"{friendlyName}: {Generated.Timestamp:0000} {Tags}{iteration}";
         }
-        return $"{friendlyName}: {Generated.Timestamp:0000}";
+        return $"{friendlyName}: {Generated.Timestamp:0000}{iteration}";
     }
 
     /// <summary>
