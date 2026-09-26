@@ -29,6 +29,12 @@ public class SequenceDesignState
 
         // force actual leader to be a follower of "SequenceStart" sound.
         Leader.WithFollower(leader.WithSequenceIfMissing(_sequenceDesign)).WithFollower(SequenceEnd);
+        
+        if (Leader.Followers.InitialLength == 0)
+        {
+            // this is the first time we are initializing the sequence, set initial count in order to avoid mixup with possible injected sounds
+            Leader.Followers.InitialLength = Leader.Followers.Count;
+        }
 
         UpdateLoopDuration(leader.Strategy); // if leader is a loop, we can use its interval to calculate total sequence duration
     }
