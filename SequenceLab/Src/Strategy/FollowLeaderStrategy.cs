@@ -14,27 +14,27 @@ public class FollowLeaderStrategy : AbstractStrategy
     /// </summary>
     public int MinBufferThreshold = 50;
 
-    public override GeneratedSequence ApplyStrategy(SoundDesign leader)
+    public override GeneratedSequence ApplyStrategy(SoundDesign currentSound)
     {
-        leader.Generated.Timestamp = DelayAfterLeader;
+        currentSound.Generated.Timestamp = DelayAfterLeader;
 
         // at this point, timestamp is relative to the sequence-start (and will be shifted according to the sequence leader position later down the flow)
-        leader.Sequence.AutoDuration = leader.Generated.Timestamp;
+        currentSound.Sequence.AutoDuration = currentSound.Generated.Timestamp;
 
-        if (leader.Injected.HasItems())
+        if (currentSound.Injected.HasItems())
         {
             // increase delay of the current sound by total duration of injected followers + some extra buffer
-            var exceedingDuration = leader.Injected.Last().Timestamp - leader.Generated.Timestamp;
+            var exceedingDuration = currentSound.Injected.Last().Timestamp - currentSound.Generated.Timestamp;
             if (exceedingDuration > -MinBufferThreshold)
             {
                 var delayedBy = exceedingDuration + MinBufferAfterInjectedSounds;
-                leader.Generated.DelayedBy = delayedBy;
-                leader.Generated.Comment += $"(delayed by {delayedBy})"; // delayed due to injected sounds
-                leader.Generated.Timestamp += delayedBy;
-                leader.Sequence.AutoDuration += delayedBy;
+                currentSound.Generated.DelayedBy = delayedBy;
+                currentSound.Generated.Comment += $"(delayed by {delayedBy})"; // delayed due to injected sounds
+                currentSound.Generated.Timestamp += delayedBy;
+                currentSound.Sequence.AutoDuration += delayedBy;
             }
         }
 
-        return [leader.Generated];
+        return [currentSound.Generated];
     }
 }
