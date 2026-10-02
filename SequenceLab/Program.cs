@@ -6,7 +6,7 @@ public static partial class Program
 {
     public static void Main()
     {
-        GracefulShutdown.Subscribe(TcpTransport.Close);
+        GracefulShutdown.Subscribe(TcpTransport.Instance.Dispose);
 
         try
         {

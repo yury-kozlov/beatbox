@@ -32,7 +32,16 @@ public class TcpTransport
     private const int OutputPort = 3312;
     private const int InputPort = 3311;
 
-    private static readonly UdpClient _client = new UdpClient(OutputPort);
+    /// <summary>
+    /// Single instance of the transport.
+    /// Static is used to allow disposing on app exit.
+    /// </summary>
+    public static TcpTransport Instance => field ??= new();
+
+    /// <summary>
+    /// UDP is used instead of TCP to not require active listeners on the other side (to make program start even when sampler is unavailable).
+    /// </summary>
+    private readonly UdpClient _client = new UdpClient(OutputPort);
     private readonly ConcurrentQueue<LogPosition> _pendingRows = new();
 
     /// <summary>
@@ -43,7 +52,7 @@ public class TcpTransport
 
     public SendMode SendMode { get; set; } = SendMode.Batches;
 
-    public TcpTransport()
+    private TcpTransport()
     {
         Task.Run(StartListener);
     }
@@ -79,8 +88,6 @@ public class TcpTransport
         _client?.Dispose();
         _isDisposed = true;
     }
-
-    public static void Close() => _client?.Dispose();
 
     public void Send(TransportMessage message)
     {

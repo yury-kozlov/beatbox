@@ -11,7 +11,7 @@ internal class SequencePlayerExample : IDisposable
 
     public SequencePlayerExample Init()
     {
-        _transport = new TcpTransport();
+        _transport = TcpTransport.Instance;
 
         GC.Collect();
         return this;

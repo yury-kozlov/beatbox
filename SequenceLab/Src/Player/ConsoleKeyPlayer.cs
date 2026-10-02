@@ -48,7 +48,7 @@ public class ConsoleKeyPlayer : IDisposable
 
     public ConsoleKeyPlayer()
     {
-        _transport = new TcpTransport();
+        _transport = TcpTransport.Instance;
         OnKeyPressed += (e) =>
         {
             if (e.Key == EndOfSequence || e.Key == ResetKey)
