@@ -37,6 +37,12 @@ public record GeneratedSound
     public string? Comment;
 
     /// <summary>
+    /// Number of milliseconds by which this sound was delayed due to injected sounds placed before it.
+    /// NOTE: right now this field is used only for debugging.
+    /// </summary>
+    public int DelayedBy;
+
+    /// <summary>
     /// The SoundDesign this instance was generated from (its data and structure — Name, Tags, Followers, Strategy, etc.).
     /// </summary>
     public SoundDesign SoundDesign;

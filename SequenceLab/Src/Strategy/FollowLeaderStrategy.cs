@@ -21,15 +21,17 @@ public class FollowLeaderStrategy : AbstractStrategy
         // at this point, timestamp is relative to the sequence-start (and will be shifted according to the sequence leader position later down the flow)
         leader.Sequence.AutoDuration = leader.Generated.Timestamp;
 
-
         if (leader.Injected.HasItems())
         {
             // increase delay of the current sound by total duration of injected followers + some extra buffer
             var exceedingDuration = leader.Injected.Last().Timestamp - leader.Generated.Timestamp;
             if (exceedingDuration > -MinBufferThreshold)
             {
-                leader.Generated.Timestamp += exceedingDuration + MinBufferAfterInjectedSounds;
-                leader.Sequence.AutoDuration += exceedingDuration + MinBufferAfterInjectedSounds;
+                var delayedBy = exceedingDuration + MinBufferAfterInjectedSounds;
+                leader.Generated.DelayedBy = delayedBy;
+                leader.Generated.Comment += $"(delayed by {delayedBy})"; // delayed due to injected sounds
+                leader.Generated.Timestamp += delayedBy;
+                leader.Sequence.AutoDuration += delayedBy;
             }
         }
 
