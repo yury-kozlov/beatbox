@@ -47,6 +47,7 @@ public abstract class AbstractStrategy
     /// <summary>
     /// Makes current sound (and its direct followers) play in parallel to the rest of the sequence,
     /// so that other sounds placed after it at design-time will not wait at runtime but play according to their schedule.
+    /// This field may be used as a workaround to avoid breaking a stable sequence which may otherwise become delayed due to injected sounds.
     /// </summary>
     public bool FireAndForget { get; set; }
 

@@ -26,7 +26,8 @@ public class FollowLeaderStrategy : AbstractStrategy
             // increase delay of the current sound by total duration of injected followers + some extra buffer
             var lastInjectedSound = currentSound.Injected.Last();
             var exceedingDuration = currentSound.Generated.Timestamp - lastInjectedSound.Timestamp;
-            if (exceedingDuration > MinBufferThreshold)
+            var isInjectedFireAndForget = currentSound.Injected.All(x => x.SoundDesign.Strategy.FireAndForget);
+            if (exceedingDuration > MinBufferThreshold && !isInjectedFireAndForget)
             {
                 var delayedBy = exceedingDuration + MinBufferAfterInjectedSounds;
                 currentSound.Generated.DelayedBy = delayedBy;
