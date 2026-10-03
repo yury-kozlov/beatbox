@@ -25,15 +25,15 @@ public class InjectionMap
     /// </summary>
     internal InjectionMap(FollowersDesign source)
     {
-        if (source.Count == source.InitialLength)
+        if (source.Count == source.InitialSounds.Count)
         {
             // no injections
             return;
         }
 
         // sequence has new sounds since it was initialized
-        var yielding = source[..source.InitialLength];
-        var injected = source[source.InitialLength..];
+        var yielding = source.InitialSounds;
+        var injected = source[source.InitialSounds.Count..];
 
         for (var i = 0; i < yielding.Count; i++)
         {

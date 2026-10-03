@@ -1,4 +1,5 @@
 ﻿using Beater.Sampled;
+using static Beater.SoundExtensions;
 
 namespace Beater;
 
@@ -83,7 +84,7 @@ class Examples
     {
         // in order to play 2 sequences at the same time
         // just Combine them to the same parent sequence:
-        
+
         /// another option is to use property <see cref="AbstractStrategy.FireAndForget"/> for simplicity (without defining a separate sequence)
         /// this property indicates that a sound and its direct followers will be played in parallel (not sequentially)
 
@@ -115,5 +116,17 @@ class Examples
         var formattedString = ConsoleKeyPlayer.GetFormattedDelays(0, 100, 240, 280, 260, 260);
         // X  X      X       X      X      X
         Console.WriteLine(formattedString);
+    }
+
+    public static void PrintDebuggerFriendlyStringOfSequenceSounds()
+    {
+        var seq = Chain(
+            new Kick(),
+            new Snare { DelayAfterLeader = 100 },
+            new Kick { DelayAfterLeader = 200 });
+        
+        var formattedString = SequenceDebuggerDisplay.Get(seq);
+
+        Console.WriteLine(formattedString); // "k, 100 s, 200 k"
     }
 }

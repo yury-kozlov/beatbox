@@ -71,7 +71,7 @@ public record SoundDesign
         get; set
         {
             // capture initial length of the followers in order to keep track of any changes for example when a new sound is injected
-            (field = value).InitialLength = value.Count;
+            (field = value).WithInitialSounds(value);
         }
     } = [];
 
@@ -168,6 +168,13 @@ public record SoundDesign
     public SoundDesign WithFollower(SoundDesign follower)
     {
         Followers.Add(follower);
+
+        if (!Followers.InitialSounds.HasItems() || follower is SequenceEnd)
+        {
+            // this is the first time we are initializing the sequence, set initial list in order to avoid mixup with possible injected sounds
+            Followers.WithInitialSounds(follower);
+        }
+
         return this;
     }
 
@@ -194,7 +201,6 @@ public record SoundDesign
             Generated = new GeneratedSound(this),
             _uniqueInstance = new object(),
         };
-        clone.Followers.InitialLength = Followers.InitialLength;
         clone.Generated.SoundDesign = clone;
         clone.Followers.SetLeader(clone); // update cloned reference (so that any change on the clone will be visible to its followers)
 
@@ -226,12 +232,14 @@ public static class SoundExtensions
         return sound is not null && sound.Leader is null;
     }
 
+    /// <summary>
+    /// Chains the specified sounds so that each subsequent sound is placed as a follower of the previous one.
+    /// </summary>
     public static SoundDesign Chain(params SoundDesign[] sounds)
     {
         for (int i = sounds.Length - 1; i > 0; i--)
         {
             sounds[i - 1].WithFollower(sounds[i]);
-            sounds[i - 1].Followers.InitialLength++;
         }
         return sounds.First();
     }
