@@ -175,6 +175,8 @@ public record SoundDesign
             Followers.WithInitialSounds(follower);
         }
 
+        follower.Leader ??= this;
+
         return this;
     }
 
