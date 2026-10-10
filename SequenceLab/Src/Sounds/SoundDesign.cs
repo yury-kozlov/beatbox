@@ -70,8 +70,9 @@ public record SoundDesign
     {
         get; set
         {
+            field = value;
             // capture initial length of the followers in order to keep track of any changes for example when a new sound is injected
-            (field = value).WithInitialSounds(value);
+            Followers.AddInitialSounds(value);
         }
     } = [];
 
@@ -168,13 +169,7 @@ public record SoundDesign
     public SoundDesign WithFollower(SoundDesign follower)
     {
         Followers.Add(follower);
-
-        if (!Followers.InitialSounds.HasItems() || follower is SequenceEnd)
-        {
-            // this is the first time we are initializing the sequence, set initial list in order to avoid mixup with possible injected sounds
-            Followers.WithInitialSounds(follower);
-        }
-
+        Followers.AddInitialSounds([follower]);
         follower.Leader ??= this;
 
         return this;
@@ -199,7 +194,7 @@ public record SoundDesign
     {
         var clone = this with
         {
-            Followers = [.. Followers.Select(f => f.DeepClone())],
+            Followers = Followers.DeepClone(),
             Generated = new GeneratedSound(this),
             _uniqueInstance = new object(),
         };

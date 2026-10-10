@@ -67,8 +67,8 @@ public class InjectionMap
         foreach (var injection in _injections)
         {
             // injected sound should go right before the yielding sound
-            var iYielding = ordered.IndexOf(injection.YieldingSound);
-            var iInjected = ordered.IndexOf(injection.InjectedSound);
+            var iYielding = ordered.FindIndex(o => o.Id == injection.YieldingSound.Id);
+            var iInjected = ordered.FindIndex(o => o.Id == injection.InjectedSound.Id);
             if (iYielding < iInjected)
             {
                 ordered.MoveBefore(iYielding, iInjected);
