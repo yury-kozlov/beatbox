@@ -175,10 +175,13 @@ public record SoundDesign
         return this;
     }
 
-    public SoundDesign MoveFollowerToTheEnd(SoundDesign follower)
+    /// <summary>
+    /// Makes sure sequence end sound is the final follower.
+    /// </summary>
+    public SoundDesign FinalizeSequenceEnd(SequenceEnd sequenceEnd)
     {
-        Followers.Remove(follower);
-        return WithFollower(follower);
+        Followers.Remove(sequenceEnd);
+        return WithFollower(sequenceEnd);
     }
 
     /// <summary>

@@ -110,7 +110,7 @@ public class SequenceDesign
         {
             // appending for the first time
             Leader.WithFollower(next.Leader);
-            Leader.MoveFollowerToTheEnd(SequenceEnd);
+            Leader.FinalizeSequenceEnd(SequenceEnd);
             return this;
         }
 
@@ -124,7 +124,7 @@ public class SequenceDesign
         // this is not supposed to happen:
         Console.WriteLine($"Appended sequence {next.Name} will be played in parallel instead if sequentially because sequence end of the previous sequence was not found");
         Leader.WithFollower(next.Leader);
-        Leader.MoveFollowerToTheEnd(SequenceEnd);
+        Leader.FinalizeSequenceEnd(SequenceEnd);
         return this;
     }
 
@@ -156,7 +156,7 @@ public class SequenceDesign
         }
 
         Leader.WithFollower(other.Leader);
-        Leader.MoveFollowerToTheEnd(SequenceEnd);
+        Leader.FinalizeSequenceEnd(SequenceEnd);
         return this;
     }
 
