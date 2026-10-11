@@ -27,8 +27,12 @@ public class SequenceDesignState
             return;
         }
 
-        // force actual leader to be a follower of "SequenceStart" sound.
-        Leader.WithFollower(leader.WithSequenceIfMissing(_sequenceDesign)).WithFollower(SequenceEnd);
+        // make sure leader and its followers don't have empty Sequence reference:
+        leader.WithSequenceIfMissing(_sequenceDesign);
+
+        // force the specified "leader" to be a follower of "SequenceStart" sound (SequenceStart is the actual "Leader"):
+        Leader.WithInitialFollower(leader)
+              .WithInitialFollower(SequenceEnd);
 
         UpdateLoopDuration(leader.Strategy); // if leader is a loop, we can use its interval to calculate total sequence duration
     }

@@ -19,4 +19,9 @@ public class GeneratedSequence : List<GeneratedSound>
         AddRange(followers);
         return SequenceSoundSorter.SortByTimestamp(this);
     }
+
+    /// <summary>
+    /// Example returned value: "k, 1200 k, 1200 k, 600 k, 600 k".
+    /// </summary>
+    public string DebuggerDisplay => SequenceDebuggerDisplay.Get([.. this.Select(s => s.SoundDesign)]);
 }

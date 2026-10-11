@@ -14,27 +14,18 @@ public class FollowersDesign : List<SoundDesign>
     /// </summary>
     public List<SoundDesign> InitialSounds { get; } = [];
 
-    public FollowersDesign AddInitialSounds(List<SoundDesign> newSounds)
+    public void TryAddInitialSounds(List<SoundDesign> newSounds)
     {
-        if (!newSounds.HasItems())
+        if (newSounds.HasItems() && !InitialSounds.HasItems())
         {
-            // nothing to add
-            return this;
-        }
-
-        if (!InitialSounds.HasItems())
-        {
-            // this is the first time we are initializing the sequence            
-            // without checking for already initialized sounds we may incorrectly reset them when cloning a sound
+            // this is the first time we are initializing the sequence
             InitialSounds.AddRange(newSounds);
         }
-        else if (newSounds.FirstOrDefault() is SequenceEnd sequenceEnd)
-        {
-            // end of sequence is a system sound (not part of explicit design) and is added separately from the main list
-            InitialSounds.Add(sequenceEnd);
-        }
+    }
 
-        return this;
+    public void AddInitialSound(SoundDesign newSound)
+    {
+        InitialSounds.Add(newSound);
     }
 
     public FollowersDesign()
@@ -54,7 +45,10 @@ public class FollowersDesign : List<SoundDesign>
     internal FollowersDesign DeepClone()
     {
         var clone = new FollowersDesign(this.Select(f => f.DeepClone()));
-        clone.AddInitialSounds([.. InitialSounds.Select(s => s.DeepClone())]);
+        foreach (var initialSound in InitialSounds)
+        {
+            clone.AddInitialSound(initialSound.DeepClone());
+        }
         return clone;
     }
 }

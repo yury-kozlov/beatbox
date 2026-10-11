@@ -72,7 +72,7 @@ public record SoundDesign
         {
             field = value;
             // capture initial length of the followers in order to keep track of any changes for example when a new sound is injected
-            Followers.AddInitialSounds(value);
+            field.TryAddInitialSounds(value);
         }
     } = [];
 
@@ -166,12 +166,30 @@ public record SoundDesign
         return this;
     }
 
+    /// <summary>
+    /// Appends the specified sound as a follower of the current sound.
+    /// May be used for injecting sounds into a sequence.
+    /// </summary>
     public SoundDesign WithFollower(SoundDesign follower)
     {
         Followers.Add(follower);
-        Followers.AddInitialSounds([follower]);
         follower.Leader ??= this;
 
+        return this;
+    }
+
+    /// <summary>
+    /// Appends the specified sound as a follower of the current sound,
+    /// also adds it to the list of initial sounds (to distinguish from injected sounds that may be added later).
+    /// </summary>
+    public SoundDesign WithInitialFollower(SoundDesign follower)
+    {
+        WithFollower(follower);
+
+        // unconditionally add new sound to initial sounds because it's not an injected sound.
+        // for example: end of sequence is a system sound (not part of explicit design) and is added separately from the main list
+        Followers.AddInitialSound(follower);
+        
         return this;
     }
 
@@ -181,7 +199,7 @@ public record SoundDesign
     public SoundDesign FinalizeSequenceEnd(SequenceEnd sequenceEnd)
     {
         Followers.Remove(sequenceEnd);
-        return WithFollower(sequenceEnd);
+        return WithInitialFollower(sequenceEnd);
     }
 
     /// <summary>
@@ -239,7 +257,8 @@ public static class SoundExtensions
     {
         for (int i = sounds.Length - 1; i > 0; i--)
         {
-            sounds[i - 1].WithFollower(sounds[i]);
+            // initialize whole chain as a single sequence (each follower also goes to initial sounds):
+            sounds[i - 1].WithInitialFollower(sounds[i]);
         }
         return sounds.First();
     }

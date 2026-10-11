@@ -22,7 +22,7 @@ public class InjectionMapTests(ITestOutputHelper output) : TestBase(output)
         var soundA = CreateSound("a", 10);
         var soundB = CreateSound("b", 20);
         var source = new FollowersDesign { soundA, soundB };
-        source.AddInitialSounds(source);
+        source.TryAddInitialSounds(source);
 
         // act
         var map = new InjectionMap(source);
@@ -39,7 +39,7 @@ public class InjectionMapTests(ITestOutputHelper output) : TestBase(output)
         var soundB = CreateSound("b", 200);
         var soundC = CreateSound("c", 50);
         var source = new FollowersDesign { soundA, soundB, soundC };
-        source.AddInitialSounds([soundA, soundB]); // soundA, soundB were part of the initial sequence; soundC was injected later
+        source.TryAddInitialSounds([soundA, soundB]); // soundA, soundB were part of the initial sequence; soundC was injected later
 
         // act
         var map = new InjectionMap(source);
@@ -56,7 +56,7 @@ public class InjectionMapTests(ITestOutputHelper output) : TestBase(output)
         var soundB = CreateSound("b", 20);
         var soundC = CreateSound("c", 100);
         var source = new FollowersDesign { soundA, soundB, soundC };
-        source.AddInitialSounds([soundA, soundB]);
+        source.TryAddInitialSounds([soundA, soundB]);
 
         // act
         var map = new InjectionMap(source);
@@ -73,7 +73,7 @@ public class InjectionMapTests(ITestOutputHelper output) : TestBase(output)
         var soundB = CreateSound("b", 300, new FollowPreviousSoundStrategy());
         var soundC = CreateSound("c", 150);
         var source = new FollowersDesign { soundA, soundB, soundC };
-        source.AddInitialSounds([soundA, soundB]);
+        source.TryAddInitialSounds([soundA, soundB]);
 
         // act
         var map = new InjectionMap(source);
@@ -92,7 +92,7 @@ public class InjectionMapTests(ITestOutputHelper output) : TestBase(output)
         var soundB = CreateSound("b", 200);
         var soundC = CreateSound("c", 50);
         var source = new FollowersDesign { soundA, soundB, soundC };
-        source.AddInitialSounds([soundA, soundB]);
+        source.TryAddInitialSounds([soundA, soundB]);
         var map = new InjectionMap(source);
 
         // act
@@ -110,7 +110,7 @@ public class InjectionMapTests(ITestOutputHelper output) : TestBase(output)
         var soundB = CreateSound("b", 200);
         var soundC = CreateSound("c", 50);
         var source = new FollowersDesign { soundA, soundB, soundC };
-        source.AddInitialSounds([soundA, soundB]);
+        source.TryAddInitialSounds([soundA, soundB]);
         var map = new InjectionMap(source);
         var generatedSequence = new GeneratedSequence(CreateSound("generated", 0));
 
@@ -130,7 +130,7 @@ public class InjectionMapTests(ITestOutputHelper output) : TestBase(output)
         var soundB = CreateSound("b", 200);
         var soundC = CreateSound("c", 50);
         var source = new FollowersDesign { soundA, soundB, soundC };
-        source.AddInitialSounds([soundA, soundB]);
+        source.TryAddInitialSounds([soundA, soundB]);
         var map = new InjectionMap(source);
         map.SetInjectionSequence(soundC, new GeneratedSequence());
 
